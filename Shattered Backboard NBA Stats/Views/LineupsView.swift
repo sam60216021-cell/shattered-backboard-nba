@@ -6,6 +6,25 @@
 
 import SwiftUI
 
+// MARK: - Game projection cache
+
+/// Caches projected player stats per game for the app session.
+/// Returning to a previously-viewed game is instant — no recomputation.
+@MainActor
+private final class GameProjectionStore {
+    static let shared = GameProjectionStore()
+    private init() {}
+    private var cache: [String: [String: PlayerProjection]] = [:]
+
+    func projections(forKey key: String) -> [String: PlayerProjection]? {
+        cache[key]
+    }
+
+    func store(_ projections: [String: PlayerProjection], forKey key: String) {
+        cache[key] = projections
+    }
+}
+
 // MARK: - Navigation context
 
 /// Wraps a player + the game they play in so PlayerStatsView gets full context.
@@ -28,7 +47,7 @@ struct GamePicksView: View {
     @AppStorage("debugForcePlayoffMode") private var forcePlayoffMode: Bool = false
     #endif
 
-    private let displayStats = ["PTS", "REB", "AST", "PRA"]
+    private let displayStats = ["PTS", "REB", "AST", "PR", "PA", "RA", "PRA"]
 
     // MARK: Roster
 
@@ -74,6 +93,18 @@ struct GamePicksView: View {
         return Set(list.compactMap { $0.name?.lowercased() })
     }
 
+    private func projectedStarters(for team: String, roster: [Player]) -> Set<String> {
+        let ranked = roster
+            .sorted {
+                let mA = projections[$0.playerID]?.minutes ?? -1
+                let mB = projections[$1.playerID]?.minutes ?? -1
+                if mA != mB { return mA > mB }
+                return $0.name < $1.name
+            }
+            .prefix(5)
+        return Set(ranked.map { $0.name.lowercased() })
+    }
+
     private func missingPlayers(for team: String) -> [MissingPlayer] {
         team.uppercased() == game.awayTeam.uppercased()
             ? game.missingAwayPlayers
@@ -106,13 +137,23 @@ struct GamePicksView: View {
                 playerList
             }
         }
-        .navigationTitle("\(game.awayTeam) @ \(game.homeTeam)")
+        .navigationTitle("\(SportConfig.teamNickname(for: game.awayTeam)) @ \(SportConfig.teamNickname(for: game.homeTeam))")
         .navigationBarTitleDisplayMode(.inline)
         .navigationDestination(for: PlayerGameContext.self) { ctx in
             PlayerStatsView(player: ctx.player, game: ctx.game)
         }
         .task { await loadProjections() }
+        .onAppear {
+            NotificationCenter.default.addObserver(forName: .didRefreshPlayerLogs, object: nil, queue: .main) { _ in
+                Task { await loadProjections() }
+            }
+        }
+        .onDisappear {
+            NotificationCenter.default.removeObserver(self, name: .didRefreshPlayerLogs, object: nil)
+        }
         .onChange(of: dataService.snapshotID) { _, _ in Task { await loadProjections() } }
+        .onChange(of: dataService.logsRevision) { _, _ in Task { await loadProjections() } }
+        .onReceive(dataService.$standingsMap) { _ in Task { await loadProjections() } }
         #if DEBUG
         .onChange(of: forcePlayoffMode) { _, _ in Task { await loadProjections() } }
         #endif
@@ -120,26 +161,40 @@ struct GamePicksView: View {
 
     @MainActor
     private func loadProjections() async {
+        let cacheKey = projectionCacheKey()
+
+        // Return instantly from cache — no spinner, no recomputation
+        if let cached = GameProjectionStore.shared.projections(forKey: cacheKey), !cached.isEmpty {
+            projections = cached
+            return
+        }
+
         guard !isLoadingProjections else { return }
         isLoadingProjections = true
         defer { isLoadingProjections = false }
+
         let allPlayers = dataService.snapshot?.players ?? []
-
-        // Fetch logs for any game players that have no local data yet
-        let gamePlayerIDs = allPlayers
-            .filter {
-                let t = ($0.team ?? "").uppercased()
-                return t == game.awayTeam.uppercased() || t == game.homeTeam.uppercased()
-            }
-            .map { $0.playerID }
-        await dataService.prefetchMissingLogs(playerIDs: gamePlayerIDs)
-
-        projections = PredictionEngine.shared.projectGame(
+        let details = dataService.gameDetails[game.gameID ?? game.id]
+        let result = PredictionEngine.shared.projectGame(
             game: game,
             players: allPlayers,
-            isPlayoffs: isPlayoffForced || game.isPlayoffGame,
-            isFirstRound: isPlayoffForced || game.isFirstRound
+            isPlayoffs: isPlayoffForced || (details?.isPlayoff ?? game.isPlayoffGame),
+            isFirstRound: isPlayoffForced || (details?.isFirstRound ?? game.isFirstRound)
         )
+        projections = result
+        GameProjectionStore.shared.store(result, forKey: cacheKey)
+    }
+
+    private func projectionCacheKey() -> String {
+        let gameKey = game.gameID ?? game.id
+        return "\(gameKey)|snap:\(dataService.snapshotID)|logs:\(dataService.logsRevision)|st:\(standingsSignature())|gt:\(dataService.gameDetails[gameKey]?.gameType ?? "")"
+    }
+
+    private func standingsSignature() -> String {
+        let entries = dataService.standingsMap.values
+            .map { "\($0.abbr):\($0.wins)-\($0.losses):\(Int(($0.netRating * 10).rounded()))" }
+            .sorted()
+        return entries.joined(separator: ",")
     }
 
     private var isPlayoffForced: Bool {
@@ -218,6 +273,10 @@ struct GamePicksView: View {
                 .padding(.top, 40)
             } else {
                 LazyVStack(spacing: 10) {
+                    // ── Game analytics card ──────────────────────────────────
+                    GameAnalyticsView(game: game, projections: projections)
+                        .padding(.top, 4)
+
                     if teamFilter != game.homeTeam {
                         teamSection(game.awayTeam, players: awayPlayers, label: "Away")
                     }
@@ -234,12 +293,22 @@ struct GamePicksView: View {
 
     @ViewBuilder
     private func teamSection(_ team: String, players: [Player], label: String) -> some View {
-        let starterSet = starters(for: team)
+        let officialStarterSet = starters(for: team)
+        let useProjected = officialStarterSet.isEmpty
+        let starterSet = useProjected ? projectedStarters(for: team, roster: players) : officialStarterSet
         let orphans    = orphanedMissing(for: team, roster: players)
 
         HStack {
             Text(team).font(.caption.bold()).foregroundColor(.skyBright)
             Text("· \(label)").font(.caption).foregroundColor(.white.opacity(0.35))
+            if useProjected {
+                Text("PROJECTED")
+                    .font(.system(size: 9, weight: .bold))
+                    .foregroundColor(.black.opacity(0.85))
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 3)
+                    .background(Color.yellow, in: Capsule())
+            }
             Spacer()
             Text("\(players.count + orphans.count) players")
                 .font(.caption2).foregroundColor(.white.opacity(0.25))
@@ -254,6 +323,7 @@ struct GamePicksView: View {
                 projection: projections[player.playerID],
                 displayStats: displayStats,
                 isStarter: starterSet.contains(player.name.lowercased()),
+                isProjectedStarter: useProjected,
                 injuryStatus: injuryInfo(for: player, in: team)
             )
         }
@@ -272,6 +342,7 @@ struct PlayerPickCard: View {
     let projection: PlayerProjection?
     let displayStats: [String]
     let isStarter: Bool
+    let isProjectedStarter: Bool
     let injuryStatus: MissingPlayer?
 
     private func injuryColor(_ status: String?) -> Color {
@@ -301,12 +372,12 @@ struct PlayerPickCard: View {
                         .background(Color.white.opacity(0.08), in: Capsule())
                 }
                 if isStarter {
-                    Label("STARTING", systemImage: "star.fill")
+                    Label(isProjectedStarter ? "PROJECTED" : "STARTING", systemImage: "star.fill")
                         .font(.system(size: 9, weight: .bold))
                         .foregroundColor(.black.opacity(0.85))
-                        .padding(.horizontal, 6)
+                        .padding(.horizontal, 7)
                         .padding(.vertical, 3)
-                        .background(Color.green, in: Capsule())
+                        .background(isProjectedStarter ? Color.yellow : Color.green, in: Capsule())
                 }
                 Spacer()
                 if let inj = injuryStatus {
@@ -415,6 +486,7 @@ struct PickStatRow: View {
 
     @ObservedObject private var router = AppRouter.shared
     @State private var showBlocked = false
+    @State private var direction: PropDirection = .over
 
     private var engineLine: Double { projection?.line(for: stat)  ?? 0 }
     private var engineProj: Double { projection?.value(for: stat) ?? 0 }
@@ -423,15 +495,21 @@ struct PickStatRow: View {
 
     private var engineProp: PlayerProp {
         PlayerProp(
-            id: "\(gameID ?? "")_\(player.name)_\(stat)",
+            id: "\(gameID ?? "")_\(player.name)_\(stat)_\(direction.rawValue)",
             gameID: gameID,
             playerName: player.name,
             team: player.team,
             statLabel: stat,
             line: max(0.5, engineLine),
+            direction: direction,
             overPct: hasData ? engineConf : nil,
             projectedValue: engineProj > 0 ? engineProj : nil
         )
+    }
+
+    private var selectedConfidence: Double {
+        let over = min(1.0, max(0.0, engineConf))
+        return direction == .over ? over : (1.0 - over)
     }
 
     private var inParlay: Bool { router.isInParlay(engineProp) }
@@ -451,7 +529,7 @@ struct PickStatRow: View {
             // Line + projection
             VStack(alignment: .leading, spacing: 1) {
                 if hasData && engineLine > 0 {
-                    Text("OVER \(engineLine.cleanLine)")
+                    Text("\(direction.rawValue) \(engineLine.cleanLine)")
                         .font(.caption.bold())
                         .foregroundColor(.white.opacity(0.85))
                     Text("proj \(engineProj.cleanLine)")
@@ -468,12 +546,25 @@ struct PickStatRow: View {
 
             // Confidence
             if hasData {
-                let color: Color = engineConf >= 0.80 ? .green : engineConf >= 0.65 ? .skyBright : .orange
-                Text("\(Int(round(engineConf * 100)))%")
+                let color: Color = selectedConfidence >= 0.80 ? .green : selectedConfidence >= 0.65 ? .skyBright : .orange
+                Text("\(Int(round(selectedConfidence * 100)))%")
                     .font(.caption.bold())
                     .foregroundColor(color)
                     .frame(width: 38, alignment: .trailing)
             }
+
+            Button {
+                haptic(.light)
+                direction = direction == .over ? .under : .over
+            } label: {
+                Text(direction == .over ? "O" : "U")
+                    .font(.system(size: 10, weight: .bold))
+                    .foregroundColor(.skyDeep)
+                    .padding(.horizontal, 7)
+                    .padding(.vertical, 4)
+                    .background(Color.skyBright.opacity(0.9), in: Capsule())
+            }
+            .buttonStyle(.plain)
 
             // Add / remove button
             if inParlay {

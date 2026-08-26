@@ -2,9 +2,11 @@
 //  ContentView.swift — Root tab container.
 //
 //  Tabs:
-//    0  Schedule  — today's NBA games; tap a game → Game Picks
-//    1  Picks     — personal parlay builder
-//    2  Settings  — app settings
+//    0  Schedule   — today's NBA games; tap a game → Game Picks
+//    1  Picks      — personal parlay builder
+//    2  Search     — global player search
+//    3  Plays      — best picks of the day
+//    4  Parlay     — similar-stat parlay builder
 //
 
 import SwiftUI
@@ -54,38 +56,33 @@ struct ContentView: View {
                 .tag(1)
 
             PlayerSearchView()
-                .tabItem { Label("Players", systemImage: "magnifyingglass") }
+                .tabItem { Label("Search", systemImage: "magnifyingglass") }
                 .tag(2)
 
-            SettingsView()
-                .tabItem { Label("Settings", systemImage: "gearshape.fill") }
+            TopPicksView()
+                .tabItem { Label("Plays", systemImage: "trophy.fill") }
                 .tag(3)
+
+            SimilarParlayView()
+                .tabItem { Label("Parlay", systemImage: "person.2.wave.2.fill") }
+                .tag(4)
         }
         .tint(.skyBright)
         // Retry schedule fetch whenever the app returns to the foreground
         // and no games are loaded (e.g. after granting local network permission).
         .onChange(of: scenePhase) { _, phase in
             guard phase == .active else { return }
-            let hasGames = !(LocalDataService.shared.snapshot?.games.isEmpty ?? true)
-            guard !hasGames, !LocalDataService.shared.isFetching else { return }
-            Task { _ = try? await LocalDataService.shared.fetchAll() }
+            guard !LocalDataService.shared.isFetching else { return }
+            Task {
+                _ = try? await LocalDataService.shared.fetchAll(fetchLogs: true)
+                AppRouter.shared.pruneCompletedPicks()
+            }
         }
         .task {
-            // One-time schema migration: wipe all local data to pick up
-            // the new playoff roster.  Remove this block after 2026-05-01.
-            let migrationKey = "schemaReset_2026_playoffs_v1"
-            if !UserDefaults.standard.bool(forKey: migrationKey) {
-                UserDefaults.standard.set(true, forKey: migrationKey)
-                await LocalDataService.shared.nuclearReset()
-                return
-            }
-
-            // Always attempt a fresh sync on launch.
-            // • If online: persistToDatabase() atomically replaces today's data.
-            // • If offline: fetchAll() throws but the snapshot loaded by
-            //   loadFromDatabase() (which now falls back to the most recent cached
-            //   date) remains visible, so the app works without a connection.
-            _ = try? await LocalDataService.shared.fetchAll()
+            // On launch: sync the schedule and fetch logs for today's players only.
+            // Full historical backfill is available manually in Settings.
+            _ = try? await LocalDataService.shared.fetchAll(fetchLogs: true)
+            AppRouter.shared.pruneCompletedPicks()
         }
     }
 }

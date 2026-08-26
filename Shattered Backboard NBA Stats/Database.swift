@@ -201,6 +201,97 @@ final class StoredLineupPlayer {
     }
 }
 
+// MARK: - StoredGameDetails
+
+/// Live per-game metadata (scores, period, status, playoff series).
+/// Persisted on every sync so it survives app kills and background suspension.
+@Model
+final class StoredGameDetails {
+    @Attribute(.unique) var gameID: String
+    var gameType: String          // "playoff" | "regular"
+    var seriesGameNumber: String  // "Game 2"
+    var gameLabel: String         // "East First Round"
+    var homeScore: Int
+    var awayScore: Int
+    var period: Int
+    var statusCode: Int           // 1=upcoming 2=live 3=final
+    var homeWins: Int
+    var awayWins: Int
+    var syncedAt: Date
+
+    init(gameID: String, gameType: String, seriesGameNumber: String,
+         gameLabel: String, homeScore: Int, awayScore: Int,
+         period: Int, statusCode: Int, homeWins: Int, awayWins: Int,
+         syncedAt: Date = .now) {
+        self.gameID            = gameID
+        self.gameType          = gameType
+        self.seriesGameNumber  = seriesGameNumber
+        self.gameLabel         = gameLabel
+        self.homeScore         = homeScore
+        self.awayScore         = awayScore
+        self.period            = period
+        self.statusCode        = statusCode
+        self.homeWins          = homeWins
+        self.awayWins          = awayWins
+        self.syncedAt          = syncedAt
+    }
+
+    func toGameDetails() -> GameDetails {
+        GameDetails(
+            gameType: gameType, seriesGameNumber: seriesGameNumber,
+            gameLabel: gameLabel, homeScore: homeScore, awayScore: awayScore,
+            period: period, statusCode: statusCode,
+            homeWins: homeWins, awayWins: awayWins
+        )
+    }
+}
+
+// MARK: - StoredStandings
+
+/// One team's season standing.  Replaced wholesale on every standings sync.
+@Model
+final class StoredStandings {
+    @Attribute(.unique) var abbr: String
+    var conference: String
+    var wins: Int
+    var losses: Int
+    var pct: Double
+    var homeRecord: String
+    var roadRecord: String
+    var lastTen: String
+    var streak: String
+    var pointsPG: Double
+    var oppPointsPG: Double
+    var syncedAt: Date
+
+    init(abbr: String, conference: String, wins: Int, losses: Int, pct: Double,
+         homeRecord: String, roadRecord: String, lastTen: String, streak: String,
+         pointsPG: Double, oppPointsPG: Double, syncedAt: Date = .now) {
+        self.abbr         = abbr
+        self.conference   = conference
+        self.wins         = wins
+        self.losses       = losses
+        self.pct          = pct
+        self.homeRecord   = homeRecord
+        self.roadRecord   = roadRecord
+        self.lastTen      = lastTen
+        self.streak       = streak
+        self.pointsPG     = pointsPG
+        self.oppPointsPG  = oppPointsPG
+        self.syncedAt     = syncedAt
+    }
+
+    func toStandingsEntry() -> StandingsEntry {
+        StandingsEntry(
+            abbr: abbr, conference: conference,
+            wins: wins, losses: losses, pct: pct,
+            homeRecord: homeRecord, roadRecord: roadRecord,
+            lastTen: lastTen, streak: streak,
+            pointsPG: pointsPG, oppPointsPG: oppPointsPG
+        )
+    }
+}
+
 // MARK: - AppDatabase
 
 /// Shared SwiftData container.  Initialised once at app launch.
@@ -222,6 +313,8 @@ final class AppDatabase {
             StoredPlayer.self,
             StoredGameLog.self,
             StoredLineupPlayer.self,
+            StoredGameDetails.self,
+            StoredStandings.self,
         ])
 
         // Build an explicit store URL so we can guarantee the parent

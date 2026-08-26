@@ -122,11 +122,15 @@ private struct PlayerSearchRow: View {
                     .font(.system(size: 12, weight: .bold))
                     .foregroundColor(.skyBright)
             }
+            .frame(width: 36, height: 36)
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(player.name)
-                    .font(.subheadline.bold())
+                    .font(.system(size: 15, weight: .semibold))
                     .foregroundColor(.white)
+                    .lineLimit(1)
+                    .truncationMode(.tail)
+                    .minimumScaleFactor(0.85)
                 HStack(spacing: 6) {
                     if let team = player.team {
                         Text(team)
@@ -141,7 +145,9 @@ private struct PlayerSearchRow: View {
                             .foregroundColor(.white.opacity(0.45))
                     }
                 }
+                .lineLimit(1)
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
 
             Spacer()
 

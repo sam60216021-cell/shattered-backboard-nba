@@ -134,8 +134,12 @@ func nbaStatColor(_ stat: String) -> Color {
     case "PTS": return .orange
     case "REB": return .green
     case "AST": return Color(red: 0.3, green: 0.6, blue: 1.0)
+    case "PR":  return Color(red: 1.0, green: 0.55, blue: 0.2)
+    case "PA":  return Color(red: 0.95, green: 0.75, blue: 0.2)
+    case "RA":  return Color(red: 0.45, green: 0.85, blue: 0.55)
     case "3PM": return .purple
     case "PRA": return .yellow
+    case "FPTS": return Color(red: 0.98, green: 0.45, blue: 0.20)
     case "FTM": return Color(red: 0.2, green: 0.8, blue: 0.6)
     case "STL": return Color(red: 1.0, green: 0.6, blue: 0.2)
     case "BLK": return Color(red: 0.6, green: 0.4, blue: 1.0)

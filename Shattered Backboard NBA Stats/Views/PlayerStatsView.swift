@@ -13,20 +13,22 @@ struct PlayerStatsView: View {
     let player: Player
     let game: ScheduleGame?
 
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @ObservedObject private var dataService = LocalDataService.shared
     @ObservedObject private var router      = AppRouter.shared
 
     /// Log data owned by this view — never shares state with other player navigations.
     @State private var logs: [GameLog] = []
-    @State private var isLoading = false
     @State private var projection: PlayerProjection?
+    @State private var simResults: [String: SimulationResult] = [:]
     @State private var activeSheet: PickSheet? = nil
     @State private var chartStat: String = "PTS"
     @State private var avgWindow: Int = 0  // 0 = season; N = last N games
     @State private var customLines: [String: Double] = [:]  // per-stat user-adjusted line
+    @State private var matchup: DefenderMatchup? = nil
 
-    private let allStats    = ["PTS", "REB", "AST", "PRA", "3PM", "FTM", "STL", "BLK", "DD", "TD"]
-    private let chartStats  = ["PTS", "REB", "AST", "3PM", "PRA", "STL", "BLK", "DD", "TD"]
+    private let allStats    = ["PTS", "REB", "AST", "PR", "PA", "RA", "PRA", "FPTS", "3PM", "FTM", "STL", "BLK", "DD", "TD"]
+    private let chartStats  = ["PTS", "REB", "AST", "PR", "PA", "RA", "PRA", "FPTS", "3PM", "STL", "BLK", "DD", "TD"]
     private let chartGameOptions  = [10, 15, 20, 30]
     private let avgWindowOptions: [(label: String, window: Int)] = [
         ("L10", 10), ("L15", 15), ("L20", 20), ("Season", 0)
@@ -98,6 +100,12 @@ struct PlayerStatsView: View {
                     if !logs.isEmpty {
                         statBarCard
                     }
+                    if let proj = projection {
+                        defenderMatchupChip
+                        bestBetInsightCard(proj: proj)
+                        projectionRangeCard(proj: proj)
+                        trendContextCard(proj: proj)
+                    }
                     addPicksSection
                     gameLogSection
                 }
@@ -121,40 +129,108 @@ struct PlayerStatsView: View {
 
     // MARK: - Data loading
 
-    private func loadLogs() async {
-        isLoading = true
-        await dataService.fetchPlayerLogs(playerID: player.playerID)
-        logs = dataService.playerLogs
-        // Compute on-device projection with full game context when available
-        let ctx: ProjectionContext
+    private func buildProjectionContext() -> ProjectionContext {
+        let cachedLogs = dataService.localLogs(playerID: player.playerID)
+        let minutesRisk: Double = {
+            let mins3 = Array(cachedLogs.prefix(3)).map(\.min)
+            let mins10 = Array(cachedLogs.prefix(10)).map(\.min)
+            guard mins3.count >= 2, mins10.count >= 5 else { return 0.0 }
+            let m3 = mins3.reduce(0, +) / Double(mins3.count)
+            let m10 = mins10.reduce(0, +) / Double(mins10.count)
+            guard m10 > 0 else { return 0.0 }
+            if m3 < 16 { return 0.55 }
+            if m3 < 22 { return 0.30 }
+            if m3 < m10 * 0.85 { return 0.20 }
+            return 0.0
+        }()
+
+        let statusRisk: Double = {
+            guard let g = game else { return 0.0 }
+            let pool = (g.missingAwayPlayers + g.missingHomePlayers)
+            guard let miss = pool.first(where: { ($0.name ?? "").caseInsensitiveCompare(player.name) == .orderedSame }) else {
+                return 0.0
+            }
+            switch (miss.status ?? "").uppercased() {
+            case "OUT":          return 1.0
+            case "DOUBTFUL":     return 0.75
+            case "QUESTIONABLE": return 0.45
+            default:              return 0.0
+            }
+        }()
+
+        let availabilityRisk = min(1.0, max(statusRisk, minutesRisk))
+
         if let g = game {
             let isHome   = (player.team ?? "").uppercased() == g.homeTeam.uppercased()
             let opponent = isHome ? g.awayTeam : g.homeTeam
-            let forced   = { () -> Bool in
+            let forced: Bool = {
                 #if DEBUG
                 return forcePlayoffMode
                 #else
                 return false
                 #endif
             }()
-            ctx = ProjectionContext(opponent: opponent, isHome: isHome,
-                                    isPlayoffs: forced || g.isPlayoffGame,
-                                    isFirstRound: forced || g.isFirstRound,
-                                    gameDate: g.date)
+            let details = dataService.gameDetails[g.gameID ?? g.id]
+            return ProjectionContext(opponent: opponent, isHome: isHome,
+                                    isPlayoffs: forced || (details?.isPlayoff ?? g.isPlayoffGame),
+                                    isFirstRound: forced || (details?.isFirstRound ?? g.isFirstRound),
+                                    gameDate: g.date,
+                                    availabilityRisk: availabilityRisk,
+                                    playerPosition: player.position,
+                                    defenderMatchup: matchup)
         } else {
-            let forced = { () -> Bool in
+            let forced: Bool = {
                 #if DEBUG
                 return forcePlayoffMode
                 #else
                 return false
                 #endif
             }()
-            ctx = ProjectionContext(opponent: nil, isHome: nil,
+            return ProjectionContext(opponent: nil, isHome: nil,
                                     isPlayoffs: forced, isFirstRound: forced,
-                                    gameDate: isoToday())
+                                    gameDate: isoToday(),
+                                    availabilityRisk: availabilityRisk)
         }
+    }
+
+    private func loadLogs() async {
+        // Individual-defender matchup (opposing same-position starter), if scheduled.
+        if let g = game {
+            matchup = MatchupDefenseEvaluator.cached(player: player, game: g, dataService: dataService)
+        } else {
+            matchup = nil
+        }
+        let ctx = buildProjectionContext()
+        let cached = dataService.localLogs(playerID: player.playerID)
+        guard !cached.isEmpty else {
+            // No local data yet — the daily background sync (fetchAll) will populate it.
+            return
+        }
+        logs = cached
         projection = PredictionEngine.shared.project(player: player, logs: logs, context: ctx)
-        isLoading = false
+
+        // Determine opponent for defensive volatility adjustment
+        let opponent: String? = game.map { g in
+            (player.team ?? "").uppercased() == g.awayTeam.uppercased() ? g.homeTeam : g.awayTeam
+        }
+
+        // Run Monte Carlo simulations for all major stats (synchronous — completes in microseconds).
+        if let proj = projection {
+            var results: [String: SimulationResult] = [:]
+            for stat in ["PTS", "REB", "AST", "PRA", "FPTS", "3PM", "STL", "BLK"] {
+                let mean = proj.value(for: stat)
+                guard mean > 0 else { continue }
+                results[stat] = SimulationEngine.shared.simulatePlayerStat(
+                    playerID: player.playerID,
+                    stat: stat,
+                    logs: logs,
+                    projectedMean: mean,
+                    opponent: opponent,
+                    defenderMatchup: matchup
+                )
+            }
+            simResults = results
+        }
     }
 
     private func isoToday() -> String {
@@ -167,15 +243,21 @@ struct PlayerStatsView: View {
     // MARK: - Player header
 
     private var playerHeader: some View {
-        HStack(spacing: 14) {
+        HStack(alignment: .top, spacing: 14) {
             ZStack {
                 Circle().fill(Color.skyMid).frame(width: 52, height: 52)
                 Text(initials)
                     .font(.headline.bold())
                     .foregroundColor(.skyBright)
             }
-            VStack(alignment: .leading, spacing: 4) {
-                Text(player.name).font(.title3.bold()).foregroundColor(.white)
+            VStack(alignment: .leading, spacing: 6) {
+                Text(player.name)
+                    .font(playerNameFont)
+                    .foregroundColor(.white)
+                    .lineLimit(2)
+                    .minimumScaleFactor(0.88)
+                    .multilineTextAlignment(.leading)
+                    .fixedSize(horizontal: false, vertical: true)
                 HStack(spacing: 6) {
                     if let team = player.team {
                         Text(team).font(.caption.bold()).foregroundColor(.skyBright)
@@ -185,18 +267,39 @@ struct PlayerStatsView: View {
                         Text(pos).font(.caption).foregroundColor(.white.opacity(0.5))
                     }
                 }
+                if let label = projection?.streakLabel {
+                    Text(label)
+                        .font(.system(size: 10, weight: .semibold))
+                        .padding(.horizontal, 7)
+                        .padding(.vertical, 2)
+                        .background(Color.white.opacity(0.12), in: Capsule())
+                }
             }
-            Spacer()
-            // Averages pill
-            if !logs.isEmpty {
-                VStack(alignment: .trailing, spacing: 3) {
-                    let avgPts = avg(logs.compactMap(\.pts))
-                    let avgReb = avg(logs.compactMap(\.reb))
-                    let avgAst = avg(logs.compactMap(\.ast))
-                    statBubble(avgPts, label: "PPG")
-                    HStack(spacing: 6) {
-                        statBubble(avgReb, label: "RPG")
-                        statBubble(avgAst, label: "APG")
+            .frame(maxWidth: .infinity, alignment: .leading)
+
+            VStack(alignment: .trailing, spacing: 8) {
+                Button {
+                    router.toggleWatch(playerID: player.playerID)
+                } label: {
+                    Image(systemName: router.isWatched(playerID: player.playerID) ? "bell.fill" : "bell")
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundColor(router.isWatched(playerID: player.playerID) ? .green : .white.opacity(0.5))
+                        .padding(8)
+                        .background(Color.white.opacity(0.08), in: Circle())
+                }
+                .buttonStyle(.plain)
+
+                // Averages pill
+                if !logs.isEmpty {
+                    VStack(alignment: .trailing, spacing: 3) {
+                        let avgPts = avg(logs.compactMap(\.pts))
+                        let avgReb = avg(logs.compactMap(\.reb))
+                        let avgAst = avg(logs.compactMap(\.ast))
+                        statBubble(avgPts, label: "PPG")
+                        HStack(spacing: 6) {
+                            statBubble(avgReb, label: "RPG")
+                            statBubble(avgAst, label: "APG")
+                        }
                     }
                 }
             }
@@ -204,6 +307,13 @@ struct PlayerStatsView: View {
         .padding(14)
         .background(Color.skyCard, in: RoundedRectangle(cornerRadius: 14))
         .overlay(RoundedRectangle(cornerRadius: 14).stroke(Color.skyBorder, lineWidth: 1))
+    }
+
+    private var playerNameFont: Font {
+        if horizontalSizeClass == .compact {
+            return .system(size: 20, weight: .bold, design: .rounded)
+        }
+        return .system(size: 22, weight: .bold, design: .rounded)
     }
 
     private func statBubble(_ value: Double, label: String) -> some View {
@@ -236,7 +346,11 @@ struct PlayerStatsView: View {
             case "REB":  val = log.reb     ?? 0
             case "AST":  val = log.ast     ?? 0
             case "3PM":  val = log.threepm ?? 0
+            case "PR":   val = (log.pts ?? 0) + (log.reb ?? 0)
+            case "PA":   val = (log.pts ?? 0) + (log.ast ?? 0)
+            case "RA":   val = (log.reb ?? 0) + (log.ast ?? 0)
             case "PRA":  val = (log.pts ?? 0) + (log.reb ?? 0) + (log.ast ?? 0)
+            case "FPTS": val = log.fantasyScore
             case "STL":  val = log.stl ?? 0
             case "BLK":  val = log.blk ?? 0
             case "DD":
@@ -420,9 +534,9 @@ struct PlayerStatsView: View {
 
             // Bar chart with date labels and dynamic y scale
             Chart {
-                ForEach(Array(entries.enumerated()), id: \.offset) { idx, entry in
+                ForEach(Array(entries.enumerated()), id: \.offset) { _, entry in
                     BarMark(
-                        x: .value("Game", idx),
+                        x: .value("Date", entry.date),
                         y: .value(chartStat, entry.value)
                     )
                     .foregroundStyle(barColor.opacity(0.85))
@@ -437,7 +551,20 @@ struct PlayerStatsView: View {
                             .foregroundColor(.skyBright.opacity(0.7))
                     }
             }
-            .chartXAxis(.hidden)
+            // Date labels drawn by Charts itself — one per bar, centered under it
+            .chartXAxis {
+                AxisMarks { value in
+                    AxisValueLabel {
+                        if let d = value.as(String.self) {
+                            Text(d)
+                                .font(.system(size: 8, weight: .medium))
+                                .foregroundStyle(Color.white.opacity(0.5))
+                                .rotationEffect(.degrees(-90))
+                                .offset(x: 2)
+                        }
+                    }
+                }
+            }
             .chartYScale(domain: 0...yMax)
             .chartYAxis {
                 AxisMarks(position: .leading, values: .automatic(desiredCount: 4)) {
@@ -448,21 +575,8 @@ struct PlayerStatsView: View {
                 }
             }
             .chartPlotStyle { $0.background(Color.clear) }
-            .frame(height: 180)
+            .frame(height: 210)
             .id("\(chartStat)_\(chartGameCount)_\(avgWindow)")
-
-            // Rotated date labels — one per bar, centered under each column
-            HStack(spacing: 0) {
-                ForEach(Array(entries.enumerated()), id: \.offset) { _, entry in
-                    Text(entry.date)
-                        .font(.system(size: 8, weight: .medium))
-                        .foregroundStyle(Color.white.opacity(0.5))
-                        .fixedSize()
-                        .rotationEffect(.degrees(-90))
-                        .frame(maxWidth: .infinity)
-                }
-            }
-            .frame(height: 40)
         }
         .padding(14)
         .background(Color.skyCard, in: RoundedRectangle(cornerRadius: 14))
@@ -518,6 +632,7 @@ struct PlayerStatsView: View {
             team: player.team,
             statLabel: stat,
             line: max(0.5, engineLine),
+            direction: .over,
             overPct: engineConf,
             projectedValue: engineProj > 0 ? engineProj : nil
         ) : nil
@@ -531,9 +646,13 @@ struct PlayerStatsView: View {
             case "PTS":  values = logs.prefix(10).compactMap(\.pts)
             case "REB":  values = logs.prefix(10).compactMap(\.reb)
             case "AST":  values = logs.prefix(10).compactMap(\.ast)
+            case "PR":   values = logs.prefix(10).map { ($0.pts ?? 0) + ($0.reb ?? 0) }
+            case "PA":   values = logs.prefix(10).map { ($0.pts ?? 0) + ($0.ast ?? 0) }
+            case "RA":   values = logs.prefix(10).map { ($0.reb ?? 0) + ($0.ast ?? 0) }
             case "3PM":  values = logs.prefix(10).compactMap(\.threepm)
             case "FTM":  values = logs.prefix(10).compactMap(\.ftm)
             case "PRA":  values = logs.prefix(10).map { ($0.pts ?? 0) + ($0.reb ?? 0) + ($0.ast ?? 0) }
+            case "FPTS": values = logs.prefix(10).map(\.fantasyScore)
             case "STL":  values = logs.prefix(10).compactMap(\.stl)
             case "BLK":  values = logs.prefix(10).compactMap(\.blk)
             default:     values = []
@@ -601,6 +720,7 @@ struct PlayerStatsView: View {
                         stat: stat,
                         serverProp: engineProp,
                         defaultLine: defLine,
+                        defaultDirection: .over,
                         gameID: game?.gameID
                     )
                 } label: {
@@ -614,20 +734,160 @@ struct PlayerStatsView: View {
         .background(inParlay ? Color.skyBright.opacity(0.08) : Color.clear)
     }
 
+    // MARK: - Best Bet insight
+
+    /// Scores core single stats by hit-rate confidence PLUS matchup edge
+    /// (projection vs season average), penalized where the opposing defender
+    /// suppresses that stat. Returns the winner + reason.
+    private func bestBet(for proj: PlayerProjection) -> (stat: String, reason: String)? {
+        guard logs.count >= 3 else { return nil }
+
+        let statKeyPaths: [(String, KeyPath<GameLog, Double?>)] = [
+            ("PTS", \.pts), ("REB", \.reb), ("AST", \.ast),
+            ("3PM", \.threepm), ("STL", \.stl), ("BLK", \.blk)
+        ]
+
+        var scored: [(stat: String, projected: Double, score: Double, edge: Double)] = []
+        for (stat, kp) in statKeyPaths {
+            let value = proj.value(for: stat)
+            guard value > 0.5 else { continue }
+            // Season average for this stat (all logs, not just the recent window).
+            let vals = logs.compactMap { $0[keyPath: kp] }
+            let avg = vals.isEmpty ? 0 : vals.reduce(0, +) / Double(vals.count)
+            // Matchup edge: how far tonight's projection sits above/below the
+            // season average (the engine already baked opponent & defender in).
+            let edge = avg > 0 ? max(-0.10, min(0.10, ((value / avg) - 1.0) * 0.30)) : 0
+            var score = proj.confidence(for: stat) + edge
+            // Defender suppression mirrors the engine's projection cut.
+            if let m = matchup {
+                score *= max(0.6, m.multiplier(for: stat))
+            }
+            scored.append((stat, value, score, edge))
+        }
+        guard let best = scored.max(by: {
+                    $0.score != $1.score ? $0.score < $1.score : $0.edge < $1.edge
+                }),
+              let worst = scored.min(by: { $0.score < $1.score }),
+              best.stat != worst.stat,
+              best.score >= 0.45 else { return nil }
+
+        // Build the reason sentence from real signals.
+        var parts: [String] = []
+        let pct = Int(round(best.score * 100))
+
+        if let m = matchup, m.isSignificant {
+            let suppressed = ["PTS", "REB", "AST", "3PM", "STL", "BLK"]
+                .filter { ($0 == "REB" || $0 == "PTS" || $0 == "FPTS")
+                          && m.multiplier(for: $0) < 1.0 }
+            if let hitStat = suppressed.first(where: { $0 == worst.stat }) ?? suppressed.first {
+                parts.append("the opposing \(matchupPositionLabel) (\(m.defenderName)) caps \(hitStat)")
+            }
+        }
+        if best.edge > 0.02 {
+            let pctAbove = Int(round((best.projected / max(0.1, seasonAvg(best.stat)) - 1.0) * 100))
+            parts.append("tonight projects \(pctAbove)% above the season average")
+        } else if worst.score < best.score - 0.12 {
+            parts.append("\(worst.stat) rates weakest tonight")
+        }
+
+        switch proj.streakFactor {
+        case 0.3...:  parts.append("trending up (hot L3 vs L10)")
+        case ..<(-0.3): parts.append("recent form is cold — floor matters more than ceiling")
+        default: break
+        }
+        if proj.volatility < 0.25 && parts.isEmpty {
+            parts.append(String(format: "most consistent stat (%.0f%% recent rate)", best.score * 100))
+        }
+        if parts.isEmpty {
+            parts.append(String(format: "%d%% recent hit rate vs the line", pct))
+        }
+
+        let reason = parts.prefix(2).joined(separator: ", ")
+        return (best.stat, "Take \(best.stat) — \(reason). Projected \(String(format: "%.1f", best.projected)).")
+    }
+
+    private var matchupPositionLabel: String {
+        guard let pos = matchup?.defenderPosition?.uppercased() else { return "defender" }
+        return pos.hasPrefix("C") ? "center" : pos.hasPrefix("G") ? "guard" : "forward"
+    }
+
+    /// Full-log season average for a core stat label.
+    private func seasonAvg(_ stat: String) -> Double {
+        let kp: KeyPath<GameLog, Double?>? = {
+            switch stat {
+            case "PTS": return \.pts
+            case "REB": return \.reb
+            case "AST": return \.ast
+            case "3PM": return \.threepm
+            case "STL": return \.stl
+            case "BLK": return \.blk
+            default:    return nil
+            }
+        }()
+        guard let kp else { return 0 }
+        let vals = logs.compactMap { $0[keyPath: kp] }
+        guard !vals.isEmpty else { return 0 }
+        return vals.reduce(0, +) / Double(vals.count)
+    }
+
+    /// Short plain-English card explaining which stat is the strongest play and why.
+    @ViewBuilder
+    private func bestBetInsightCard(proj: PlayerProjection) -> some View {
+        if let bet = bestBet(for: proj) {
+            VStack(alignment: .leading, spacing: 6) {
+                HStack(spacing: 6) {
+                    Image(systemName: "lightbulb.fill")
+                        .font(.caption.bold())
+                        .foregroundColor(.skyBright)
+                    Text("BEST BET — \(bet.stat)")
+                        .font(.caption.bold())
+                        .foregroundColor(.skyBright)
+                    Spacer()
+                    Text("\(Int(round(proj.confidence(for: bet.stat) * 100)))%")
+                        .font(.caption2.bold())
+                        .foregroundColor(.green)
+                }
+                Text(bet.reason)
+                    .font(.caption)
+                    .foregroundColor(.white.opacity(0.65))
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            .padding(12)
+            .background(Color.skyBright.opacity(0.06), in: RoundedRectangle(cornerRadius: 12))
+            .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color.skyBright.opacity(0.25), lineWidth: 1))
+        }
+    }
+
+    // MARK: - Defender matchup chip
+
+    /// Warns when the opposing same-position starter is a strong interior defender.
+    @ViewBuilder
+    private var defenderMatchupChip: some View {
+        if let m = matchup, m.isSignificant {
+            HStack(spacing: 8) {
+                Image(systemName: "shield.lefthalf.filled")
+                    .font(.caption.bold())
+                    .foregroundColor(.orange)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Matchup risk — \(m.riskLabel)")
+                        .font(.caption.bold()).foregroundColor(.orange)
+                    Text("vs \(m.defenderName)\(m.defenderPosition.map { " (\($0))" } ?? "") — projections adjusted")
+                        .font(.caption2).foregroundColor(.white.opacity(0.5))
+                }
+                Spacer()
+            }
+            .padding(.horizontal, 12)
+            .padding(.vertical, 9)
+            .background(Color.orange.opacity(0.08), in: RoundedRectangle(cornerRadius: 12))
+            .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color.orange.opacity(0.35), lineWidth: 1))
+        }
+    }
+
     // MARK: - Game log section
 
     @ViewBuilder
     private var gameLogSection: some View {
-        if isLoading && logs.isEmpty {
-            HStack(spacing: 10) {
-                ProgressView().tint(.skyBright)
-                Text("Loading game log…")
-                    .font(.caption).foregroundColor(.white.opacity(0.4))
-            }
-            .frame(maxWidth: .infinity)
-            .padding(20)
-            .background(Color.skyCard, in: RoundedRectangle(cornerRadius: 14))
-        } else if logs.isEmpty {
+        if logs.isEmpty {
             HStack {
                 Image(systemName: "clock.badge.questionmark")
                     .foregroundColor(.white.opacity(0.25))
@@ -649,6 +909,21 @@ struct PlayerStatsView: View {
                 .padding(.horizontal, 14)
                 .padding(.top, 12)
                 .padding(.bottom, 6)
+
+                // Legend for matchup highlights
+                if let opp = upcomingOpponent {
+                    HStack(spacing: 5) {
+                        RoundedRectangle(cornerRadius: 2)
+                            .fill(Color.skyBright.opacity(0.22))
+                            .frame(width: 12, height: 12)
+                            .overlay(RoundedRectangle(cornerRadius: 2).stroke(Color.skyBright.opacity(0.6), lineWidth: 1))
+                        Text("vs \(opp) — next matchup")
+                            .font(.caption2).foregroundColor(.white.opacity(0.45))
+                        Spacer()
+                    }
+                    .padding(.horizontal, 14)
+                    .padding(.bottom, 4)
+                }
 
                 Divider().background(Color.skyBorder)
                 logHeaderRow
@@ -684,13 +959,39 @@ struct PlayerStatsView: View {
         .padding(.vertical, 5)
     }
 
+    /// Opponent in the player's upcoming game, if one is scheduled.
+    private var upcomingOpponent: String? {
+        guard let g = game else { return nil }
+        let team = (player.team ?? "").uppercased()
+        guard !team.isEmpty else { return nil }
+        return team == g.homeTeam.uppercased() ? g.awayTeam.uppercased() : g.homeTeam.uppercased()
+    }
+
+    /// True when this historical log row was played against the upcoming opponent.
+    private func isMatchupGame(_ log: GameLog) -> Bool {
+        guard let opp = upcomingOpponent,
+              let logOpp = log.opponent?.uppercased().trimmingCharacters(in: .whitespaces),
+              !logOpp.isEmpty else { return false }
+        return logOpp == opp || logOpp.hasPrefix(opp)
+    }
+
     private func logDataRow(_ log: GameLog) -> some View {
-        HStack(spacing: 0) {
+        let highlighted = isMatchupGame(log)
+        return HStack(spacing: 0) {
             Text(String(log.gameDate.dropFirst(5)))
                 .frame(width: 52, alignment: .leading)
-            Text(log.opponent ?? "—")
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .lineLimit(1)
+            HStack(spacing: 4) {
+                Text(log.opponent ?? "—")
+                if highlighted {
+                    Image(systemName: "scope")
+                        .font(.system(size: 8, weight: .bold))
+                        .foregroundColor(.skyBright)
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .lineLimit(1)
+            .foregroundColor(highlighted ? .skyBright : nil)
+            .fontWeight(highlighted ? .semibold : nil)
             statCell(log.pts,     width: 34)
             statCell(log.reb,     width: 34)
             statCell(log.ast,     width: 34)
@@ -702,6 +1003,11 @@ struct PlayerStatsView: View {
         .foregroundColor(.white.opacity(0.8))
         .padding(.horizontal, 14)
         .padding(.vertical, 8)
+        .background(
+            highlighted
+                ? Color.skyBright.opacity(0.10)
+                : Color.clear
+        )
     }
 
     private func statCell(_ v: Double?, width: CGFloat = 36) -> some View {
@@ -718,21 +1024,230 @@ struct PlayerStatsView: View {
         let isG = pos.hasPrefix("PG") || pos.hasPrefix("SG") || pos == "G"
         let isC = pos == "C" || pos == "FC" || pos == "C-F" || pos == "CF"
         switch stat {
-        case "PTS":  return isG ? 18.5 : isC ? 13.5 : 15.5
-        case "REB":  return isG ? 3.5  : isC ? 9.5  : 6.5
-        case "AST":  return isG ? 5.5  : isC ? 2.5  : 3.5
-        case "PRA":  return isG ? 25.5 : isC ? 24.5 : 24.5
-        case "3PM":  return isG ? 2.5  : isC ? 0.5  : 1.5
-        case "FTM":  return isG ? 3.5  : isC ? 4.5  : 3.5
+        case "PTS":  return isG ? 12.5 : isC ? 9.5  : 10.5
+        case "REB":  return isG ? 2.5  : isC ? 7.5  : 5.5
+        case "AST":  return isG ? 3.5  : isC ? 1.5  : 2.5
+        case "PR":   return isG ? 15.5 : isC ? 16.5 : 16.0
+        case "PA":   return isG ? 15.5 : isC ? 11.5 : 14.0
+        case "RA":   return isG ? 6.5  : isC ? 9.5  : 8.0
+        case "PRA":  return isG ? 17.5 : isC ? 17.5 : 17.5
+        case "FPTS": return isG ? 24.5 : isC ? 25.5 : 25.0
+        case "3PM":  return isG ? 1.5  : isC ? 0.5  : 1.5
+        case "FTM":  return isG ? 2.5  : isC ? 2.5  : 2.5
         case "STL":  return 0.5
-        case "BLK":  return isC ? 1.5  : isG ? 0.5  : 0.5
+        case "BLK":  return isC ? 1.5  : 0.5
         case "DD":   return 0.5
         case "TD":   return 0.5
-        default:     return 15.5
+        default:     return 10.5
         }
     }
 
     private func statColor(_ stat: String) -> Color { nbaStatColor(stat) }
+
+    // MARK: - Projection Range Card
+
+    /// Shows floor / projection / ceiling for the currently selected stat using
+    /// Monte Carlo simulation data. Hidden for binary props (DD, TD).
+    @ViewBuilder
+    private func projectionRangeCard(proj: PlayerProjection) -> some View {
+        let projValue  = proj.value(for: chartStat)
+        let simResult  = simResults[chartStat]
+        let floorVal   = simResult?.p25 ?? proj.floor(for: chartStat)
+        let ceilingVal = simResult?.p75 ?? proj.ceiling(for: chartStat)
+
+        if !["DD", "TD"].contains(chartStat),
+           proj.gameCount > 0,
+           projValue > 0,
+           ceilingVal > 0,
+           ceilingVal > floorVal {
+
+            VStack(alignment: .leading, spacing: 10) {
+
+                // Header
+                HStack {
+                    Label("\(chartStat) Simulation Range", systemImage: "waveform.path.ecg")
+                        .font(.caption.bold())
+                        .foregroundColor(.skyBright)
+                    Spacer()
+                    if let streak = proj.streakLabel {
+                        Text(streak)
+                            .font(.system(size: 10, weight: .semibold))
+                            .padding(.horizontal, 7)
+                            .padding(.vertical, 3)
+                            .background(Color.white.opacity(0.12), in: Capsule())
+                    }
+                }
+
+                // Three-column value row
+                HStack(alignment: .bottom) {
+                    VStack(spacing: 3) {
+                        Text("FLOOR")
+                            .font(.system(size: 8, weight: .semibold))
+                            .foregroundColor(.white.opacity(0.35))
+                            .tracking(0.5)
+                        Text(floorVal.cleanLine)
+                            .font(.system(size: 15, weight: .bold, design: .rounded))
+                            .foregroundColor(.orange.opacity(0.85))
+                        Text("P25")
+                            .font(.system(size: 8))
+                            .foregroundColor(.white.opacity(0.22))
+                    }
+                    Spacer()
+                    VStack(spacing: 3) {
+                        Text("PROJECTION")
+                            .font(.system(size: 8, weight: .semibold))
+                            .foregroundColor(.white.opacity(0.35))
+                            .tracking(0.5)
+                        Text(projValue.cleanLine)
+                            .font(.system(size: 24, weight: .black, design: .rounded))
+                            .foregroundColor(.skyBright)
+                        Text("ENGINE")
+                            .font(.system(size: 8, weight: .bold))
+                            .foregroundColor(.skyBright.opacity(0.5))
+                            .tracking(0.6)
+                    }
+                    Spacer()
+                    VStack(spacing: 3) {
+                        Text("CEILING")
+                            .font(.system(size: 8, weight: .semibold))
+                            .foregroundColor(.white.opacity(0.35))
+                            .tracking(0.5)
+                        Text(ceilingVal.cleanLine)
+                            .font(.system(size: 15, weight: .bold, design: .rounded))
+                            .foregroundColor(.green.opacity(0.85))
+                        Text("P75")
+                            .font(.system(size: 8))
+                            .foregroundColor(.white.opacity(0.22))
+                    }
+                }
+                .padding(.horizontal, 4)
+
+                // Gradient range bar with projection marker
+                rangeBar(floor: floorVal, projection: projValue, ceiling: ceilingVal)
+
+                // Footer: volatility + simulation count
+                HStack {
+                    Label("Vol: \(proj.volatilityLabel)", systemImage: "chart.xyaxis.line")
+                        .font(.system(size: 9))
+                        .foregroundColor(.white.opacity(0.35))
+                    Spacer()
+                    if let sim = simResult {
+                        Text("n=\(sim.simCount)  ·  P10: \(sim.p10.cleanLine)  P90: \(sim.p90.cleanLine)")
+                            .font(.system(size: 9))
+                            .foregroundColor(.white.opacity(0.25))
+                    }
+                }
+            }
+            .padding(14)
+            .background(Color.skyCard, in: RoundedRectangle(cornerRadius: 14))
+            .overlay(RoundedRectangle(cornerRadius: 14).stroke(Color.skyBorder, lineWidth: 1))
+        }
+    }
+
+    /// Horizontal gradient bar showing the simulation range with a dot at the projected value.
+    private func rangeBar(floor: Double, projection: Double, ceiling: Double) -> some View {
+        GeometryReader { geo in
+            let maxDisplay = ceiling * 1.25
+            let w          = geo.size.width
+            let fX  = CGFloat(floor      / maxDisplay) * w
+            let cX  = CGFloat(ceiling    / maxDisplay) * w
+            let pX  = CGFloat(projection / maxDisplay) * w
+
+            ZStack(alignment: .leading) {
+                // Background track
+                RoundedRectangle(cornerRadius: 3)
+                    .fill(Color.white.opacity(0.07))
+                    .frame(height: 6)
+
+                // Colored range: floor → ceiling
+                RoundedRectangle(cornerRadius: 3)
+                    .fill(LinearGradient(
+                        colors: [.orange.opacity(0.55), .skyBright.opacity(0.65), .green.opacity(0.55)],
+                        startPoint: .leading, endPoint: .trailing
+                    ))
+                    .frame(width: max(4, cX - fX), height: 6)
+                    .offset(x: fX)
+
+                // Projection marker dot
+                Circle()
+                    .fill(Color.skyBright)
+                    .frame(width: 13, height: 13)
+                    .overlay(Circle().stroke(Color.white.opacity(0.45), lineWidth: 1.5))
+                    .offset(x: pX - 6.5, y: -3.5)
+            }
+        }
+        .frame(height: 13)
+    }
+
+    // MARK: - Trend context card
+
+    private func trendContextCard(proj: PlayerProjection) -> some View {
+        Group {
+            if !logs.isEmpty {
+                let recent3 = Array(logs.prefix(3))
+                let recent10 = Array(logs.prefix(10))
+                let l3Pts = recent3.compactMap(\.pts)
+                let l10Pts = recent10.compactMap(\.pts)
+                let l3Min = recent3.map(\.min)
+                let l10Min = recent10.map(\.min)
+
+                let avg3Pts = l3Pts.isEmpty ? 0 : l3Pts.reduce(0, +) / Double(l3Pts.count)
+                let avg10Pts = l10Pts.isEmpty ? 0 : l10Pts.reduce(0, +) / Double(l10Pts.count)
+                let avg3Min = l3Min.isEmpty ? 0 : l3Min.reduce(0, +) / Double(l3Min.count)
+                let avg10Min = l10Min.isEmpty ? 0 : l10Min.reduce(0, +) / Double(l10Min.count)
+
+                let ptsDelta = avg3Pts - avg10Pts
+                let minDelta = avg3Min - avg10Min
+                let usage3 = avg3Min > 0 ? avg3Pts / avg3Min : 0
+                let usage10 = avg10Min > 0 ? avg10Pts / avg10Min : 0
+                let usageDelta = usage3 - usage10
+
+                VStack(alignment: .leading, spacing: 10) {
+                    HStack {
+                        Label("Trend Context", systemImage: "chart.line.uptrend.xyaxis")
+                            .font(.caption.bold())
+                            .foregroundColor(.skyBright)
+                        Spacer()
+                        Text(proj.streakLabel ?? "Neutral")
+                            .font(.caption2)
+                            .foregroundColor(.white.opacity(0.5))
+                    }
+
+                    HStack(spacing: 10) {
+                        trendPill(title: "Scoring", value: ptsDelta, unit: "pts")
+                        trendPill(title: "Minutes", value: minDelta, unit: "min")
+                        trendPill(title: "Efficiency", value: usageDelta, unit: "ppm")
+                    }
+
+                    Text("L3 vs L10 baseline helps separate momentum from noise.")
+                        .font(.caption2)
+                        .foregroundColor(.white.opacity(0.35))
+                }
+                .padding(14)
+                .background(Color.skyCard, in: RoundedRectangle(cornerRadius: 14))
+                .overlay(RoundedRectangle(cornerRadius: 14).stroke(Color.skyBorder, lineWidth: 1))
+            }
+        }
+    }
+
+    private func trendPill(title: String, value: Double, unit: String) -> some View {
+        let color: Color = value > 0.1 ? .green : value < -0.1 ? .orange : .skyBright
+        let sign = value > 0 ? "+" : ""
+        return VStack(spacing: 4) {
+            Text(title)
+                .font(.system(size: 9, weight: .semibold))
+                .foregroundColor(.white.opacity(0.45))
+            Text("\(sign)\(String(format: "%.1f", value))")
+                .font(.system(size: 14, weight: .bold, design: .rounded))
+                .foregroundColor(color)
+            Text(unit)
+                .font(.system(size: 8))
+                .foregroundColor(.white.opacity(0.3))
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 8)
+        .background(Color.white.opacity(0.05), in: RoundedRectangle(cornerRadius: 10))
+    }
 }
 
 // MARK: - PickSheet model
@@ -742,6 +1257,7 @@ struct PickSheet: Identifiable {
     let stat: String
     let serverProp: PlayerProp?
     let defaultLine: Double
+    let defaultDirection: PropDirection
     let gameID: String?
 }
 
@@ -755,6 +1271,7 @@ struct LinePickerSheet: View {
     @ObservedObject private var router = AppRouter.shared
     @Environment(\.dismiss) private var dismiss
     @State private var line: Double
+    @State private var direction: PropDirection
     @State private var showBlocked = false
     @State private var blockedMsg  = ""
 
@@ -763,6 +1280,7 @@ struct LinePickerSheet: View {
         self.playerName = playerName
         self.onAdd      = onAdd
         _line = State(initialValue: sheet.defaultLine)
+        _direction = State(initialValue: sheet.defaultDirection)
     }
 
     private var builtProp: PlayerProp {
@@ -773,6 +1291,7 @@ struct LinePickerSheet: View {
             team: sheet.serverProp?.team,
             statLabel: sheet.stat,
             line: line,
+            direction: direction,
             overPct: sheet.serverProp?.overPct,
             projectedValue: sheet.serverProp?.projectedValue
         )
@@ -794,7 +1313,11 @@ struct LinePickerSheet: View {
                     .padding(.top, 8)
 
                     VStack(spacing: 2) {
-                        Text("OVER")
+                        HStack(spacing: 8) {
+                            sideChip(.over)
+                            sideChip(.under)
+                        }
+                        Text(direction.rawValue)
                             .font(.caption2.bold())
                             .foregroundColor(.white.opacity(0.4))
                             .tracking(3)
@@ -821,12 +1344,11 @@ struct LinePickerSheet: View {
                     }
 
                     if let sp = sheet.serverProp {
+                        let sidePct = direction == .over ? sp.overProbability : sp.underProbability
                         HStack(spacing: 5) {
                             Image(systemName: "info.circle").font(.caption2)
-                            Text("Projected: OVER \(sp.line.cleanLine)")
-                            if let pct = sp.overPct {
-                                Text("· \(Int(round(pct * 100)))%")
-                            }
+                            Text("Projected: \(direction.rawValue) \(sp.line.cleanLine)")
+                            Text("· \(Int(round(sidePct * 100)))%")
                         }
                         .font(.caption2)
                         .foregroundColor(.white.opacity(0.35))
@@ -864,5 +1386,20 @@ struct LinePickerSheet: View {
                 Text(blockedMsg)
             }
         }
+    }
+
+    private func sideChip(_ side: PropDirection) -> some View {
+        Button {
+            haptic(.light)
+            direction = side
+        } label: {
+            Text(side.rawValue)
+                .font(.system(size: 11, weight: .bold))
+                .foregroundColor(direction == side ? .skyDeep : .white.opacity(0.75))
+                .padding(.horizontal, 10)
+                .padding(.vertical, 5)
+                .background(direction == side ? Color.skyBright : Color.white.opacity(0.08), in: Capsule())
+        }
+        .buttonStyle(.plain)
     }
 }

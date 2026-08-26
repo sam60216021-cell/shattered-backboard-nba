@@ -5,12 +5,15 @@
 //
 
 import SwiftUI
+import Combine
 
 struct HomeView: View {
 
     @ObservedObject private var dataService = LocalDataService.shared
-    @State private var isRefreshing = false
+    @ObservedObject private var scheduleStore = ScheduleStore.shared
     @State private var isClearing   = false
+    @State private var showSettings = false
+    private let autoRefreshTimer = Timer.publish(every: 90, on: .main, in: .common).autoconnect()
     #if DEBUG
     @State private var showDebug    = false
     #endif
@@ -25,6 +28,9 @@ struct HomeView: View {
             }
             .navigationBarTitleDisplayMode(.large)
             .toolbar { refreshButton }
+            .sheet(isPresented: $showSettings) {
+                SettingsView()
+            }
             .navigationDestination(for: ScheduleGame.self) { game in
                 GamePicksView(game: game)
             }
@@ -34,13 +40,26 @@ struct HomeView: View {
             }
             #endif
         }
+        .task {
+            scheduleStore.computeIfNeeded(games: dataService.snapshot?.games ?? [])
+        }
+        .onChange(of: dataService.snapshot?.games.count) { _, _ in
+            scheduleStore.computeIfNeeded(games: dataService.snapshot?.games ?? [])
+        }
+        .onReceive(dataService.$standingsMap) { _ in
+            scheduleStore.computeIfNeeded(games: dataService.snapshot?.games ?? [])
+        }
+        .onReceive(autoRefreshTimer) { _ in
+            guard !dataService.isFetching, !isClearing else { return }
+            Task { await refresh() }
+        }
     }
 
     // MARK: - Content
 
     @ViewBuilder
     private var content: some View {
-        let games = dataService.snapshot?.games ?? []
+        let games = activeSlateGames(dataService.snapshot?.games ?? [])
         let isPlayoff = dataService.gameDetails.values.first?.gameType == "playoff"
 
         if dataService.isFetching && games.isEmpty {
@@ -69,7 +88,7 @@ struct HomeView: View {
             .padding(.vertical, 12)
         }
         .refreshable { await refresh() }
-        .navigationTitle(isPlayoff ? "2026 NBA Playoffs" : "Today's Games")
+        .navigationTitle(isPlayoff ? "2026 NBA Playoffs" : scheduleTitle(for: games))
     }
 
     private var loadingView: some View {
@@ -88,10 +107,12 @@ struct HomeView: View {
             Image(systemName: "calendar.badge.exclamationmark")
                 .font(.system(size: 52))
                 .foregroundColor(.skyBright.opacity(0.7))
-            Text("No games today")
+            Text("No games on this slate")
                 .font(.title2.bold())
                 .foregroundColor(.white)
-            Text("Pull down to refresh or check your server connection.")
+            Text(SportConfig.usesServerSync
+                 ? "Pull down to refresh or check your server connection."
+                 : "This build uses bundled data. Install a newer app build to get newer stats.")
                 .font(.subheadline)
                 .foregroundColor(.white.opacity(0.5))
                 .multilineTextAlignment(.center)
@@ -113,21 +134,38 @@ struct HomeView: View {
         }
     }
 
+    private func scheduleTitle(for games: [ScheduleGame]) -> String {
+        guard let date = games.first?.date else { return "NBA Schedule" }
+        let today = isoDateString(Date())
+        let tomorrow = isoDateString(Calendar.current.date(byAdding: .day, value: 1, to: Date()) ?? Date())
+        if date == today { return "Today's Games" }
+        if date == tomorrow { return "Tomorrow's Games" }
+        return "NBA Schedule"
+    }
+
+    /// Hard guard against stray/stale StoredGame rows (bad imports, dedupe edge
+    /// cases, sync glitches) mixing another date's games into today's slate —
+    /// collapse to a single date: today if present, else the nearest upcoming one.
+    private func activeSlateGames(_ games: [ScheduleGame]) -> [ScheduleGame] {
+        guard !games.isEmpty else { return [] }
+        let today = isoDateString(Date())
+        let byDate = Dictionary(grouping: games, by: \.date)
+        let slateDate = byDate[today] != nil ? today : byDate.keys.filter { $0 >= today }.sorted().first
+        guard let slateDate else { return [] }
+        return games.filter { $0.date == slateDate }
+    }
+
+    private func isoDateString(_ date: Date) -> String {
+        let f = DateFormatter()
+        f.dateFormat = "yyyy-MM-dd"
+        f.timeZone = TimeZone(identifier: SportConfig.appTimeZoneID)
+        return f.string(from: date)
+    }
+
     private var cachedBanner: some View {
-        let gameDate = dataService.snapshot?.games.first?.date
-        let today: String = {
-            let f = DateFormatter()
-            f.dateFormat = "yyyy-MM-dd"
-            f.timeZone   = TimeZone(identifier: "America/New_York")
-            return f.string(from: Date())
-        }()
-        let isStale = gameDate != nil && gameDate != today
-        let label   = isStale
-            ? "Offline — showing last cached data (\(gameDate!))"
-            : "Showing cached data"
-        return HStack(spacing: 6) {
-            Image(systemName: isStale ? "wifi.slash" : "clock.arrow.circlepath")
-            Text(label)
+        HStack(spacing: 6) {
+            Image(systemName: "clock.arrow.circlepath")
+            Text("Showing cached data")
             Spacer()
             Text("Pull to refresh")
         }
@@ -141,41 +179,55 @@ struct HomeView: View {
     @ToolbarContentBuilder
     private var refreshButton: some ToolbarContent {
         ToolbarItem(placement: .navigationBarTrailing) {
-            if dataService.isFetching || isClearing {
-                ProgressView().tint(.skyBright)
-            } else {
-                Menu {
-                    Button { Task { await refresh() } } label: {
-                        Label("Refresh", systemImage: "arrow.clockwise")
-                    }
-                    #if DEBUG
-                    Button { showDebug = true } label: {
-                        Label("Debug Panel", systemImage: "ant.circle")
-                    }
-                    #endif
-                    Button(role: .destructive) {
-                        Task {
-                            isClearing = true
-                            await LocalDataService.shared.clearScheduleCache()
-                            isClearing = false
-                        }
-                    } label: {
-                        Label("Clear Cache & Reload", systemImage: "trash")
+            Button {
+                showSettings = true
+            } label: {
+                Image(systemName: "gearshape.fill")
+                    .foregroundColor(.skyBright)
+            }
+            .accessibilityLabel("Settings")
+        }
+
+        ToolbarItem(placement: .navigationBarTrailing) {
+            Menu {
+                Button { Task { await refresh() } } label: {
+                    Label("Refresh", systemImage: "arrow.clockwise")
+                }
+                .disabled(dataService.isFetching || isClearing)
+                #if DEBUG
+                Button { showDebug = true } label: {
+                    Label("Debug Panel", systemImage: "ant.circle")
+                }
+                .disabled(dataService.isFetching || isClearing)
+                #endif
+                Button(role: .destructive) {
+                    Task {
+                        isClearing = true
+                        await LocalDataService.shared.clearScheduleCache()
+                        isClearing = false
                     }
                 } label: {
-                    Image(systemName: "ellipsis.circle")
-                        .foregroundColor(.skyBright)
+                    Label("Clear Cache & Reload", systemImage: "trash")
                 }
+                .disabled(dataService.isFetching || isClearing)
+            } label: {
+                ZStack {
+                    Image(systemName: "ellipsis.circle")
+                        .opacity(dataService.isFetching || isClearing ? 0 : 1)
+                    if dataService.isFetching || isClearing {
+                        ProgressView()
+                    }
+                }
+                .foregroundColor(.skyBright)
             }
+            .disabled(dataService.isFetching || isClearing)
         }
     }
 
     // MARK: - Actions
 
     private func refresh() async {
-        isRefreshing = true
-        _ = try? await LocalDataService.shared.fetchAll()
-        isRefreshing = false
+        _ = try? await LocalDataService.shared.fetchAll(fetchLogs: true)
     }
 }
 
@@ -188,10 +240,10 @@ struct ScheduleDebugView: View {
     @State private var rawResponse = ""
     @State private var isTesting   = false
 
-    private var etDate: String {
+    private var localAppDate: String {
         let f = DateFormatter()
         f.dateFormat = "yyyy-MM-dd HH:mm:ss zzz"
-        f.timeZone   = TimeZone(identifier: "America/New_York")
+        f.timeZone   = TimeZone(identifier: SportConfig.appTimeZoneID)
         return f.string(from: Date())
     }
 
@@ -231,7 +283,7 @@ struct ScheduleDebugView: View {
                 if let err = ds.lastError { row("Last error", err).foregroundColor(.red) }
             }
             Section("Dates") {
-                row("Device ET now", etDate)
+                row("Device Phoenix now", localAppDate)
                 row("lastFetchDate (UserDefaults)", lastFetchDateStored)
                 if let d = ds.lastFetchDate {
                     row("lastFetchDate (in-memory)", d.formatted(date: .abbreviated, time: .shortened))
@@ -358,14 +410,20 @@ struct ScheduleDebugView: View {
 
 struct GameRowView: View {
     let game: ScheduleGame
-    @ObservedObject private var router      = AppRouter.shared
-    @ObservedObject private var dataService = LocalDataService.shared
+    @ObservedObject private var dataService    = LocalDataService.shared
+    @ObservedObject private var scheduleStore  = ScheduleStore.shared
 
     private var details: GameDetails?         { dataService.gameDetails[game.gameID ?? ""] }
     private var homeStanding: StandingsEntry? { dataService.standingsMap[game.homeTeam] }
     private var awayStanding: StandingsEntry? { dataService.standingsMap[game.awayTeam] }
 
-    // MARK: - TeamProjection
+    // User-facing team nicknames ("Aces", "Liberty") — internal codes stay untouched.
+    private var awayDisplayName: String { SportConfig.teamNickname(for: game.awayTeam) }
+    private var homeDisplayName: String { SportConfig.teamNickname(for: game.homeTeam) }
+
+    // MARK: - Simulation-based projection
+
+    private var simResult: GameSimulationResult? { scheduleStore.simulations[game.id] }
 
     private var projection: TeamProjection? {
         guard let h = homeStanding, let a = awayStanding else { return nil }
@@ -377,20 +435,18 @@ struct GameRowView: View {
     private func seriesRecordLabel(_ d: GameDetails) -> String {
         let h = d.homeWins, a = d.awayWins
         if h == 0 && a == 0 { return "Series begins" }
-        if h > a { return "\(game.homeTeam) leads series \(h)-\(a)" }
-        if a > h { return "\(game.awayTeam) leads series \(a)-\(h)" }
+        if h > a { return "\(homeDisplayName) leads series \(h)-\(a)" }
+        if a > h { return "\(awayDisplayName) leads series \(a)-\(h)" }
         return "Series tied \(h)-\(h)"
     }
 
-    // MARK: - Analytics blurb
+    // MARK: - Analytics blurb (all games)
 
-    private func analyticsBlurb(_ d: GameDetails) -> String {
-        guard d.gameType == "playoff" else { return "" }
-        let away = game.awayTeam, home = game.homeTeam
+    private var analyticsBlurb: String {
+        let away = awayDisplayName, home = homeDisplayName
         var sentences: [String] = []
 
         if let h = homeStanding, let a = awayStanding {
-            // Net rating comparison
             let hNR  = h.netRating
             let aNR  = a.netRating
             let diff = hNR - aNR
@@ -403,18 +459,17 @@ struct GameRowView: View {
                 let worse  = diff > 0 ? away : home
                 let bNR    = diff > 0 ? hNR : aNR
                 let wNR    = diff > 0 ? aNR : hNR
-                sentences.append("\(better) (\(fmt(bNR)) net) has a \(String(format: "%.1f", abs(diff)))-pt efficiency edge on \(worse) (\(fmt(wNR))) — a gap that typically decides series.")
+                sentences.append("\(better) (\(fmt(bNR)) net) has a \(String(format: "%.1f", abs(diff)))-pt efficiency edge on \(worse) (\(fmt(wNR))) — a gap that typically decides outcomes.")
             } else if abs(diff) >= 2.5 {
                 let better = diff > 0 ? home : away
                 let worse  = diff > 0 ? away : home
                 let bNR    = diff > 0 ? hNR : aNR
                 let wNR    = diff > 0 ? aNR : hNR
-                sentences.append("\(better) (\(fmt(bNR)) net) edges \(worse) (\(fmt(wNR))) in efficiency — slight but real advantage in a series that could go either way.")
+                sentences.append("\(better) (\(fmt(bNR)) net) edges \(worse) (\(fmt(wNR))) in efficiency — slight but real advantage.")
             } else {
-                sentences.append("Net ratings nearly identical: \(home) \(fmt(hNR)) vs \(away) \(fmt(aNR)) — either team can steal this on the night.")
+                sentences.append("Net ratings nearly identical: \(home) \(fmt(hNR)) vs \(away) \(fmt(aNR)) — either team can take this.")
             }
 
-            // Recent form
             let aStr = a.streak
             let hStr = h.streak
             let aNum = Int(String(aStr.dropFirst())) ?? 1
@@ -435,7 +490,6 @@ struct GameRowView: View {
             }
         }
 
-        // Key injuries
         let awayOut = game.missingAwayPlayers.filter { $0.status == "OUT" }
         let homeOut = game.missingHomePlayers.filter { $0.status == "OUT" }
         var injParts: [String] = []
@@ -475,6 +529,207 @@ struct GameRowView: View {
         .padding(.vertical, 12)
     }
 
+    // MARK: - Moneyline calculation helpers
+
+    private func homeMoneyline(spread: Double) -> Int {
+        OddsMath.americanOdds(fromWinProbability: OddsMath.homeWinProbability(spread: spread))
+    }
+
+    private func awayMoneyline(spread: Double) -> Int {
+        OddsMath.americanOdds(fromWinProbability: 1.0 - OddsMath.homeWinProbability(spread: spread))
+    }
+
+    private var cardFill: LinearGradient {
+        LinearGradient(
+            colors: [
+                Color(red: 0.11, green: 0.19, blue: 0.35),
+                Color(red: 0.08, green: 0.13, blue: 0.25),
+                Color(red: 0.05, green: 0.09, blue: 0.20)
+            ],
+            startPoint: .topLeading,
+            endPoint: .bottomTrailing
+        )
+    }
+
+    private func compactMetric(_ value: String, label: String, tint: Color) -> some View {
+        VStack(spacing: 5) {
+            Text(value)
+                .font(.system(size: 16, weight: .black, design: .rounded))
+                .foregroundColor(.white)
+            Text(label)
+                .font(.system(size: 9, weight: .bold))
+                .foregroundColor(tint.opacity(0.9))
+                .tracking(0.7)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 12)
+        .background(tint.opacity(0.10), in: RoundedRectangle(cornerRadius: 12))
+        .overlay(
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(tint.opacity(0.22), lineWidth: 1)
+        )
+    }
+
+    private func teamPanel(team: String, standing: StandingsEntry?, emphasis: Bool) -> some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(alignment: .top) {
+                ZStack {
+                    Circle()
+                        .fill((emphasis ? Color.skyBright : .white).opacity(0.14))
+                        .frame(width: 42, height: 42)
+                    Text(SportConfig.teamNickname(for: team))
+                        .font(.system(size: 14, weight: .black, design: .rounded))
+                        .foregroundColor(emphasis ? .skyBright : .white)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.35)
+                        .frame(width: 36)
+                }
+                Spacer(minLength: 8)
+                if let standing {
+                    Text(standing.streak)
+                        .font(.system(size: 9, weight: .bold))
+                        .foregroundColor(emphasis ? .skyBright : .white.opacity(0.55))
+                        .padding(.horizontal, 7)
+                        .padding(.vertical, 4)
+                        .background((emphasis ? Color.skyBright : Color.white).opacity(0.10), in: Capsule())
+                }
+            }
+
+            Text(SportConfig.teamNickname(for: team))
+                .font(.system(size: 28, weight: .black, design: .rounded))
+                .foregroundColor(.white)
+                .lineLimit(1)
+                .minimumScaleFactor(0.55)
+
+            if let standing {
+                VStack(alignment: .leading, spacing: 3) {
+                    Text("\(standing.wins)-\(standing.losses) record")
+                        .font(.system(size: 11, weight: .semibold))
+                        .foregroundColor(.white.opacity(0.65))
+                    Text("Home \(standing.homeRecord) · Road \(standing.roadRecord)")
+                        .font(.system(size: 10, weight: .medium))
+                        .foregroundColor(.white.opacity(0.38))
+                        .lineLimit(1)
+                }
+            } else {
+                Text("Standings syncing…")
+                    .font(.system(size: 11, weight: .medium))
+                    .foregroundColor(.white.opacity(0.35))
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(14)
+        .background((emphasis ? Color.skyBright : Color.white).opacity(0.08), in: RoundedRectangle(cornerRadius: 16))
+        .overlay(
+            RoundedRectangle(cornerRadius: 16)
+                .stroke((emphasis ? Color.skyBright : Color.white).opacity(0.16), lineWidth: 1)
+        )
+    }
+
+    private func matchupCenter(sim: GameSimulationResult?, awayFavored: Bool, homeFavored: Bool) -> some View {
+        VStack(spacing: 8) {
+            Text("AT")
+                .font(.system(size: 10, weight: .black))
+                .foregroundColor(.white.opacity(0.35))
+            if let sim {
+                Text("\(Int((1 - sim.homeWinProbability) * 100))%")
+                    .font(.system(size: 18, weight: .black, design: .rounded))
+                    .foregroundColor(awayFavored ? .skyBright : .white)
+                Text("win edge")
+                    .font(.system(size: 8, weight: .bold))
+                    .foregroundColor(.white.opacity(0.35))
+                    .tracking(0.6)
+                Text("\(Int(sim.homeWinProbability * 100))%")
+                    .font(.system(size: 18, weight: .black, design: .rounded))
+                    .foregroundColor(homeFavored ? .skyBright : .white)
+            } else {
+                Text("VS")
+                    .font(.system(size: 16, weight: .black, design: .rounded))
+                    .foregroundColor(.skyBright)
+            }
+        }
+        .frame(width: 56)
+    }
+
+    private func winProbabilityPanel(sim: GameSimulationResult) -> some View {
+        let awayPct = Int((1 - sim.homeWinProbability) * 100)
+        let homePct = Int(sim.homeWinProbability * 100)
+
+        return VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Text("Win Probability")
+                    .font(.caption.bold())
+                    .foregroundColor(.white)
+                Spacer()
+                Text("\(SimulationEngine.defaultSimulationCount) trials")
+                    .font(.system(size: 9, weight: .bold))
+                    .foregroundColor(.white.opacity(0.35))
+            }
+
+            GeometryReader { geo in
+                let width = geo.size.width
+                let awayWidth = max(18, width * CGFloat(1 - sim.homeWinProbability))
+                let homeWidth = max(18, width * CGFloat(sim.homeWinProbability))
+
+                HStack(spacing: 0) {
+                    RoundedRectangle(cornerRadius: 10)
+                        .fill(Color.white.opacity(0.16))
+                        .frame(width: awayWidth)
+                        .overlay(alignment: .leading) {
+                            Text("\(awayDisplayName) \(awayPct)%")
+                                .font(.system(size: 10, weight: .bold))
+                                .foregroundColor(.white)
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.6)
+                                .padding(.leading, 10)
+                        }
+                    RoundedRectangle(cornerRadius: 10)
+                        .fill(Color.skyBright.opacity(0.75))
+                        .frame(width: homeWidth)
+                        .overlay(alignment: .trailing) {
+                            Text("\(homeDisplayName) \(homePct)%")
+                                .font(.system(size: 10, weight: .bold))
+                                .foregroundColor(.skyDeep)
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.6)
+                                .padding(.trailing, 10)
+                        }
+                }
+            }
+            .frame(height: 24)
+
+            Text("Ranges: \(awayDisplayName) \(sim.awayRangeStr)  •  \(homeDisplayName) \(sim.homeRangeStr)")
+                .font(.system(size: 11, weight: .medium))
+                .foregroundColor(.white.opacity(0.48))
+        }
+        .padding(14)
+        .background(Color.white.opacity(0.05), in: RoundedRectangle(cornerRadius: 14))
+        .overlay(
+            RoundedRectangle(cornerRadius: 14)
+                .stroke(Color.white.opacity(0.08), lineWidth: 1)
+        )
+    }
+
+    private func compactFooter(propCount: Int, simAvailable: Bool) -> some View {
+        HStack(spacing: 8) {
+            Label(
+                propCount > 0 ? "\(propCount) props ready" : "Props syncing",
+                systemImage: propCount > 0 ? "bolt.fill" : "clock.arrow.circlepath"
+            )
+            .font(.caption)
+            .foregroundColor(propCount > 0 ? .yellow.opacity(0.92) : .white.opacity(0.45))
+
+            Spacer()
+
+            Text(simAvailable ? "Tap for sims + picks" : "Tap for breakdown")
+                .font(.caption)
+                .foregroundColor(.white.opacity(0.42))
+            Image(systemName: "chevron.right")
+                .font(.caption.bold())
+                .foregroundColor(.skyBright.opacity(0.7))
+        }
+    }
+
     // MARK: - Body
 
     var body: some View {
@@ -498,6 +753,9 @@ struct GameRowView: View {
                         .font(.caption2.bold())
                         .foregroundColor(.skyBright.opacity(0.9))
                     Text(d.seriesGameNumber)
+                        .font(.caption2)
+                        .foregroundColor(.white.opacity(0.4))
+                    Text(game.displayDate)
                         .font(.caption2)
                         .foregroundColor(.white.opacity(0.4))
                 }
@@ -527,9 +785,11 @@ struct GameRowView: View {
 
                 // Away team column
                 VStack(alignment: .center, spacing: 5) {
-                    Text(game.awayTeam)
+                    Text(awayDisplayName)
                         .font(.system(size: 30, weight: .black))
                         .foregroundColor(.white)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.5)
                     if let a = awayStanding {
                         Text("\(a.wins)–\(a.losses)")
                             .font(.caption2)
@@ -573,7 +833,7 @@ struct GameRowView: View {
                         Text("@")
                             .font(.caption.bold())
                             .foregroundColor(.white.opacity(0.3))
-                        let timeStr = game.gameTime?.lowercased() ?? ""
+                        let timeStr = game.gameTime ?? ""
                         if !timeStr.isEmpty {
                             Text(timeStr)
                                 .font(.caption2)
@@ -586,9 +846,11 @@ struct GameRowView: View {
 
                 // Home team column
                 VStack(alignment: .center, spacing: 5) {
-                    Text(game.homeTeam)
+                    Text(homeDisplayName)
                         .font(.system(size: 30, weight: .black))
                         .foregroundColor(.white)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.5)
                     if let h = homeStanding {
                         Text("\(h.wins)–\(h.losses)")
                             .font(.caption2)
@@ -622,26 +884,117 @@ struct GameRowView: View {
             Divider().background(Color.skyBorder)
 
             // ── Betting lines strip ─────────────────────────────────────────
+            // ── Betting lines strip: use simulation results if available ────────
+            let sim = simResult
             let proj = projection
+            let awayMean = sim?.awayMean ?? (proj?.awayPts ?? 0)
+            let homeMean = sim?.homeMean ?? (proj?.homePts ?? 0)
+            let projTotal = awayMean + homeMean
+            let spread = sim?.projectedSpread ?? (homeMean > 0 && awayMean > 0
+                ? ((homeMean - awayMean) * 2).rounded() / 2
+                : 0)
+            let homeML = sim?.impliedHomeML ?? homeMoneyline(spread: spread)
+            let awayML = sim?.impliedAwayML ?? awayMoneyline(spread: spread)
+            
             HStack(spacing: 0) {
-                bettingCell(awayVal: proj?.awayMLStr     ?? "—", label: "MONEYLINE",
-                            homeVal: proj?.homeMLStr     ?? "—",
-                            awayBold: proj?.awayFavored  ?? false,
-                            homeBold: proj?.homeFavored  ?? false)
+                bettingCell(
+                    awayVal: String(format: "%+d", awayML), label: "MONEYLINE",
+                    homeVal: String(format: "%+d", homeML),
+                    awayBold: spread < 0,
+                    homeBold: spread > 0
+                )
                 Rectangle().fill(Color.skyBorder).frame(width: 1)
-                bettingCell(awayVal: proj?.awaySpreadStr ?? "—", label: "SPREAD",
-                            homeVal: proj?.homeSpreadStr ?? "—",
-                            awayBold: proj?.awayFavored  ?? false,
-                            homeBold: proj?.homeFavored  ?? false)
+                bettingCell(
+                    awayVal: String(format: "%+.1f", spread),  label: "SPREAD",
+                    homeVal: String(format: "%+.1f", -spread),
+                    awayBold: spread < 0,
+                    homeBold: spread > 0
+                )
                 Rectangle().fill(Color.skyBorder).frame(width: 1)
-                bettingCell(awayVal: proj?.awayPtsDisplay ?? "—", label: "PROJ FINAL",
-                            homeVal: proj?.homePtsDisplay ?? "—",
-                            awayBold: (proj?.awayPts ?? 0) > (proj?.homePts ?? 0),
-                            homeBold: (proj?.homePts ?? 0) > (proj?.awayPts ?? 0))
+                // Show simulated score ranges if available
+                if let s = sim {
+                    VStack(spacing: 4) {
+                        Text("\(Int(s.awayMean.rounded()))")
+                            .font(.system(size: 15, weight: .bold, design: .rounded))
+                            .foregroundColor(.white)
+                        Text("SIMULATED")
+                            .font(.system(size: 8, weight: .semibold))
+                            .foregroundColor(.white.opacity(0.28))
+                            .tracking(0.8)
+                        Text("\(Int(s.homeMean.rounded()))")
+                            .font(.system(size: 15, weight: .bold, design: .rounded))
+                            .foregroundColor(.white)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 12)
+                } else {
+                    bettingCell(
+                        awayVal: proj?.awayPtsDisplay ?? "—", label: "PROJ FINAL",
+                        homeVal: proj?.homePtsDisplay ?? "—",
+                        awayBold: (proj?.awayPts ?? 0) > (proj?.homePts ?? 0),
+                        homeBold: (proj?.homePts ?? 0) > (proj?.awayPts ?? 0)
+                    )
+                }
+            }
+
+            Divider().background(Color.skyBorder)
+            HStack {
+                Text("Projected O/U total: \(Int(projTotal.rounded()))")
+                    .font(.caption2)
+                    .foregroundColor(.white.opacity(0.6))
+                Spacer()
+                Text(sim != nil ? "Source: Game Simulation" : "Source: Team Projection Fallback")
+                    .font(.caption2)
+                    .foregroundColor(.white.opacity(0.45))
+            }
+            .padding(.horizontal, 16)
+            .padding(.top, 10)
+
+            HStack {
+                Text("Spread: \(awayDisplayName) \(String(format: "%+.1f", spread))  ·  \(homeDisplayName) \(String(format: "%+.1f", -spread))")
+                    .font(.caption2)
+                    .foregroundColor(.white.opacity(0.55))
+                Spacer()
+            }
+            .padding(.horizontal, 16)
+            .padding(.bottom, 10)
+
+            // ── Win probability (if simulation available) ────────────────────
+            if let s = simResult {
+                Divider().background(Color.skyBorder)
+                HStack(spacing: 12) {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Win Probability")
+                            .font(.caption2.bold())
+                            .foregroundColor(.white)
+                        HStack(spacing: 0) {
+                            Text("\(awayDisplayName) \(Int((1 - s.homeWinProbability) * 100))%")
+                                .font(.caption.bold())
+                                .foregroundColor(.skyBright.opacity(0.7))
+                            Spacer()
+                            Text("\(homeDisplayName) \(Int(s.homeWinProbability * 100))%")
+                                .font(.caption.bold())
+                                .foregroundColor(.skyBright.opacity(0.7))
+                        }
+                        Text("Score ranges · \(awayDisplayName) \(s.awayRangeStr)  |  \(homeDisplayName) \(s.homeRangeStr)")
+                            .font(.caption2)
+                            .foregroundColor(.white.opacity(0.45))
+                        Text("Projected total: \(Int(s.projTotal.rounded()))")
+                            .font(.caption2)
+                            .foregroundColor(.white.opacity(0.45))
+                    }
+                    Spacer()
+                    Text("\(SimulationEngine.defaultSimulationCount) MC trials")
+                        .font(.system(size: 8, weight: .semibold))
+                        .foregroundColor(.white.opacity(0.35))
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 12)
             }
 
             // ── Analytics blurb ─────────────────────────────────────────────
-            let blurb = analyticsBlurb(d)
+            let blurb = analyticsBlurb
             if !blurb.isEmpty {
                 Divider().background(Color.skyBorder)
                 HStack(alignment: .top, spacing: 8) {
@@ -665,7 +1018,7 @@ struct GameRowView: View {
             // ── Footer ──────────────────────────────────────────────────────
             HStack(spacing: 8) {
                 let propCount = game.playerProps.count
-                let highConf  = game.playerProps.contains(where: { ($0.overPct ?? 0) >= 0.70 })
+                let highConf  = game.playerProps.contains(where: { $0.selectedProbability >= 0.70 })
                 if propCount > 0 {
                     Image(systemName: highConf ? "bolt.fill" : "list.bullet")
                         .font(.caption)
@@ -699,64 +1052,121 @@ struct GameRowView: View {
         .overlay(RoundedRectangle(cornerRadius: 16).stroke(Color.skyBorder, lineWidth: 1))
     }
 
-    // MARK: - Compact card (non-playoff / loading fallback)
+    // MARK: - Compact card (regular season / loading fallback)
 
     private var compactCard: some View {
-        VStack(spacing: 0) {
-            HStack(alignment: .center) {
-                VStack(spacing: 2) {
-                    Text(game.awayTeam)
-                        .font(.title3.bold()).foregroundColor(.white)
-                }
-                .frame(maxWidth: .infinity)
-                VStack(spacing: 2) {
-                    Text("@")
-                        .font(.caption.bold()).foregroundColor(.white.opacity(0.4))
-                    Text(game.gameTime?.lowercased() ?? "TBD")
-                        .font(.caption2).foregroundColor(.white.opacity(0.5))
-                }
-                .frame(width: 60)
-                VStack(spacing: 2) {
-                    Text(game.homeTeam)
-                        .font(.title3.bold()).foregroundColor(.white)
-                }
-                .frame(maxWidth: .infinity)
-            }
-            .padding(.horizontal, 16).padding(.top, 14).padding(.bottom, 10)
+        let sim = simResult
+        let proj = projection
+        let awayMean = sim?.awayMean ?? (proj?.awayPts ?? 0)
+        let homeMean = sim?.homeMean ?? (proj?.homePts ?? 0)
+        let projTotal = awayMean + homeMean
+        let spread = sim?.projectedSpread ?? (homeMean > 0 && awayMean > 0
+            ? ((homeMean - awayMean) * 2).rounded() / 2
+            : 0)
+        let awayML = sim?.impliedAwayML ?? awayMoneyline(spread: spread)
+        let homeML = sim?.impliedHomeML ?? homeMoneyline(spread: spread)
+        let homeFavored = spread > 0
+        let awayFavored = spread < 0
+        let timeLabel = (game.gameTime?.isEmpty == false ? game.gameTime! : "Tip TBD")
+        let propCount = game.playerProps.count
+        let injuries = (game.missingAwayPlayers + game.missingHomePlayers)
+            .filter { $0.status == "OUT" }
 
-            Divider().background(Color.skyBorder)
-
-            HStack(spacing: 8) {
-                let propCount = game.playerProps.count
-                let highConf  = game.playerProps.contains(where: { ($0.overPct ?? 0) >= 0.70 })
-                if propCount > 0 {
-                    Image(systemName: highConf ? "bolt.fill" : "list.bullet")
-                        .font(.caption)
-                        .foregroundColor(highConf ? .yellow : .skyBright.opacity(0.7))
-                    Text("\(propCount) prop\(propCount == 1 ? "" : "s") available")
-                        .font(.caption).foregroundColor(.white.opacity(0.55))
-                } else {
-                    Text("No props yet")
-                        .font(.caption).foregroundColor(.white.opacity(0.3))
+        return VStack(spacing: 16) {
+            HStack(alignment: .top) {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Gameday Forecast")
+                        .font(.system(size: 11, weight: .bold))
+                        .foregroundColor(.skyBright)
+                        .tracking(0.8)
+                    Text(game.displayDate)
+                        .font(.system(size: 11, weight: .semibold))
+                        .foregroundColor(.white.opacity(0.65))
+                        .tracking(0.4)
+                    Text(timeLabel)
+                        .font(.system(size: 20, weight: .black, design: .rounded))
+                        .foregroundColor(.white)
+                    Text(sim == nil ? "Projection card" : "Simulation card")
+                        .font(.system(size: 11, weight: .medium))
+                        .foregroundColor(.white.opacity(0.45))
+                    Text(sim == nil ? "Using standings fallback" : "Using Monte Carlo simulation")
+                        .font(.system(size: 10, weight: .semibold))
+                        .foregroundColor(.white.opacity(0.38))
                 }
                 Spacer()
-                let injuries = (game.missingAwayPlayers + game.missingHomePlayers)
-                    .filter { $0.status == "OUT" }
-                if !injuries.isEmpty {
-                    HStack(spacing: 3) {
-                        Image(systemName: "bandage.fill")
-                            .font(.caption2).foregroundColor(.red.opacity(0.7))
-                        Text("\(injuries.count) out")
-                            .font(.caption2).foregroundColor(.red.opacity(0.7))
+                VStack(alignment: .trailing, spacing: 8) {
+                    Text(propCount > 0 ? "\(propCount) targets" : "Game hub")
+                        .font(.system(size: 10, weight: .bold))
+                        .foregroundColor(.black.opacity(0.85))
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 6)
+                        .background(Color.skyBright, in: Capsule())
+                    if !injuries.isEmpty {
+                        Label("\(injuries.count) out", systemImage: "bandage.fill")
+                            .font(.system(size: 10, weight: .bold))
+                            .foregroundColor(.red.opacity(0.9))
                     }
                 }
-                Image(systemName: "chevron.right")
-                    .font(.caption.bold()).foregroundColor(.skyBright.opacity(0.6))
             }
-            .padding(.horizontal, 16).padding(.vertical, 10)
+
+            HStack(spacing: 12) {
+                teamPanel(team: game.awayTeam, standing: awayStanding, emphasis: awayFavored)
+
+                matchupCenter(sim: sim, awayFavored: awayFavored, homeFavored: homeFavored)
+
+                teamPanel(team: game.homeTeam, standing: homeStanding, emphasis: homeFavored)
+            }
+
+            HStack(spacing: 10) {
+                compactMetric(String(format: "%+d", awayML), label: "AWAY ML", tint: awayFavored ? .skyBright : .white)
+                compactMetric(String(format: "%+d", homeML), label: "HOME ML", tint: homeFavored ? .skyBright : .white)
+                compactMetric("\(Int(projTotal.rounded()))", label: "O/U TOTAL", tint: .mint)
+            }
+
+            HStack(spacing: 10) {
+                compactMetric("\(Int(awayMean.rounded()))", label: "AWAY SCORE", tint: .white)
+                compactMetric(String(format: "%+.1f", spread), label: "SPREAD (HOME)", tint: homeFavored ? .skyBright : .orange)
+                compactMetric("\(Int(homeMean.rounded()))", label: "HOME SCORE", tint: .skyBright)
+            }
+
+            if let s = sim {
+                winProbabilityPanel(sim: s)
+            }
+
+            let blurb = analyticsBlurb
+            if !blurb.isEmpty {
+                HStack(alignment: .top, spacing: 10) {
+                    Image(systemName: "sparkles.rectangle.stack")
+                        .font(.caption.bold())
+                        .foregroundColor(.skyBright.opacity(0.8))
+                        .padding(.top, 2)
+                    Text(blurb)
+                        .font(.system(size: 12, weight: .medium))
+                        .foregroundColor(.white.opacity(0.62))
+                        .lineLimit(4)
+                        .multilineTextAlignment(.leading)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(14)
+                .background(Color.black.opacity(0.16), in: RoundedRectangle(cornerRadius: 14))
+            }
+
+            compactFooter(propCount: propCount, simAvailable: sim != nil)
         }
-        .background(Color.skyCard, in: RoundedRectangle(cornerRadius: 14))
-        .overlay(RoundedRectangle(cornerRadius: 14).stroke(Color.skyBorder, lineWidth: 1))
+        .padding(16)
+        .background(cardFill, in: RoundedRectangle(cornerRadius: 22))
+        .overlay(
+            RoundedRectangle(cornerRadius: 22)
+                .stroke(Color.white.opacity(0.10), lineWidth: 1)
+        )
+        .overlay(alignment: .topTrailing) {
+            Circle()
+                .fill(Color.skyBright.opacity(0.12))
+                .frame(width: 120, height: 120)
+                .blur(radius: 8)
+                .offset(x: 30, y: -30)
+        }
+        .shadow(color: Color.black.opacity(0.24), radius: 14, y: 8)
     }
 }
 

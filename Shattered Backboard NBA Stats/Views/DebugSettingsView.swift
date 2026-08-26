@@ -40,6 +40,9 @@ struct DebugSettingsView: View {
                             Button("Load Recent Stats") {
                                 Task { await LocalDataService.shared.fetchLogsForTodaysPlayers() }
                             }
+                            Button("Backfill ALL Player Stats") {
+                                Task { await LocalDataService.shared.backfillAllPlayerLogs(forceRefresh: true) }
+                            }
                             Button("Refresh + Load Stats") {
                                 Task { try? await LocalDataService.shared.fetchAll(fetchLogs: true) }
                             }
@@ -79,13 +82,13 @@ struct DebugSettingsView: View {
                     // ── Projection Engine ─────────────────────────────────────
                     Section(
                         header: Text("Projection Engine").foregroundColor(.orange),
-                        footer: Text("Forces every game to use playoff multipliers (−35% to −41%). Persists across launches.")
+                        footer: Text("Forces every game to use playoff multipliers (−17% to −23%). Persists across launches.")
                             .foregroundColor(.secondary)
                     ) {
                         Toggle(isOn: $forcePlayoffMode) {
                             VStack(alignment: .leading, spacing: 2) {
                                 Text("Force Playoff Mode")
-                                Text(forcePlayoffMode ? "Active — all projections use −35% to −41%" : "Off — games use auto-detected mode")
+                                Text(forcePlayoffMode ? "Active — all projections use −17% to −23%" : "Off — games use auto-detected mode")
                                     .font(.caption)
                                     .foregroundColor(forcePlayoffMode ? .orange : .secondary)
                             }
