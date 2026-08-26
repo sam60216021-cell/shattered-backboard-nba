@@ -521,7 +521,7 @@ final class LocalDataService: ObservableObject {
         // nothing left to resolve.
         if await hydratePlaceholderPlayerNamesIfNeeded() {
             loadFromDatabase()
-            publishSnapshotFromDatabase(fetchedAt: Date())
+            _ = publishSnapshotFromDatabase(fetchedAt: Date())
         }
 
         let base = serverURL.trimmingCharacters(in: .whitespaces)
