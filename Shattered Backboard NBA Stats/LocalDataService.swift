@@ -514,6 +514,16 @@ final class LocalDataService: ObservableObject {
             return snap
         }
 
+        // Resolve placeholder player names before any network sync attempt.
+        // Bundled seed logs carry IDs but no names; until a real roster/stats
+        // sync supplies canonical ones, hydrate from public sources so Player
+        // Search shows real players. Self-throttled, and a no-op when there is
+        // nothing left to resolve.
+        if await hydratePlaceholderPlayerNamesIfNeeded() {
+            loadFromDatabase()
+            publishSnapshotFromDatabase(fetchedAt: Date())
+        }
+
         let base = serverURL.trimmingCharacters(in: .whitespaces)
 
         // Ask the server for the slate keyed to the app's display time zone.
@@ -1793,31 +1803,112 @@ final class LocalDataService: ObservableObject {
         }
     }
 
-    private func hydratePlaceholderPlayerNamesIfNeeded() async {
-        guard !SportConfig.usesServerSync else { return }
-        guard shouldRunNameHydration() else { return }
+    /// One-shot bulk ID→name map for every NBA player, sourced from NBA Stats'
+    /// public `commonallplayers` endpoint. Bundled player IDs are NBA.com
+    /// person IDs, which ESPN's athlete API does not recognize — this endpoint
+    /// is the canonical source for that ID space. Requires browser-like
+    /// headers; default fingerprints get stalled by its CDN.
+    private func fetchNBAPlayerNameMap() async -> [String: String] {
+        // Season label uses the calendar year the season *ends* ("2025-26").
+        let seasonLabel = "\(SportConfig.currentSeason - 1)-\(String(SportConfig.currentSeason).suffix(2))"
+        guard let url = URL(string:
+            "https://stats.nba.com/stats/commonallplayers?IsOnlyCurrentSeason=0&LeagueID=00&Season=\(seasonLabel)")
+        else { return [:] }
+
+        var request = URLRequest(url: url)
+        request.timeoutInterval = 20
+        request.setValue(
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.4 Safari/605.1.15",
+            forHTTPHeaderField: "User-Agent"
+        )
+        request.setValue("application/json, text/plain, */*", forHTTPHeaderField: "Accept")
+        request.setValue("en-US,en;q=0.9", forHTTPHeaderField: "Accept-Language")
+        request.setValue("https://www.nba.com/", forHTTPHeaderField: "Referer")
+        request.setValue("https://www.nba.com", forHTTPHeaderField: "Origin")
+
+        do {
+            let (data, response) = try await session.data(for: request)
+            guard let http = response as? HTTPURLResponse,
+                  (200..<300).contains(http.statusCode) else {
+                syncLog("[nameHydration] NBA map HTTP error: \((response as? HTTPURLResponse)?.statusCode ?? -1)")
+                return [:]
+            }
+
+            // Shape: {"resultSets":[{"name":"CommonAllPlayers",
+            //   "headers":["PERSON_ID","DISPLAY_FIRST_LAST",…],"rowSet":[[…],…]}]}
+            guard let root  = try JSONSerialization.jsonObject(with: data) as? [String: Any],
+                  let sets   = root["resultSets"] as? [[String: Any]]
+            else { return [:] }
+
+            var map: [String: String] = [:]
+            for set in sets {
+                guard let headers = set["headers"] as? [String],
+                      let idIdx   = headers.firstIndex(of: "PERSON_ID"),
+                      let nameIdx = headers.firstIndex(of: "DISPLAY_FIRST_LAST"),
+                      let rows    = set["rowSet"] as? [[Any]]
+                else { continue }
+                for row in rows {
+                    guard row.count > max(idIdx, nameIdx),
+                          let pidNum = row[idIdx] as? NSNumber else { continue }
+                    let name = row[nameIdx] as? String ?? ""
+                    if !name.isEmpty { map[pidNum.stringValue] = name }
+                }
+            }
+            syncLog("[nameHydration] NBA map fetched: \(map.count) players")
+            return map
+        } catch {
+            syncLog("[nameHydration] NBA map fetch failed: \(error.localizedDescription)")
+            return [:]
+        }
+    }
+
+    /// Resolves placeholder names ("CLE Player", "Unknown Player", raw IDs)
+    /// to real display names. Runs regardless of sync mode: bundled seed logs
+    /// carry IDs without names, and until a real roster/stats sync provides
+    /// canonical names this keeps Player Search usable. A later server sync
+    /// overwrites hydrated names through its normal upserts.
+    ///
+    /// Returns true when any stored player names were updated.
+    @discardableResult
+    private func hydratePlaceholderPlayerNamesIfNeeded() async -> Bool {
+        guard shouldRunNameHydration() else { return false }
 
         let ctx = modelContext
         let allPlayers = (try? ctx.fetch(FetchDescriptor<StoredPlayer>())) ?? []
-        let unresolved = allPlayers.filter { isPlaceholderPlayerName($0.name, playerID: $0.playerID) }
-        guard !unresolved.isEmpty else {
+        let unresolvedIDs = Set(allPlayers
+            .filter { isPlaceholderPlayerName($0.name, playerID: $0.playerID) }
+            .map(\.playerID))
+        guard !unresolvedIDs.isEmpty else {
             UserDefaults.standard.set(Date(), forKey: Self.lastNameHydrationAtKey)
-            return
+            return false
         }
 
-        let maxResolve = min(120, unresolved.count)
-        syncLog("[nameHydration] resolving names for \(maxResolve)/\(unresolved.count) players")
+        let maxResolve = min(120, unresolvedIDs.count)
+        syncLog("[nameHydration] resolving names for \(maxResolve)/\(unresolvedIDs.count) players")
         var updates: [String: String] = [:]
-        for player in unresolved.prefix(maxResolve) {
-            if let resolved = await fetchDisplayNameFromESPNCore(playerID: player.playerID) {
-                updates[player.playerID] = resolved
+
+        // Pass 1: single bulk request covering the whole league — cheapest way
+        // to resolve most/all of the bundled NBA.com-style IDs at once.
+        let nbaMap = await fetchNBAPlayerNameMap()
+        for pid in unresolvedIDs where updates.count < maxResolve {
+            if let name = nbaMap[pid] { updates[pid] = name }
+        }
+
+        // Pass 2: ESPN core athlete API for whatever is left (only useful when
+        // player IDs happen to be ESPN IDs, e.g. bundles sourced from ESPN).
+        let stillMissing = unresolvedIDs.subtracting(updates.keys).sorted()
+        for pid in stillMissing.prefix(maxResolve) {
+            if let resolved = await fetchDisplayNameFromESPNCore(playerID: pid) {
+                updates[pid] = resolved
             }
         }
 
         guard !updates.isEmpty else {
-            syncLog("[nameHydration] no name updates found")
-            UserDefaults.standard.set(Date(), forKey: Self.lastNameHydrationAtKey)
-            return
+            // Do NOT stamp the throttle timer on total failure — an offline
+            // first launch should retry on the next launch rather than wait
+            // out the 12-hour window with placeholder names showing.
+            syncLog("[nameHydration] no name updates found — will retry next sync")
+            return false
         }
 
         for player in allPlayers {
@@ -1828,6 +1919,7 @@ final class LocalDataService: ObservableObject {
         try? ctx.save()
         syncLog("[nameHydration] updated \(updates.count) player names")
         UserDefaults.standard.set(Date(), forKey: Self.lastNameHydrationAtKey)
+        return true
     }
 
     private func publishSnapshotFromDatabase(fetchedAt: Date) -> DataSnapshot {

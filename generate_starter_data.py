@@ -111,9 +111,30 @@ def main():
         else:
             print(f"  ✗ {pid}: no data", file=sys.stderr)
 
+    # Embed display metadata for every bundled player. Without this the app
+    # derives placeholder names ("<TEAM> Player") from log rows, because raw
+    # game logs carry no name fields.
+    pos_by_id: dict[str, str | None] = {}
+    for p in (roster_data or {}).get("players", []):
+        if p.get("player_id"):
+            pos_by_id[p["player_id"]] = p.get("pos")
+
+    players_out = []
+    for pid, meta in sorted(player_ids.items()):
+        name = (meta.get("name") or "").strip()
+        if not name:
+            continue
+        players_out.append({
+            "player_id": pid,
+            "name": name,
+            "team": meta.get("team") or None,
+            "pos": pos_by_id.get(pid),
+        })
+
     output = {
         "season": SEASON,
         "note": f"Generated {datetime.date.today().isoformat()} — {len(all_logs)} log rows for {len(player_ids)} players.",
+        "players": players_out,
         "logs": all_logs,
     }
 
