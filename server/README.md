@@ -13,3 +13,8 @@ Create the Render service from `server/render.yaml` with `server` as the root
 directory. After deployment, set `SportConfig.baseURL` in the iOS app to the
 Render HTTPS URL.
 
+For manual Web Service setup, use this start command:
+
+```text
+uvicorn app:app --host 0.0.0.0 --port 10000
+```
