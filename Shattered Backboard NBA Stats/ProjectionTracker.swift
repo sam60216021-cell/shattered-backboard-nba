@@ -14,6 +14,7 @@ enum ProjectionGrade: String, Codable {
 struct TrackedNBAProjection: Identifiable, Codable, Equatable {
     let id: String
     let modelVersion: String
+    let source: ProjectionModelSource?
     let capturedAt: Date
     let gameID: String
     let gameDate: String
@@ -72,6 +73,7 @@ final class ProjectionTracker {
         graded: 0, hits: 0, pushes: 0, meanAbsoluteError: nil
     )
     private(set) var statSummaries: [ProjectionAccuracySummary] = []
+    private(set) var sourceSummaries: [ProjectionAccuracySummary] = []
     private(set) var recentGradedRecords: [TrackedNBAProjection] = []
     private(set) var lastUpdated: Date?
 
@@ -93,8 +95,8 @@ final class ProjectionTracker {
         rebuildSummaries()
     }
 
-    func update(entries: [TopPickEntry], dataService: LocalDataService, now: Date = Date()) {
-        var changed = capture(entries: entries, now: now)
+    func update(outputs: [ModuleProjection], dataService: LocalDataService, now: Date = Date()) {
+        var changed = capture(outputs: outputs, now: now)
         changed = gradePending(dataService: dataService, now: now) || changed
         guard changed else { return }
         lastUpdated = now
@@ -109,47 +111,34 @@ final class ProjectionTracker {
         persist()
     }
 
-    private func capture(entries: [TopPickEntry], now: Date) -> Bool {
+    private func capture(outputs: [ModuleProjection], now: Date) -> Bool {
         var knownIDs = Set(records.map(\.id))
         var additions: [TrackedNBAProjection] = []
 
-        for entry in entries {
-            guard let game = entry.game,
-                  let gameID = game.gameID ?? Optional(game.id),
-                  entry.suggestedLine > 0 else { continue }
-
-            let lineKey = String(format: "%.1f", entry.suggestedLine)
-            let id = [gameID, entry.player.playerID, entry.stat,
-                      entry.direction.rawValue, lineKey, SportConfig.predictionModelVersion]
+        for output in outputs where output.line > 0 {
+            let lineKey = String(format: "%.1f", output.line)
+            let id = [output.gameID, output.playerID, output.stat,
+                      output.direction.rawValue, lineKey, output.modelVersion]
                 .joined(separator: "|")
             guard knownIDs.insert(id).inserted else { continue }
 
-            let team = entry.player.team?.uppercased()
-            let opponent: String?
-            if team == game.awayTeam.uppercased() {
-                opponent = game.homeTeam
-            } else if team == game.homeTeam.uppercased() {
-                opponent = game.awayTeam
-            } else {
-                opponent = nil
-            }
-
             additions.append(TrackedNBAProjection(
                 id: id,
-                modelVersion: SportConfig.predictionModelVersion,
+                modelVersion: output.modelVersion,
+                source: output.source,
                 capturedAt: now,
-                gameID: gameID,
-                gameDate: game.date,
-                playerID: entry.player.playerID,
-                playerName: entry.player.name,
-                team: entry.player.team,
-                opponent: opponent,
-                stat: entry.stat,
-                direction: entry.direction,
-                line: entry.suggestedLine,
-                projectedValue: entry.projection.value(for: entry.stat),
-                confidence: entry.confidence,
-                sampleSize: entry.projection.gameCount,
+                gameID: output.gameID,
+                gameDate: output.gameDate,
+                playerID: output.playerID,
+                playerName: output.playerName,
+                team: output.team,
+                opponent: output.opponent,
+                stat: output.stat,
+                direction: output.direction,
+                line: output.line,
+                projectedValue: output.projectedValue,
+                confidence: output.confidence,
+                sampleSize: output.sampleSize,
                 actualValue: nil,
                 gradedAt: nil
             ))
@@ -184,6 +173,13 @@ final class ProjectionTracker {
                 if $0.graded == $1.graded { return $0.label < $1.label }
                 return $0.graded > $1.graded
             }
+        sourceSummaries = ProjectionModelSource.allCases.map { source in
+            summary(
+                id: "source-\(source.rawValue)",
+                label: source.rawValue,
+                rows: records.filter { ($0.source ?? .analytics) == source }
+            )
+        }
         recentGradedRecords = records
             .filter { $0.actualValue != nil }
             .sorted { ($0.gradedAt ?? .distantPast) > ($1.gradedAt ?? .distantPast) }

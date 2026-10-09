@@ -12,6 +12,7 @@ struct ProjectionAccuracyView: View {
         ScrollView {
             VStack(spacing: 16) {
                 ProjectionAccuracyOverview(summary: tracker.overallSummary)
+                ProjectionSourceSummarySection(summaries: tracker.sourceSummaries)
                 ProjectionStatSummarySection(summaries: tracker.statSummaries)
                 ProjectionRecentResultsSection(records: tracker.recentGradedRecords)
             }
@@ -26,6 +27,26 @@ struct ProjectionAccuracyView: View {
         .onChange(of: dataService.logsRevision) { _, _ in
             tracker.regrade(dataService: dataService)
         }
+    }
+}
+
+private struct ProjectionSourceSummarySection: View {
+    let summaries: [ProjectionAccuracySummary]
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("By Model")
+                .font(.headline)
+                .foregroundStyle(.white)
+
+            ForEach(summaries) { summary in
+                ProjectionStatSummaryRow(summary: summary)
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(16)
+        .background(Color.skyCard, in: RoundedRectangle(cornerRadius: 16))
+        .overlay(RoundedRectangle(cornerRadius: 16).stroke(Color.skyBorder, lineWidth: 1))
     }
 }
 private struct ProjectionAccuracyOverview: View {
@@ -177,7 +198,7 @@ private struct ProjectionResultRow: View {
                 Text(record.playerName)
                     .font(.subheadline.bold())
                     .foregroundStyle(.white)
-                Text("\(record.stat) \(record.direction.rawValue) \(record.line, specifier: "%.1f") · \(record.gameDate)")
+                Text("\((record.source ?? .analytics).shortLabel) · \(record.stat) \(record.direction.rawValue) \(record.line, specifier: "%.1f") · \(record.gameDate)")
                     .font(.caption)
                     .foregroundStyle(.white.opacity(0.5))
             }

@@ -316,8 +316,12 @@ final class TopPicksStore: ObservableObject {
                 return PlayerPickGroup(player: player, picks: sorted)
             }
             .sorted { $0.player.name < $1.player.name }
-        ProjectionTracker.shared.update(
+        let moduleOutputs = PredictionPipeline.shared.run(
             entries: playerGroups.flatMap(\.picks),
+            playerAdvanced: dataService.playerAdvancedMap
+        )
+        ProjectionTracker.shared.update(
+            outputs: moduleOutputs,
             dataService: dataService
         )
         isLoading       = false
@@ -991,6 +995,9 @@ private struct SimPickRow: View {
                         .font(.system(size: 9, weight: .bold, design: .rounded))
                         .foregroundColor(.orange.opacity(0.95))
                 }
+
+                ProjectionSourceComparisonView(projectionID: entry.id)
+                    .frame(maxWidth: 210)
             }
 
             Spacer(minLength: 4)
@@ -1138,6 +1145,14 @@ private struct ConfidenceExplainSheet: View {
                                 .fixedSize(horizontal: false, vertical: true)
                         }
                     }
+                }
+
+                Section("Model comparison") {
+                    ProjectionSourceComparisonView(
+                        projectionID: entry.id,
+                        showReasoning: true
+                    )
+                    .padding(.vertical, 4)
                 }
 
                 Section("Outcome range") {
