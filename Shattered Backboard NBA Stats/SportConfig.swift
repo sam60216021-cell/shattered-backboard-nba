@@ -127,6 +127,7 @@ struct SportConfig {
 
     // ── Prediction / simulation defaults ──────────────────────────────────────
     static let predictionSimulationCount = 500
+    static let predictionModelVersion = "nba-2026.1"
 
     // ── UserDefaults keys ──────────────────────────────────────────────────────
     static let serverURLKey     = "nba_server_url"

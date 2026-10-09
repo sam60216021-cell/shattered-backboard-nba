@@ -118,6 +118,12 @@ struct SettingsView: View {
 
                     // ── Model health (lightweight backtest) ───────────────────
                     Section(header: Text("Model Health")) {
+                        NavigationLink {
+                            ProjectionAccuracyView()
+                        } label: {
+                            Label("Projection Accuracy", systemImage: "target")
+                        }
+
                         if isComputingHealth {
                             HStack(spacing: 10) {
                                 ProgressView()

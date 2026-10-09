@@ -316,6 +316,10 @@ final class TopPicksStore: ObservableObject {
                 return PlayerPickGroup(player: player, picks: sorted)
             }
             .sorted { $0.player.name < $1.player.name }
+        ProjectionTracker.shared.update(
+            entries: playerGroups.flatMap(\.picks),
+            dataService: dataService
+        )
         isLoading       = false
         lastComputedAt  = Date()
         lastComputedDay = slateDate
