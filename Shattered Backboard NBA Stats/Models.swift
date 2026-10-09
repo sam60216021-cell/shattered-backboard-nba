@@ -38,12 +38,9 @@ struct ScheduleGame: Identifiable, Codable, Hashable {
     // Prefer the server-provided game type via LocalDataService.gameDetails
     // (see GameDetails.isPlayoff); these are only used when it is unavailable.
 
-    /// True when both teams are known 2026 playoff qualifiers.
+    /// Date-window fallback used only when the server has no game classification.
     var isPlayoffGame: Bool {
-        let away = awayTeam.uppercased()
-        let home = homeTeam.uppercased()
-        return SportConfig.playoffTeams2026.contains(away) &&
-               SportConfig.playoffTeams2026.contains(home)
+        date >= SportConfig.playoffStartDate && date <= SportConfig.playoffEndDate
     }
 
     /// True when the game date falls within the first round window.
@@ -53,10 +50,18 @@ struct ScheduleGame: Identifiable, Codable, Hashable {
 
     // MARK: Date display helpers
 
-    private static let isoDayParser = ISO8601DateFormatter()
+    private static let isoDayParser: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.calendar = Calendar(identifier: .gregorian)
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.timeZone = TimeZone(secondsFromGMT: 0)
+        formatter.dateFormat = "yyyy-MM-dd"
+        return formatter
+    }()
 
     private static let friendlyDateFormatter: DateFormatter = {
         let f = DateFormatter()
+        f.locale = .autoupdatingCurrent
         f.dateFormat = "EEE, MMM d"
         return f
     }()
@@ -420,8 +425,7 @@ struct GameDetails {
 
 extension GameDetails {
     /// Explicit server classification - nil when the game type is unknown, in
-    /// which case callers fall back to the hard-coded playoff-qualifier
-    /// heuristic in ScheduleGame.isPlayoffGame.
+    /// which case callers fall back to ScheduleGame's rolling playoff window.
     var isPlayoff: Bool? {
         switch gameType.lowercased() {
         case "playoff": return true

@@ -48,18 +48,12 @@ struct SportConfig {
         return month >= 10 ? year + 1 : year
     }
 
-    // ── Playoff configuration ──────────────────────────────────────────────────
-    // NOTE: server-provided game_type is the primary playoff signal; these two
-    // values only feed the offline fallback heuristic in ScheduleGame.
-    //
-    // All 30 NBA franchises — used by the offline playoff heuristic once the
-    // bracket is confirmed each season.
-    static let playoffTeams2026: Set<String> = [
-        "ATL", "BOS", "BKN", "CHA", "CHI", "CLE", "DAL", "DEN",
-        "DET", "GSW", "HOU", "IND", "LAC", "LAL", "MEM", "MIA",
-        "MIL", "MIN", "NOP", "NYK", "OKC", "ORL", "PHI", "PHX",
-        "POR", "SAC", "SAS", "TOR", "UTA", "WAS",
-    ]
+    // ── Season windows ─────────────────────────────────────────────────────────
+    // The server-provided game_type remains the primary playoff signal. These
+    // rolling dates are only used when offline data has no game classification.
+    static var currentSeasonStartDate: String { "\(currentSeason - 1)-10-01" }
+    static var playoffStartDate: String { "\(currentSeason)-04-11" }
+    static var playoffEndDate: String { "\(currentSeason)-06-30" }
 
     // ── Team display names ──────────────────────────────────────────────────────
     // Maps internal team codes (used as data keys for standings, sims, and sync)
@@ -127,7 +121,7 @@ struct SportConfig {
 
     // ── Prediction / simulation defaults ──────────────────────────────────────
     static let predictionSimulationCount = 500
-    static let predictionModelVersion = "nba-2026.1"
+    static var predictionModelVersion: String { "nba-\(currentSeason).1" }
 
     // ── UserDefaults keys ──────────────────────────────────────────────────────
     static let serverURLKey     = "nba_server_url"

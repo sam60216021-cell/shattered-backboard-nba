@@ -2192,7 +2192,7 @@ private struct NBASimilarParlayCard: View {
                 .foregroundColor(.secondary)
                 .lineLimit(2)
 
-            ForEach(Array(legs.enumerated()), id: \.offset) { index, leg in
+            ForEach(Array(legs.enumerated()), id: \.element.id) { index, leg in
                 NavigationLink(destination: PlayerStatsView(player: leg.entry.player, game: leg.entry.game)) {
                     HStack(spacing: 10) {
                         Text("\(index + 1)")

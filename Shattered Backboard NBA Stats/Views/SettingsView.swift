@@ -60,8 +60,12 @@ struct SettingsView: View {
                             Button("Backfill All Player Stats") {
                                 Task { await LocalDataService.shared.backfillAllPlayerLogs(forceRefresh: true) }
                             }
-                            Button("Backfill Aug 3 → Now") {
-                                Task { await LocalDataService.shared.backfillHistoricalPlayerLogs(from: "2026-08-03") }
+                            Button("Backfill Current Season") {
+                                Task {
+                                    await LocalDataService.shared.backfillHistoricalPlayerLogs(
+                                        from: SportConfig.currentSeasonStartDate
+                                    )
+                                }
                             }
                         }
 

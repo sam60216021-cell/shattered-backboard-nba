@@ -541,7 +541,7 @@ struct PlayerStatsView: View {
 
             // Bar chart with date labels and dynamic y scale
             Chart {
-                ForEach(Array(entries.enumerated()), id: \.offset) { _, entry in
+                ForEach(entries, id: \.date) { entry in
                     BarMark(
                         x: .value("Date", entry.date),
                         y: .value(chartStat, entry.value)
