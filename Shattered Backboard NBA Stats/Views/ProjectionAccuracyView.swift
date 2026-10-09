@@ -4,6 +4,149 @@
 
 import SwiftUI
 
+struct AnalyticsCenterToolbarItem: ToolbarContent {
+    var body: some ToolbarContent {
+        ToolbarItem(placement: .topBarTrailing) {
+            NavigationLink {
+                AnalyticsCenterView()
+            } label: {
+                Image(systemName: "brain.head.profile")
+                    .foregroundStyle(Color.skyBright)
+            }
+            .accessibilityLabel("Analytics Center")
+        }
+    }
+}
+
+struct AnalyticsCenterView: View {
+    @State private var pipeline = PredictionPipeline.shared
+    @ObservedObject private var dataService = LocalDataService.shared
+
+    var body: some View {
+        ScrollView {
+            VStack(spacing: 16) {
+                AnalyticsModelStackSection(outputs: pipeline.latestOutputs)
+                AnalyticsDataCoverageSection(
+                    players: dataService.snapshot?.players.count ?? 0,
+                    playerAdvanced: dataService.playerAdvancedMap.count,
+                    teamAdvanced: dataService.teamAdvancedMap.count,
+                    positionSplits: dataService.teamPositionSplitsMap.count
+                )
+
+                NavigationLink {
+                    ProjectionAccuracyView()
+                } label: {
+                    Label("Open Projection Accuracy", systemImage: "target")
+                        .font(.headline)
+                        .foregroundStyle(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding(14)
+                        .background(Color.skyBright.opacity(0.75), in: RoundedRectangle(cornerRadius: 14))
+                }
+                .buttonStyle(.plain)
+            }
+            .padding(16)
+        }
+        .background(NightSkyBackground())
+        .navigationTitle("Analytics Center")
+        .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
+private struct AnalyticsModelStackSection: View {
+    let outputs: [ModuleProjection]
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Label("Prediction Stack", systemImage: "brain.head.profile")
+                .font(.headline)
+                .foregroundStyle(.white)
+
+            ForEach(ProjectionModelSource.allCases, id: \.self) { source in
+                AnalyticsModelStatusRow(
+                    source: source,
+                    count: outputs.lazy.filter { $0.source == source }.count
+                )
+            }
+
+            Text(outputs.isEmpty
+                 ? "Open Plays to calculate the current slate. Analytics, AI, and Blended results will then be available throughout the app."
+                 : "The Blended model confidence-weights the independent Analytics and AI projections.")
+                .font(.caption)
+                .foregroundStyle(.white.opacity(0.55))
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(16)
+        .background(Color.skyCard, in: RoundedRectangle(cornerRadius: 16))
+        .overlay(RoundedRectangle(cornerRadius: 16).stroke(Color.skyBorder, lineWidth: 1))
+    }
+}
+
+private struct AnalyticsModelStatusRow: View {
+    let source: ProjectionModelSource
+    let count: Int
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Text(source.shortLabel)
+                .font(.caption.bold())
+                .foregroundStyle(source == .blended ? Color.mint : Color.skyBright)
+                .frame(width: 52, alignment: .leading)
+            Text(source.rawValue)
+                .font(.subheadline.bold())
+                .foregroundStyle(.white)
+            Spacer()
+            Text("\(count) projections")
+                .font(.caption.monospacedDigit())
+                .foregroundStyle(.white.opacity(0.55))
+        }
+        .padding(10)
+        .background(Color.white.opacity(0.05), in: RoundedRectangle(cornerRadius: 10))
+    }
+}
+
+private struct AnalyticsDataCoverageSection: View {
+    let players: Int
+    let playerAdvanced: Int
+    let teamAdvanced: Int
+    let positionSplits: Int
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Label("Advanced Data Coverage", systemImage: "chart.xyaxis.line")
+                .font(.headline)
+                .foregroundStyle(.white)
+
+            AnalyticsCoverageRow(label: "Roster players", value: players)
+            AnalyticsCoverageRow(label: "Player advanced", value: playerAdvanced)
+            AnalyticsCoverageRow(label: "Team advanced", value: teamAdvanced)
+            AnalyticsCoverageRow(label: "Position splits", value: positionSplits)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(16)
+        .background(Color.skyCard, in: RoundedRectangle(cornerRadius: 16))
+        .overlay(RoundedRectangle(cornerRadius: 16).stroke(Color.skyBorder, lineWidth: 1))
+    }
+}
+
+private struct AnalyticsCoverageRow: View {
+    let label: String
+    let value: Int
+
+    var body: some View {
+        HStack {
+            Text(label)
+                .foregroundStyle(.white.opacity(0.75))
+            Spacer()
+            Text("\(value)")
+                .font(.subheadline.bold().monospacedDigit())
+                .foregroundStyle(value > 0 ? Color.mint : Color.orange)
+        }
+        .font(.subheadline)
+    }
+}
+
 struct ProjectionAccuracyView: View {
     @State private var tracker = ProjectionTracker.shared
     @ObservedObject private var dataService = LocalDataService.shared
@@ -192,7 +335,7 @@ private struct ProjectionResultRow: View {
 
     var body: some View {
         HStack(spacing: 10) {
-            Image(systemName: record.grade == .hit ? "checkmark.circle.fill" : "xmark.circle.fill")
+            Image(systemName: gradeIcon)
                 .foregroundStyle(gradeColor)
             VStack(alignment: .leading, spacing: 2) {
                 Text(record.playerName)
@@ -213,5 +356,14 @@ private struct ProjectionResultRow: View {
             }
         }
         .padding(.vertical, 5)
+    }
+
+    private var gradeIcon: String {
+        switch record.grade {
+        case .hit: return "checkmark.circle.fill"
+        case .miss: return "xmark.circle.fill"
+        case .push: return "minus.circle.fill"
+        case nil: return "clock.circle.fill"
+        }
     }
 }

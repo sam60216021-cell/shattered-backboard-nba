@@ -88,7 +88,7 @@ struct HomeView: View {
             .padding(.vertical, 12)
         }
         .refreshable { await refresh() }
-        .navigationTitle(isPlayoff ? "2026 NBA Playoffs" : scheduleTitle(for: games))
+        .navigationTitle(isPlayoff ? "\(SportConfig.currentSeason) NBA Playoffs" : scheduleTitle(for: games))
     }
 
     private var loadingView: some View {
@@ -178,6 +178,8 @@ struct HomeView: View {
 
     @ToolbarContentBuilder
     private var refreshButton: some ToolbarContent {
+        AnalyticsCenterToolbarItem()
+
         ToolbarItem(placement: .navigationBarTrailing) {
             Button {
                 showSettings = true

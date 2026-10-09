@@ -598,6 +598,8 @@ struct QuickPicksView: View {
 
     @ToolbarContentBuilder
     private var toolbarItems: some ToolbarContent {
+        AnalyticsCenterToolbarItem()
+
         ToolbarItem(placement: .navigationBarLeading) {
             if !router.parlayPicks.isEmpty {
                 Button {

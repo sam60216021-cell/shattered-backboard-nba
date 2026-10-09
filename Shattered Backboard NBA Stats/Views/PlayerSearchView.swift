@@ -36,6 +36,7 @@ struct PlayerSearchView: View {
             }
             .navigationTitle("Players")
             .navigationBarTitleDisplayMode(.large)
+            .toolbar { AnalyticsCenterToolbarItem() }
             .searchable(
                 text: $searchText,
                 placement: .navigationBarDrawer(displayMode: .always),

@@ -535,6 +535,7 @@ struct TopPicksView: View {
             }
             .navigationTitle("Plays")
             .navigationBarTitleDisplayMode(.inline)
+            .toolbar { AnalyticsCenterToolbarItem() }
         }
         .task {
             store.computeIfNeeded(snapshotID: snapshotID, playerCount: playerCount, gameCount: gameCount, logsRevision: dataService.logsRevision)
@@ -2097,6 +2098,8 @@ struct SimilarParlayView: View {
             }
             .navigationTitle("Parlay")
             .toolbar {
+                AnalyticsCenterToolbarItem()
+
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
                         store.computeIfNeeded(
