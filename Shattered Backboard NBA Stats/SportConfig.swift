@@ -19,9 +19,9 @@ struct SportConfig {
     static let usesServerSync   = true
 
     // ── Remote server base URL ─────────────────────────────────────────────────
-    // Point this at your Mac NBA data server.
-    // Run: cd nba-server && python server.py   (serves on port 8000)
-    static let baseURL          = "http://192.168.0.7:8000"
+    // Render-hosted feed service. Debug builds can override this URL from the
+    // hidden developer settings screen when testing a local server.
+    static let baseURL          = "https://shattered-backboard-nba.onrender.com"
 
     // ── API endpoints (appended to baseURL) ────────────────────────────────────
     static let scheduleEndpoint      = "/nba/schedule"
