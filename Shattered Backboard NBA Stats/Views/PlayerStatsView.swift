@@ -274,6 +274,13 @@ struct PlayerStatsView: View {
                         .padding(.vertical, 2)
                         .background(Color.white.opacity(0.12), in: Capsule())
                 }
+                if let advanced = dataService.playerAdvancedMap[player.playerID] {
+                    PlayerUsageBadge(
+                        usagePct: advanced.estimatedUsagePct,
+                        possessionsPer36: advanced.possessionsUsedPer36,
+                        games: advanced.games
+                    )
+                }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
 
@@ -1247,6 +1254,31 @@ struct PlayerStatsView: View {
         .frame(maxWidth: .infinity)
         .padding(.vertical, 8)
         .background(Color.white.opacity(0.05), in: RoundedRectangle(cornerRadius: 10))
+    }
+}
+
+private struct PlayerUsageBadge: View {
+    let usagePct: Double?
+    let possessionsPer36: Double?
+    let games: Int
+
+    var body: some View {
+        if let usagePct {
+            HStack(spacing: 5) {
+                Image(systemName: "chart.pie.fill")
+                Text("Usage \(usagePct, specifier: "%.1f")%")
+                if let possessionsPer36 {
+                    Text("· \(possessionsPer36, specifier: "%.1f") poss/36")
+                        .foregroundStyle(.white.opacity(0.55))
+                }
+            }
+            .font(.system(size: 10, weight: .semibold))
+            .foregroundStyle(Color.orange)
+            .padding(.horizontal, 7)
+            .padding(.vertical, 3)
+            .background(Color.orange.opacity(0.14), in: Capsule())
+            .accessibilityLabel("Estimated usage \(usagePct, specifier: "%.1f") percent across \(games) games")
+        }
     }
 }
 

@@ -114,6 +114,21 @@ private struct RawTeamAdvancedResponse: Decodable {
     let teams: [RawTeamAdvancedEntry]?
 }
 
+private struct RawPlayerAdvancedResponse: Decodable {
+    let season: Int?
+    let players: [RawPlayerAdvancedEntry]?
+}
+
+private struct RawPlayerAdvancedEntry: Decodable {
+    let player_id: String?
+    let name: String?
+    let team: String?
+    let games: Int?
+    let minutes_per_game: Double?
+    let estimated_usage_pct: Double?
+    let possessions_used_per_36: Double?
+}
+
 private struct RawTeamPositionSplitsResponse: Decodable {
     let season: Int?
     let days: Int?
@@ -240,6 +255,8 @@ final class LocalDataService: ObservableObject {
     @Published var standingsMap: [String: StandingsEntry] = [:]
     /// Team advanced metrics keyed by team abbreviation.
     @Published var teamAdvancedMap: [String: TeamAdvancedEntry] = [:]
+    /// Possession-based player metrics keyed by stable NBA player ID.
+    @Published var playerAdvancedMap: [String: PlayerAdvancedEntry] = [:]
     /// Team defensive splits keyed by team abbreviation, then position bucket.
     @Published var teamPositionSplitsMap: [String: [String: TeamPositionSplitEntry]] = [:]
     /// Latest rolling backtest summary used for model auto-tuning.
@@ -538,6 +555,7 @@ final class LocalDataService: ObservableObject {
             let rosterURL    = URL(string: base + SportConfig.rosterEndpoint),
             let standingsURL = URL(string: base + SportConfig.standingsEndpoint),
             let teamAdvURL   = URL(string: base + SportConfig.teamAdvancedEndpoint),
+            let playerAdvURL = URL(string: base + SportConfig.playerAdvancedEndpoint),
             let posSplitURL  = URL(string: base + SportConfig.teamPositionSplitsEndpoint)
         else { throw URLError(.badURL) }
 
@@ -626,6 +644,7 @@ final class LocalDataService: ObservableObject {
                     rosterURL: rosterURL,
                     standingsURL: standingsURL,
                     teamAdvURL: teamAdvURL,
+                    playerAdvURL: playerAdvURL,
                     posSplitURL: posSplitURL
                 )
             }
@@ -1950,6 +1969,7 @@ final class LocalDataService: ObservableObject {
         rosterURL: URL,
         standingsURL: URL,
         teamAdvURL: URL,
+        playerAdvURL: URL,
         posSplitURL: URL
     ) async {
         async let lineupsTask  = fetchDataWithCache(from: lineupsURL, maxAge: 10 * 60, tag: "lineups")
@@ -1957,6 +1977,7 @@ final class LocalDataService: ObservableObject {
         async let rosterTask   = fetchDataWithCache(from: rosterURL, maxAge: 6 * 60 * 60, tag: "roster")
         async let standTask    = fetchDataWithCache(from: standingsURL, maxAge: 20 * 60, tag: "standings")
         async let teamAdvTask  = fetchDataWithCache(from: teamAdvURL, maxAge: 30 * 60, tag: "team_advanced")
+        async let playerAdvTask = fetchDataWithCache(from: playerAdvURL, maxAge: 30 * 60, tag: "player_advanced")
         async let posSplitTask = fetchDataWithCache(from: posSplitURL, maxAge: 30 * 60, tag: "team_position_splits")
 
         let lData        = try? await lineupsTask
@@ -1964,6 +1985,7 @@ final class LocalDataService: ObservableObject {
         let roData       = try? await rosterTask
         let stndData     = try? await standTask
         let teamAdvData  = try? await teamAdvTask
+        let playerAdvData = try? await playerAdvTask
         let posSplitData = try? await posSplitTask
 
         let decoder = JSONDecoder()
@@ -2025,6 +2047,25 @@ final class LocalDataService: ObservableObject {
             }
             teamAdvancedMap = map
             syncLog("[supplemental] teamAdvancedMap populated — \(map.count) teams")
+        }
+
+        if let playerAdvData,
+           let rawPlayerAdv = try? JSONDecoder().decode(RawPlayerAdvancedResponse.self, from: playerAdvData) {
+            var map: [String: PlayerAdvancedEntry] = [:]
+            for player in rawPlayerAdv.players ?? [] {
+                guard let playerID = player.player_id, !playerID.isEmpty else { continue }
+                map[playerID] = PlayerAdvancedEntry(
+                    playerID: playerID,
+                    name: player.name ?? playerID,
+                    team: player.team,
+                    games: player.games ?? 0,
+                    minutesPerGame: player.minutes_per_game,
+                    estimatedUsagePct: player.estimated_usage_pct,
+                    possessionsUsedPer36: player.possessions_used_per_36
+                )
+            }
+            playerAdvancedMap = map
+            syncLog("[supplemental] playerAdvancedMap populated — \(map.count) players")
         }
 
         if let posSplitData,

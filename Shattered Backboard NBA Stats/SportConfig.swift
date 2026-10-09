@@ -27,6 +27,7 @@ struct SportConfig {
     static let scheduleEndpoint      = "/nba/schedule"
     static let standingsEndpoint     = "/nba/standings"
     static let teamAdvancedEndpoint  = "/nba/team_advanced"
+    static let playerAdvancedEndpoint = "/nba/player_advanced"
     static let teamPositionSplitsEndpoint = "/nba/team_position_splits"
     static let lineupsEndpoint       = "/nba/lineups"
     static let statsEndpoint         = "/nba/stats"
@@ -130,4 +131,3 @@ struct SportConfig {
     // ── UserDefaults keys ──────────────────────────────────────────────────────
     static let serverURLKey     = "nba_server_url"
 }
-

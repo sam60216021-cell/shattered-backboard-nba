@@ -729,6 +729,168 @@ final class PredictionEngine {
 
     /// Derived advanced metrics from available NBA box-score fields.
     /// Uses TS%, usage proxy, AST/TOV quality, and stocks-per-minute trend.
+    // MARK: - Per-pick reasoning
+
+    /// One concrete, pick-specific reason a stat is or isn't recommended.
+    struct PickReason {
+        enum Kind {
+            case edge        // model sits above/below the line — the core of the pick
+            case matchup     // opponent/defender context
+            case volume      // minutes / role opportunity
+            case form        // hot/cold streak, efficiency or usage trend
+            case risk        // something working against the pick
+            case sample      // grounding: how much data backs this
+        }
+        let kind: Kind
+        let text: String
+    }
+
+    /// Builds the ordered list of plain-English reasons behind ONE specific pick.
+    ///
+    /// Every call returns at least one `.sample` line so the reasoning surface can
+    /// never render empty (the failure mode that made picks feel unjustified).
+    /// Lines are ordered most-decision-relevant first: edge → matchup → volume →
+    /// form → risk → sample grounding.
+    func pickReasons(
+        for proj: PlayerProjection,
+        stat: String,
+        line: Double,
+        direction: PropDirection,
+        sim: SimulationResult?,
+        logs: [GameLog],
+        defenderMatchup: DefenderMatchup?
+    ) -> [PickReason] {
+        var out: [PickReason] = []
+        let projected = proj.value(for: stat)
+        let over      = direction == .over
+
+        // ── Edge: the single most important line — how far the model sits from
+        // the market number, expressed in both raw and percentage terms.
+        if projected > 0, line > 0 {
+            let diff = projected - line
+            let pct  = abs(diff) / line * 100
+            let aligned = (over && diff > 0) || (!over && diff < 0)
+            if aligned && pct >= 1.0 {
+                let side = over ? "over" : "under"
+                out.append(PickReason(
+                    kind: .edge,
+                    text: String(format: "Model projects %.1f %@ — %.1f %@ the %@ %.1f line (+%.0f%%)",
+                                 projected, stat, abs(diff), over ? "above" : "below", side, line, pct)
+                ))
+            }
+        }
+
+        // ── Matchup: opposing defender suppression is already baked into the
+        // projection, so surface it as an explicit driver when it's meaningful.
+        if let dm = defenderMatchup, dm.isSignificant {
+            let mult = dm.multiplier(for: stat)
+            let delta = (mult - 1.0) * 100
+            let name = dm.defenderName
+            let pos = dm.defenderPosition.map { " (\($0))" } ?? ""
+            if delta <= -2.0 {
+                out.append(PickReason(
+                    kind: .matchup,
+                    text: String(format: "%@%@ is a strong %@ defender — projection cut %.0f%%",
+                                 name, pos, stat, abs(delta))
+                ))
+            } else if delta >= 2.0 {
+                out.append(PickReason(
+                    kind: .matchup,
+                    text: String(format: "%@%@ is a weak %@ defender — projection boosted %.0f%%",
+                                 name, pos, stat, abs(delta))
+                ))
+            }
+        }
+
+        // ── Volume: minutes drive every counting stat, so always show the
+        // projected role when it's a genuine signal (not a bench cameo).
+        let mins = proj.minutes
+        if mins > 0 {
+            let recentMins = logs.prefix(10).compactMap { $0.minutesSeconds }.filter { $0 > 0 }.map { $0 / 60.0 }
+            let avgRecent = recentMins.isEmpty ? nil : recentMins.reduce(0, +) / Double(recentMins.count)
+            if let ar = avgRecent, ar > 0, abs(mins - ar) / ar >= 0.05 {
+                let dir = mins > ar ? "up" : "down"
+                out.append(PickReason(
+                    kind: .volume,
+                    text: String(format: "Projected %.1f minutes — trending %@ from his recent %.1f average",
+                                 mins, dir, ar)
+                ))
+            } else if mins >= 28 {
+                out.append(PickReason(
+                    kind: .volume,
+                    text: String(format: "Projected %.1f minutes — heavy starter workload keeps his volume secure",
+                                 mins)
+                ))
+            }
+        }
+
+        // ── Form: streak factor is the engine's own L3-vs-L10 read.
+        if abs(proj.streakFactor) >= 0.25 {
+            if proj.streakFactor > 0 {
+                out.append(PickReason(
+                    kind: .form,
+                    text: String(format: "Hot form — last 3 games running %.0f%% above his 10-game baseline",
+                                 abs(proj.streakFactor) * 100)
+                ))
+            } else {
+                out.append(PickReason(
+                    kind: .form,
+                    text: String(format: "Cold form — last 3 games running %.0f%% below his 10-game baseline",
+                                 abs(proj.streakFactor) * 100)
+                ))
+            }
+        }
+
+        // ── Risk: an unaligned edge and/or a sustained decline are the two
+        // things that should make you hesitate, so state them plainly.
+        if projected > 0, line > 0 {
+            let diff = projected - line
+            let aligned = (over && diff > 0) || (!over && diff < 0)
+            if !aligned {
+                out.append(PickReason(
+                    kind: .risk,
+                    text: String(format: "Model sits at %.1f vs the %.1f line — this side runs against the model's own number. Consistency play, not a value edge.",
+                                 projected, line)
+                ))
+            }
+        }
+        if proj.declineStreakGames >= 2 {
+            out.append(PickReason(
+                kind: .risk,
+                text: String(format: "Sustained dip — %d straight games of declining form; projection discounted %.0f%%",
+                             proj.declineStreakGames, (1.0 - proj.declineProjectionPenalty) * 100)
+            ))
+        }
+        if proj.volatility >= 0.30 {
+            out.append(PickReason(
+                kind: .risk,
+                text: String(format: "High game-to-game volatility (%.2f) — wider outcome range than most plays",
+                             proj.volatility)
+            ))
+        }
+
+        // ── Sim distribution: the actual outcome spread behind the confidence %,
+        // so the number is never a black box.
+        if let s = sim, s.simCount > 0 {
+            let overProb = s.hitProbability(above: line)
+            let hp = over ? overProb : (1.0 - overProb)
+            out.append(PickReason(
+                kind: .edge,
+                text: String(format: "%d simulations: %.0f%% land past %.1f — middle 80%% of outcomes span %.1f–%.1f",
+                             s.simCount, hp * 100, line, s.p10, s.p90)
+            ))
+        }
+
+        // ── Sample grounding: ALWAYS present so reasoning is never empty.
+        var ground = String(format: "%d games of data behind this projection", logs.count)
+        if let f = proj.floors[stat], let c = proj.ceilings[stat] {
+            ground += String(format: " · recent range %.1f–%.1f", f, c)
+        }
+        out.append(PickReason(kind: .sample, text: ground))
+
+        return out
+    }
+
     private func advancedMetricsMultiplier(
         logs: [GameLog],
         keyPath: KeyPath<GameLog, Double?>,
