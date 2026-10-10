@@ -292,6 +292,122 @@ final class StoredStandings {
     }
 }
 
+// MARK: - Stored advanced analytics
+
+/// Team-level advanced metrics used by the projection engine.
+@Model
+final class StoredTeamAdvanced {
+    @Attribute(.unique) var abbr: String
+    var pace: Double?
+    var offRating: Double?
+    var defRating: Double?
+    var netRating: Double?
+    var tsPct: Double?
+    var efgPct: Double?
+    var tovPct: Double?
+    var rebPct: Double?
+    var astRatio: Double?
+    var syncedAt: Date
+
+    init(entry: TeamAdvancedEntry, syncedAt: Date = .now) {
+        abbr = entry.abbr
+        pace = entry.pace
+        offRating = entry.offRating
+        defRating = entry.defRating
+        netRating = entry.netRating
+        tsPct = entry.tsPct
+        efgPct = entry.efgPct
+        tovPct = entry.tovPct
+        rebPct = entry.rebPct
+        astRatio = entry.astRatio
+        self.syncedAt = syncedAt
+    }
+
+    func toEntry() -> TeamAdvancedEntry {
+        TeamAdvancedEntry(
+            abbr: abbr, pace: pace, offRating: offRating,
+            defRating: defRating, netRating: netRating,
+            tsPct: tsPct, efgPct: efgPct, tovPct: tovPct,
+            rebPct: rebPct, astRatio: astRatio
+        )
+    }
+}
+
+/// Player-level usage and possession context used by AI projections.
+@Model
+final class StoredPlayerAdvanced {
+    @Attribute(.unique) var playerID: String
+    var name: String
+    var team: String?
+    var games: Int
+    var minutesPerGame: Double?
+    var estimatedUsagePct: Double?
+    var possessionsUsedPer36: Double?
+    var syncedAt: Date
+
+    init(entry: PlayerAdvancedEntry, syncedAt: Date = .now) {
+        playerID = entry.playerID
+        name = entry.name
+        team = entry.team
+        games = entry.games
+        minutesPerGame = entry.minutesPerGame
+        estimatedUsagePct = entry.estimatedUsagePct
+        possessionsUsedPer36 = entry.possessionsUsedPer36
+        self.syncedAt = syncedAt
+    }
+
+    func toEntry() -> PlayerAdvancedEntry {
+        PlayerAdvancedEntry(
+            playerID: playerID, name: name, team: team, games: games,
+            minutesPerGame: minutesPerGame,
+            estimatedUsagePct: estimatedUsagePct,
+            possessionsUsedPer36: possessionsUsedPer36
+        )
+    }
+}
+
+/// Opponent production allowed to each position group.
+@Model
+final class StoredTeamPositionSplit {
+    @Attribute(.unique) var splitID: String
+    var teamAbbr: String
+    var positionGroup: String
+    var ptsAllowed: Double?
+    var rebAllowed: Double?
+    var astAllowed: Double?
+    var threepmAllowed: Double?
+    var stlAllowed: Double?
+    var blkAllowed: Double?
+    var praAllowed: Double?
+    var sampleSize: Int
+    var syncedAt: Date
+
+    init(entry: TeamPositionSplitEntry, syncedAt: Date = .now) {
+        splitID = "\(entry.teamAbbr.uppercased())_\(entry.positionGroup.uppercased())"
+        teamAbbr = entry.teamAbbr
+        positionGroup = entry.positionGroup
+        ptsAllowed = entry.ptsAllowed
+        rebAllowed = entry.rebAllowed
+        astAllowed = entry.astAllowed
+        threepmAllowed = entry.threepmAllowed
+        stlAllowed = entry.stlAllowed
+        blkAllowed = entry.blkAllowed
+        praAllowed = entry.praAllowed
+        sampleSize = entry.sampleSize
+        self.syncedAt = syncedAt
+    }
+
+    func toEntry() -> TeamPositionSplitEntry {
+        TeamPositionSplitEntry(
+            teamAbbr: teamAbbr, positionGroup: positionGroup,
+            ptsAllowed: ptsAllowed, rebAllowed: rebAllowed,
+            astAllowed: astAllowed, threepmAllowed: threepmAllowed,
+            stlAllowed: stlAllowed, blkAllowed: blkAllowed,
+            praAllowed: praAllowed, sampleSize: sampleSize
+        )
+    }
+}
+
 // MARK: - AppDatabase
 
 /// Shared SwiftData container.  Initialised once at app launch.
@@ -315,6 +431,9 @@ final class AppDatabase {
             StoredLineupPlayer.self,
             StoredGameDetails.self,
             StoredStandings.self,
+            StoredTeamAdvanced.self,
+            StoredPlayerAdvanced.self,
+            StoredTeamPositionSplit.self,
         ])
 
         // Build an explicit store URL so we can guarantee the parent

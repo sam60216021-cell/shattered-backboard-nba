@@ -466,6 +466,24 @@ final class LocalDataService: ObservableObject {
             }
         }
 
+        // Restore prediction inputs before any network request. These maps used
+        // to live only in memory, which made analytics disappear after relaunch.
+        let storedTeamAdvanced = (try? ctx.fetch(FetchDescriptor<StoredTeamAdvanced>())) ?? []
+        teamAdvancedMap = Dictionary(
+            uniqueKeysWithValues: storedTeamAdvanced.map { ($0.abbr, $0.toEntry()) }
+        )
+        let storedPlayerAdvanced = (try? ctx.fetch(FetchDescriptor<StoredPlayerAdvanced>())) ?? []
+        playerAdvancedMap = Dictionary(
+            uniqueKeysWithValues: storedPlayerAdvanced.map { ($0.playerID, $0.toEntry()) }
+        )
+        let storedPositionSplits = (try? ctx.fetch(FetchDescriptor<StoredTeamPositionSplit>())) ?? []
+        var restoredSplits: [String: [String: TeamPositionSplitEntry]] = [:]
+        for row in storedPositionSplits {
+            let entry = row.toEntry()
+            restoredSplits[entry.teamAbbr, default: [:]][entry.positionGroup] = entry
+        }
+        teamPositionSplitsMap = restoredSplits
+
         // Restore game details from SwiftData
         let storedDetails = (try? ctx.fetch(FetchDescriptor<StoredGameDetails>())) ?? []
         if !storedDetails.isEmpty {
@@ -1391,6 +1409,45 @@ final class LocalDataService: ObservableObject {
         syncLog("[persist] stored \(map.count) standings rows")
     }
 
+    private func persistTeamAdvanced(_ map: [String: TeamAdvancedEntry]) {
+        guard !map.isEmpty else { return }
+        let ctx = modelContext
+        deleteAll(StoredTeamAdvanced.self, from: ctx)
+        let now = Date()
+        for entry in map.values {
+            ctx.insert(StoredTeamAdvanced(entry: entry, syncedAt: now))
+        }
+        try? ctx.save()
+        syncLog("[persist] stored \(map.count) team advanced rows")
+    }
+
+    private func persistPlayerAdvanced(_ map: [String: PlayerAdvancedEntry]) {
+        guard !map.isEmpty else { return }
+        let ctx = modelContext
+        deleteAll(StoredPlayerAdvanced.self, from: ctx)
+        let now = Date()
+        for entry in map.values {
+            ctx.insert(StoredPlayerAdvanced(entry: entry, syncedAt: now))
+        }
+        try? ctx.save()
+        syncLog("[persist] stored \(map.count) player advanced rows")
+    }
+
+    private func persistTeamPositionSplits(_ map: [String: [String: TeamPositionSplitEntry]]) {
+        guard !map.isEmpty else { return }
+        let ctx = modelContext
+        deleteAll(StoredTeamPositionSplit.self, from: ctx)
+        let now = Date()
+        for teamEntries in map.values {
+            for entry in teamEntries.values {
+                ctx.insert(StoredTeamPositionSplit(entry: entry, syncedAt: now))
+            }
+        }
+        try? ctx.save()
+        let count = map.values.reduce(0) { $0 + $1.count }
+        syncLog("[persist] stored \(count) team position split rows")
+    }
+
     private func deriveStandingsFromLocalLogs(lookbackGames: Int = 12) -> [String: StandingsEntry] {
         let ctx = modelContext
         let cutoff = Self.isoDateString(Calendar.current.date(byAdding: .day, value: -140, to: Date()) ?? Date())
@@ -2048,6 +2105,7 @@ final class LocalDataService: ObservableObject {
                 )
             }
             teamAdvancedMap = map
+            persistTeamAdvanced(map)
             syncLog("[supplemental] teamAdvancedMap populated — \(map.count) teams")
         }
 
@@ -2067,6 +2125,7 @@ final class LocalDataService: ObservableObject {
                 )
             }
             playerAdvancedMap = map
+            persistPlayerAdvanced(map)
             syncLog("[supplemental] playerAdvancedMap populated — \(map.count) players")
         }
 
@@ -2091,6 +2150,7 @@ final class LocalDataService: ObservableObject {
                 grouped[team, default: [:]][group] = entry
             }
             teamPositionSplitsMap = grouped
+            persistTeamPositionSplits(grouped)
             syncLog("[supplemental] teamPositionSplitsMap populated — \(grouped.count) teams")
         }
 
@@ -2400,12 +2460,18 @@ final class LocalDataService: ObservableObject {
         deleteAll(StoredGameLog.self,       from: ctx)
         deleteAll(StoredGameDetails.self,   from: ctx)
         deleteAll(StoredStandings.self,     from: ctx)
+        deleteAll(StoredTeamAdvanced.self,  from: ctx)
+        deleteAll(StoredPlayerAdvanced.self, from: ctx)
+        deleteAll(StoredTeamPositionSplit.self, from: ctx)
         try? ctx.save()
         clearResponseCache()
         logMemoryCache.removeAll()
         snapshot = nil
         gameDetails = [:]
         standingsMap = [:]
+        teamAdvancedMap = [:]
+        playerAdvancedMap = [:]
+        teamPositionSplitsMap = [:]
         syncLog("[nuclearReset] DB cleared — starting full sync")
         _ = try? await fetchAll(fetchLogs: true)
         syncLog("[nuclearReset] complete")
