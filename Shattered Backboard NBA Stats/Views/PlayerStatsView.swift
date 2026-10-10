@@ -204,7 +204,7 @@ struct PlayerStatsView: View {
     }
 
     private func loadLogs() async {
-        // Individual-defender matchup (opposing same-position starter), if scheduled.
+        // Direct-defender matchup (official or projected opposing starter), if scheduled.
         if let g = game {
             matchup = MatchupDefenseEvaluator.cached(player: player, game: g, dataService: dataService)
         } else {
@@ -877,7 +877,7 @@ struct PlayerStatsView: View {
 
     // MARK: - Defender matchup chip
 
-    /// Warns when the opposing same-position starter is a strong interior defender.
+    /// Warns when the projected direct defender creates strong matchup pressure.
     @ViewBuilder
     private var defenderMatchupChip: some View {
         if let m = matchup, m.isSignificant {

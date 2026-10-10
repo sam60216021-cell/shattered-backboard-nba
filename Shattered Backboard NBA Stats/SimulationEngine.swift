@@ -116,7 +116,7 @@ final class SimulationEngine {
             simCount: n
         )))
 
-        // Individual-defender impact (0 → none, ≤0.10 → elite interior presence).
+        // Direct-defender impact (0 → none, ≤0.10 → elite matchup pressure).
         // The projected mean already includes the defender cut; here we shape the
         // DISTRIBUTION: more volatility + a heavier downside tail when locked down.
         let defenderImpact: Double = {

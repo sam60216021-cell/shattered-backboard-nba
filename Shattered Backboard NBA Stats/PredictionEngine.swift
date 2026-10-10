@@ -142,7 +142,7 @@ struct ProjectionContext {
     let period: Int?
     let hoursToTip: Double?
     let playerPosition: String?
-    let defenderMatchup: DefenderMatchup?   // opposing same-position starter; nil → skip
+    let defenderMatchup: DefenderMatchup?   // projected direct defender; nil → skip
 
     init(opponent: String?, isHome: Bool?, isPlayoffs: Bool,
          isFirstRound: Bool = false, gameDate: String,
@@ -671,7 +671,7 @@ final class PredictionEngine {
         )
         let blowoutMult = blowoutRiskMultiplier(logs: logs, opponent: context.opponent)
         let statusMult = gameStatusMinutesMultiplier(context: context)
-        // Individual-defender matchup: opposing same-position starter's interior presence.
+        // Direct-defender matchup: position fit plus perimeter and interior pressure.
         let defenderMult = context.defenderMatchup?.multiplier(for: statLabel(for: keyPath)) ?? 1.0
         let combined = base
             * oppMult
