@@ -26,6 +26,7 @@ struct PlayerStatsView: View {
     @State private var avgWindow: Int = 0  // 0 = season; N = last N games
     @State private var customLines: [String: Double] = [:]  // per-stat user-adjusted line
     @State private var matchup: DefenderMatchup? = nil
+    @State private var isLoadingPlayerLogs = false
 
     private let allStats    = ["PTS", "REB", "AST", "PR", "PA", "RA", "PRA", "FPTS", "3PM", "FTM", "STL", "BLK", "DD", "TD"]
     private let chartStats  = ["PTS", "REB", "AST", "PR", "PA", "RA", "PRA", "FPTS", "3PM", "STL", "BLK", "DD", "TD"]
@@ -210,12 +211,29 @@ struct PlayerStatsView: View {
         } else {
             matchup = nil
         }
-        let ctx = buildProjectionContext()
-        let cached = dataService.localLogs(playerID: player.playerID)
+        var cached = dataService.localLogs(playerID: player.playerID)
+        if cached.isEmpty {
+            // Global search includes the full roster, while startup warm-up focuses
+            // on today's slate. Fetch an unwarmed player's history on demand.
+            isLoadingPlayerLogs = true
+            await dataService.fetchPlayerLogs(playerID: player.playerID)
+            cached = dataService.localLogs(playerID: player.playerID)
+            if cached.isEmpty {
+                // Early in a new season, a player may not have a current-season
+                // appearance yet. Fall back to the preceding season for a useful
+                // profile and prediction baseline.
+                await dataService.fetchPlayerLogs(
+                    playerID: player.playerID,
+                    season: SportConfig.currentSeason - 1
+                )
+                cached = dataService.localLogs(playerID: player.playerID)
+            }
+            isLoadingPlayerLogs = false
+        }
         guard !cached.isEmpty else {
-            // No local data yet — the daily background sync (fetchAll) will populate it.
             return
         }
+        let ctx = buildProjectionContext()
         logs = cached
         projection = PredictionEngine.shared.project(player: player, logs: logs, context: ctx)
 
@@ -904,12 +922,31 @@ struct PlayerStatsView: View {
 
     @ViewBuilder
     private var gameLogSection: some View {
-        if logs.isEmpty {
+        if isLoadingPlayerLogs && logs.isEmpty {
+            HStack(spacing: 10) {
+                ProgressView()
+                    .tint(.skyBright)
+                Text("Loading recent games…")
+                    .font(.caption)
+                    .foregroundColor(.white.opacity(0.55))
+            }
+            .frame(maxWidth: .infinity)
+            .padding(20)
+            .background(Color.skyCard, in: RoundedRectangle(cornerRadius: 14))
+        } else if logs.isEmpty {
             HStack {
                 Image(systemName: "clock.badge.questionmark")
                     .foregroundColor(.white.opacity(0.25))
-                Text("No recent game logs in database")
-                    .font(.caption).foregroundColor(.white.opacity(0.3))
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("No recent games are available for this player.")
+                        .font(.caption)
+                        .foregroundColor(.white.opacity(0.45))
+                    Button("Try Again") {
+                        Task { await loadLogs() }
+                    }
+                    .font(.caption.bold())
+                    .foregroundColor(.skyBright)
+                }
             }
             .frame(maxWidth: .infinity)
             .padding(20)

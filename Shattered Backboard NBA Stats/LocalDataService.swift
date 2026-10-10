@@ -317,8 +317,10 @@ final class LocalDataService: ObservableObject {
     /// weighting naturally de-emphasises the older rows.
     private static let logRetentionDays = 400   // covers full current NBA season (Oct-Jun) + buffer
 
-    /// Window sent to the server for log fetch requests.
-    private static let logFetchDays = 90
+    /// Window sent to the server for log fetch requests. Keep this aligned with
+    /// local retention so player profiles still have prior-season history during
+    /// the preseason, before the new season has produced game logs.
+    private static let logFetchDays = 400
 
     /// Returns the latest game_date stored across all local logs, or nil if none.
     /// Used as the `since` cutoff so we only request games the phone doesn't have yet.
