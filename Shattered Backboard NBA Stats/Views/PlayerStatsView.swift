@@ -102,11 +102,21 @@ struct PlayerStatsView: View {
                     }
                     if let proj = projection {
                         defenderMatchupChip
+                        if let numbers = PredictionNumberEngine.numbers(
+                            player: player,
+                            stat: chartStat,
+                            projection: proj,
+                            logs: logs,
+                            game: game,
+                            defenderMatchup: matchup,
+                            playerAdvanced: dataService.playerAdvancedMap[player.playerID]
+                        ) {
+                            PlayerPredictionNumbersCard(stat: chartStat, numbers: numbers)
+                        }
                         bestBetInsightCard(proj: proj)
                         projectionRangeCard(proj: proj)
                         trendContextCard(proj: proj)
                     }
-                    addPicksSection
                     gameLogSection
                 }
                 .padding(.horizontal, 16)
@@ -810,7 +820,7 @@ struct PlayerStatsView: View {
         }
 
         let reason = parts.prefix(2).joined(separator: ", ")
-        return (best.stat, "Take \(best.stat) — \(reason). Projected \(String(format: "%.1f", best.projected)).")
+        return (best.stat, "\(best.stat) is the strongest model signal — \(reason). Projected \(String(format: "%.1f", best.projected)).")
     }
 
     private var matchupPositionLabel: String {
@@ -846,7 +856,7 @@ struct PlayerStatsView: View {
                     Image(systemName: "lightbulb.fill")
                         .font(.caption.bold())
                         .foregroundColor(.skyBright)
-                    Text("BEST BET — \(bet.stat)")
+                    Text("MODEL FOCUS — \(bet.stat)")
                         .font(.caption.bold())
                         .foregroundColor(.skyBright)
                     Spacer()
@@ -1254,6 +1264,29 @@ struct PlayerStatsView: View {
         .frame(maxWidth: .infinity)
         .padding(.vertical, 8)
         .background(Color.white.opacity(0.05), in: RoundedRectangle(cornerRadius: 10))
+    }
+}
+
+private struct PlayerPredictionNumbersCard: View {
+    let stat: String
+    let numbers: ProjectionNumberSet
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack {
+                Label("Projected \(stat)", systemImage: "number.circle.fill")
+                    .font(.headline)
+                    .foregroundStyle(.white)
+                Spacer()
+                Text("Compare with sportsbook")
+                    .font(.caption2)
+                    .foregroundStyle(.white.opacity(0.45))
+            }
+            ProjectionNumberComparisonView(numbers: numbers)
+        }
+        .padding(14)
+        .background(Color.skyCard, in: RoundedRectangle(cornerRadius: 14))
+        .overlay(RoundedRectangle(cornerRadius: 14).stroke(Color.skyBorder, lineWidth: 1))
     }
 }
 

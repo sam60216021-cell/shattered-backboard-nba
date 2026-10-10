@@ -39,6 +39,83 @@ struct ModuleProjection: Identifiable, Hashable {
     let reasoning: [String]
 }
 
+struct ProjectionNumberSet: Equatable {
+    let analytics: Double
+    let ai: Double
+    let blended: Double
+}
+
+struct PredictionNumberEngine {
+    static func numbers(
+        player: Player,
+        stat: String,
+        projection: PlayerProjection,
+        logs: [GameLog],
+        game: ScheduleGame?,
+        defenderMatchup: DefenderMatchup?,
+        playerAdvanced: PlayerAdvancedEntry?
+    ) -> ProjectionNumberSet? {
+        let analytics = projection.value(for: stat)
+        let values = logs.prefix(16).map { max(0, $0.value(for: stat)) }
+        guard analytics > 0, values.count >= 5 else { return nil }
+
+        let baseline = robustMean(values)
+        let lastFive = mean(values.prefix(5))
+        let lastThree = mean(values.prefix(3))
+        var ai = baseline * 0.35 + lastFive * 0.35 + lastThree * 0.30
+
+        let recent = mean(values.prefix(3))
+        let older = mean(values.dropFirst(3).prefix(5))
+        let trendBaseline = max(1, (recent + older) / 2)
+        ai *= max(0.88, min(1.12, 1 + ((recent - older) / trendBaseline) * 0.16))
+
+        let recentMinutes = mean(logs.prefix(3).map(\.min))
+        let stableMinutes = mean(logs.prefix(10).map(\.min))
+        if stableMinutes > 0 {
+            ai *= max(0.88, min(1.12, recentMinutes / stableMinutes))
+        }
+        if let defenderMatchup {
+            ai *= defenderMatchup.multiplier(for: stat)
+        }
+        if let usage = playerAdvanced?.estimatedUsagePct {
+            ai *= max(0.96, min(1.04, 1 + (usage - 20) / 500))
+        }
+        if let game {
+            let isHome = player.team?.uppercased() == game.homeTeam.uppercased()
+            ai *= isHome ? 1.012 : 0.994
+        }
+
+        ai = max(0, ai)
+        let analyticsConfidence = max(0.01, projection.confidence(for: stat))
+        let volatility = coefficientOfVariation(values)
+        let sampleStrength = min(1, Double(values.count) / 12)
+        let stability = max(0, 1 - min(1, volatility))
+        let aiConfidence = max(0.35, min(0.90, 0.38 + sampleStrength * 0.30 + stability * 0.24))
+        let blended = (analytics * analyticsConfidence + ai * aiConfidence)
+            / (analyticsConfidence + aiConfidence)
+
+        return ProjectionNumberSet(analytics: analytics, ai: ai, blended: blended)
+    }
+
+    private static func robustMean(_ values: [Double]) -> Double {
+        guard values.count >= 7 else { return mean(values) }
+        let sorted = values.sorted()
+        return mean(sorted.dropFirst().dropLast())
+    }
+
+    private static func mean<S: Sequence>(_ values: S) -> Double where S.Element == Double {
+        let array = Array(values)
+        return array.isEmpty ? 0 : array.reduce(0, +) / Double(array.count)
+    }
+
+    private static func coefficientOfVariation(_ values: [Double]) -> Double {
+        let average = mean(values)
+        guard values.count >= 3, average > 0 else { return 1 }
+        let variance = values.reduce(0) { $0 + pow($1 - average, 2) } / Double(values.count)
+        return sqrt(variance) / average
+    }
+}
+
 struct AnalyticsPredictionModule {
     let modelVersion = "nba-analytics-v1"
 

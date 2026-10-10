@@ -412,7 +412,7 @@ struct PlayerPickCard: View {
             VStack(spacing: 0) {
                 ForEach(displayStats, id: \.self) { stat in
                     PickStatRow(stat: stat, player: player,
-                                gameID: game.gameID, projection: projection)
+                                game: game, projection: projection)
                     if stat != displayStats.last {
                         Divider()
                             .background(Color.white.opacity(0.05))
@@ -481,118 +481,54 @@ struct MissingPlayerRow: View {
 struct PickStatRow: View {
     let stat: String
     let player: Player
-    let gameID: String?
+    let game: ScheduleGame
     let projection: PlayerProjection?
 
-    @ObservedObject private var router = AppRouter.shared
-    @State private var showBlocked = false
-    @State private var direction: PropDirection = .over
-
-    private var engineLine: Double { projection?.line(for: stat)  ?? 0 }
-    private var engineProj: Double { projection?.value(for: stat) ?? 0 }
-    private var engineConf: Double { projection?.confidence(for: stat) ?? 0 }
-    private var hasData:    Bool   { (projection?.gameCount ?? 0) > 0 }
-
-    private var engineProp: PlayerProp {
-        PlayerProp(
-            id: "\(gameID ?? "")_\(player.name)_\(stat)_\(direction.rawValue)",
-            gameID: gameID,
-            playerName: player.name,
-            team: player.team,
-            statLabel: stat,
-            line: max(0.5, engineLine),
-            direction: direction,
-            overPct: hasData ? engineConf : nil,
-            projectedValue: engineProj > 0 ? engineProj : nil
+    private var projectedNumbers: ProjectionNumberSet? {
+        guard let projection else { return nil }
+        return PredictionNumberEngine.numbers(
+            player: player,
+            stat: stat,
+            projection: projection,
+            logs: LocalDataService.shared.localLogs(playerID: player.playerID),
+            game: game,
+            defenderMatchup: MatchupDefenseEvaluator.cached(
+                player: player,
+                game: game,
+                dataService: LocalDataService.shared
+            ),
+            playerAdvanced: LocalDataService.shared.playerAdvancedMap[player.playerID]
         )
     }
 
-    private var selectedConfidence: Double {
-        let over = min(1.0, max(0.0, engineConf))
-        return direction == .over ? over : (1.0 - over)
-    }
-
-    private var inParlay: Bool { router.isInParlay(engineProp) }
-    private var canAdd:   Bool { router.canAdd(engineProp) }
-
     var body: some View {
-        HStack(spacing: 10) {
-            // Stat chip
-            Text(stat)
-                .font(.caption2.bold())
-                .foregroundColor(.black.opacity(0.85))
-                .padding(.horizontal, 8)
-                .padding(.vertical, 4)
-                .background(nbaStatColor(stat), in: Capsule())
-                .frame(width: 42)
-
-            // Line + projection
-            VStack(alignment: .leading, spacing: 1) {
-                if hasData && engineLine > 0 {
-                    Text("\(direction.rawValue) \(engineLine.cleanLine)")
-                        .font(.caption.bold())
-                        .foregroundColor(.white.opacity(0.85))
-                    Text("proj \(engineProj.cleanLine)")
-                        .font(.system(size: 9))
-                        .foregroundColor(Color.skyBright.opacity(0.65))
-                } else {
-                    Text("No recent data")
-                        .font(.caption)
-                        .foregroundColor(.white.opacity(0.3))
-                }
-            }
-
-            Spacer()
-
-            // Confidence
-            if hasData {
-                let color: Color = selectedConfidence >= 0.80 ? .green : selectedConfidence >= 0.65 ? .skyBright : .orange
-                Text("\(Int(round(selectedConfidence * 100)))%")
-                    .font(.caption.bold())
-                    .foregroundColor(color)
-                    .frame(width: 38, alignment: .trailing)
-            }
-
-            Button {
-                haptic(.light)
-                direction = direction == .over ? .under : .over
-            } label: {
-                Text(direction == .over ? "O" : "U")
-                    .font(.system(size: 10, weight: .bold))
-                    .foregroundColor(.skyDeep)
-                    .padding(.horizontal, 7)
+        VStack(spacing: 7) {
+            HStack(spacing: 10) {
+                Text(stat)
+                    .font(.caption2.bold())
+                    .foregroundColor(.black.opacity(0.85))
+                    .padding(.horizontal, 8)
                     .padding(.vertical, 4)
-                    .background(Color.skyBright.opacity(0.9), in: Capsule())
+                    .background(nbaStatColor(stat), in: Capsule())
+                Text("Projected numbers")
+                    .font(.caption.bold())
+                    .foregroundStyle(.white.opacity(0.7))
+                Spacer()
+                Text("Sportsbook reference")
+                    .font(.system(size: 9, weight: .medium))
+                    .foregroundStyle(.white.opacity(0.35))
             }
-            .buttonStyle(.plain)
 
-            // Add / remove button
-            if inParlay {
-                Button {
-                    router.removeFromParlay(engineProp)
-                } label: {
-                    Image(systemName: "checkmark.circle.fill")
-                        .font(.title3)
-                        .foregroundColor(.skyBright)
-                }
+            if let projectedNumbers {
+                ProjectionNumberComparisonView(numbers: projectedNumbers, compact: true)
             } else {
-                Button {
-                    if !router.addToParlay(engineProp) { showBlocked = true }
-                } label: {
-                    Image(systemName: canAdd ? "plus.circle.fill" : "plus.circle")
-                        .font(.title3)
-                        .foregroundColor(canAdd ? .skyBright : .white.opacity(0.25))
-                }
-                .disabled(!canAdd || !hasData)
+                Text("Not enough recent data to calculate a reliable number.")
+                    .font(.caption)
+                    .foregroundStyle(.white.opacity(0.35))
+                    .frame(maxWidth: .infinity, alignment: .leading)
             }
         }
         .padding(.horizontal, 14)
         .padding(.vertical, 9)
-        .background(inParlay ? Color.skyBright.opacity(0.08) : Color.clear)
-        .alert("Can't add to Picks", isPresented: $showBlocked) {
-            Button("OK", role: .cancel) {}
-        } message: {
-            Text(router.blockedReason(for: engineProp) ?? "")
-        }
     }
 }
