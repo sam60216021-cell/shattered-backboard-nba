@@ -2,22 +2,24 @@
 set -euo pipefail
 
 SCRIPT_DIR="${0:A:h}"
-LEGACY_SERVER="$HOME/Documents/sports/nba-server"
+REPO_DIR="${SCRIPT_DIR:h}"
 
-if [[ -x "$LEGACY_SERVER/.venv/bin/python3" ]]; then
-    PYTHON="$LEGACY_SERVER/.venv/bin/python3"
+cd "$REPO_DIR"
+python3 "$SCRIPT_DIR/update_server.py"
+
+git add server/data
+
+if git diff --cached --quiet; then
+    echo ""
+    echo "NBA feeds are already current. Nothing to publish."
 else
-    PYTHON="python3"
+    STAMP="$(date '+%Y-%m-%d %H:%M %Z')"
+    git commit -m "Update NBA server feeds ($STAMP)"
+    git push origin main
+    echo ""
+    echo "Updated NBA feeds were saved locally and pushed to GitHub."
+    echo "Render will deploy them automatically."
 fi
-
-if [[ -f "$LEGACY_SERVER/update.py" ]]; then
-    "$PYTHON" "$LEGACY_SERVER/update.py"
-fi
-
-python3 "$SCRIPT_DIR/build_feeds.py" --source "$LEGACY_SERVER/data/nba"
 
 echo ""
-echo "NBA feeds are ready in $SCRIPT_DIR/data"
-echo "Commit and push this project to trigger the Render deployment."
 read -k1 "?Press any key to close."
-

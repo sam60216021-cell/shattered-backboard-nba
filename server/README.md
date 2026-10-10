@@ -2,12 +2,19 @@
 
 This directory follows the same deployment model as GridPicks:
 
-1. Run `NBA Publish.command` on the Mac.
-2. The existing local NBA updater refreshes its source files.
-3. `build_feeds.py` packages portable feeds into `server/data`, including a
-   freshness manifest and estimated player usage metrics.
-4. Commit and push the repository. Render deploys `app.py` and serves only the
-   generated JSON; it does not scrape third-party sites during app requests.
+1. Double-click the `NBA Publish.command` desktop shortcut on the Mac.
+2. `update_server.py` downloads the upcoming schedule and all 30 active
+   rosters from ESPN, plus projected or confirmed starting lineups from
+   RotoWire.
+3. The updater validates the responses and atomically saves them in
+   `server/data`. Incomplete rosters and mismatched lineup slates are rejected.
+4. The launcher commits only `server/data`, pushes `main` to GitHub, and Render
+   deploys the static feeds automatically. Render does not scrape third-party
+   sites during app requests.
+
+`build_feeds.py` remains available for importing historical game logs and
+advanced feeds from an older local dataset, but routine publishing no longer
+depends on the deleted `~/Documents/sports/nba-server` directory.
 
 Create the Render service from `server/render.yaml` with `server` as the root
 directory. After deployment, set `SportConfig.baseURL` in the iOS app to the

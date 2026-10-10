@@ -101,7 +101,7 @@ def player_advanced():
 def player_logs(
     player_id: str = Query(min_length=1, max_length=80),
     season: int | None = Query(default=None, ge=1947, le=2200),
-    days: int = Query(default=90, ge=1, le=365),
+    days: int = Query(default=90, ge=1, le=730),
     start_date: str | None = Query(default=None, pattern=r"^\d{4}-\d{2}-\d{2}$"),
 ):
     payload = load_json("player_logs.json", '{"logs_by_player": {}}')
@@ -118,7 +118,7 @@ def player_logs(
 def player_logs_bulk(
     player_ids: str = Query(min_length=1, max_length=4_000),
     season: int | None = Query(default=None, ge=1947, le=2200),
-    days: int = Query(default=90, ge=1, le=365),
+    days: int = Query(default=90, ge=1, le=730),
 ):
     payload = load_json("player_logs.json", '{"logs_by_player": {}}')
     source = payload.get("logs_by_player") or {}
