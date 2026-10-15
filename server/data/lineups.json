@@ -1,155 +1,292 @@
 {
-  "date": "2026-10-09",
-  "game_count": 2,
-  "games_with_lineups": 2,
-  "last_updated": "2026-10-10T06:09:42.626468+00:00",
+  "date": "2026-10-14",
+  "game_count": 7,
+  "games_with_lineups": 7,
+  "last_updated": "2026-10-15T06:03:43.520824+00:00",
   "rows": [
     {
-      "away": "HOU",
+      "away": "CHA",
       "away_lineup": [
         {
-          "name": "Fred VanVleet",
+          "name": "Dennis Schroder",
           "position": "PG",
           "source": "rotowire",
           "status": "CONFIRMED",
-          "team": "HOU",
-          "updated_at": "2026-10-10T06:09:42.626468+00:00"
+          "team": "CHA",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
         },
         {
-          "name": "Amen Thompson",
+          "name": "Royce O'Neale",
           "position": "SG",
           "source": "rotowire",
           "status": "CONFIRMED",
-          "team": "HOU",
-          "updated_at": "2026-10-10T06:09:42.626468+00:00"
+          "team": "CHA",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
         },
         {
-          "name": "Kevin Durant",
+          "name": "Brandon Miller",
           "position": "SF",
           "source": "rotowire",
-          "status": "QUESTIONABLE",
-          "team": "HOU",
-          "updated_at": "2026-10-10T06:09:42.626468+00:00"
+          "status": "CONFIRMED",
+          "team": "CHA",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
         },
         {
-          "name": "Jabari Smith",
+          "name": "Naz Reid",
           "position": "PF",
           "source": "rotowire",
           "status": "CONFIRMED",
-          "team": "HOU",
-          "updated_at": "2026-10-10T06:09:42.626468+00:00"
+          "team": "CHA",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
         },
         {
-          "name": "Alperen Sengun",
+          "name": "Moussa Diabate",
           "position": "C",
           "source": "rotowire",
           "status": "CONFIRMED",
-          "team": "HOU",
-          "updated_at": "2026-10-10T06:09:42.626468+00:00"
+          "team": "CHA",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
         }
       ],
-      "date": "2026-10-09",
-      "game_id": "401898395",
+      "date": "2026-10-14",
+      "game_id": "401898405",
+      "home": "BOS",
+      "home_lineup": [
+        {
+          "name": "Derrick White",
+          "position": "PG",
+          "source": "rotowire",
+          "status": "CONFIRMED",
+          "team": "BOS",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
+        },
+        {
+          "name": "Jordan Walsh",
+          "position": "SG",
+          "source": "rotowire",
+          "status": "CONFIRMED",
+          "team": "BOS",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
+        },
+        {
+          "name": "Paul George",
+          "position": "SF",
+          "source": "rotowire",
+          "status": "CONFIRMED",
+          "team": "BOS",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
+        },
+        {
+          "name": "Jayson Tatum",
+          "position": "PF",
+          "source": "rotowire",
+          "status": "CONFIRMED",
+          "team": "BOS",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
+        },
+        {
+          "name": "Mitchell Robinson",
+          "position": "C",
+          "source": "rotowire",
+          "status": "CONFIRMED",
+          "team": "BOS",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
+        }
+      ],
+      "time": "2026-10-14T23:30Z"
+    },
+    {
+      "away": "BKN",
+      "away_lineup": [
+        {
+          "name": "Egor Demin",
+          "position": "PG",
+          "source": "rotowire",
+          "status": "CONFIRMED",
+          "team": "BKN",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
+        },
+        {
+          "name": "Keon Ellis",
+          "position": "SG",
+          "source": "rotowire",
+          "status": "CONFIRMED",
+          "team": "BKN",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
+        },
+        {
+          "name": "Michael Porter",
+          "position": "SF",
+          "source": "rotowire",
+          "status": "CONFIRMED",
+          "team": "BKN",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
+        },
+        {
+          "name": "Julius Randle",
+          "position": "PF",
+          "source": "rotowire",
+          "status": "CONFIRMED",
+          "team": "BKN",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
+        },
+        {
+          "name": "Day'Ron Sharpe",
+          "position": "C",
+          "source": "rotowire",
+          "status": "CONFIRMED",
+          "team": "BKN",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
+        }
+      ],
+      "date": "2026-10-14",
+      "game_id": "401898404",
+      "home": "MIA",
+      "home_lineup": [
+        {
+          "name": "Davion Mitchell",
+          "position": "PG",
+          "source": "rotowire",
+          "status": "CONFIRMED",
+          "team": "MIA",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
+        },
+        {
+          "name": "Klay Thompson",
+          "position": "SG",
+          "source": "rotowire",
+          "status": "CONFIRMED",
+          "team": "MIA",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
+        },
+        {
+          "name": "Andrew Wiggins",
+          "position": "SF",
+          "source": "rotowire",
+          "status": "CONFIRMED",
+          "team": "MIA",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
+        },
+        {
+          "name": "Giannis Antetokounmpo",
+          "position": "PF",
+          "source": "rotowire",
+          "status": "CONFIRMED",
+          "team": "MIA",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
+        },
+        {
+          "name": "Nick Richards",
+          "position": "C",
+          "source": "rotowire",
+          "status": "CONFIRMED",
+          "team": "MIA",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
+        }
+      ],
+      "time": "2026-10-14T23:30Z"
+    },
+    {
+      "away": "NOP",
+      "away_lineup": [
+        {
+          "name": "Jeremiah Fears",
+          "position": "PG",
+          "source": "rotowire",
+          "status": "CONFIRMED",
+          "team": "NOP",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
+        },
+        {
+          "name": "Bennedict Mathurin",
+          "position": "SG",
+          "source": "rotowire",
+          "status": "CONFIRMED",
+          "team": "NOP",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
+        },
+        {
+          "name": "Saddiq Bey",
+          "position": "SF",
+          "source": "rotowire",
+          "status": "CONFIRMED",
+          "team": "NOP",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
+        },
+        {
+          "name": "Karlo Matkovic",
+          "position": "PF",
+          "source": "rotowire",
+          "status": "CONFIRMED",
+          "team": "NOP",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
+        },
+        {
+          "name": "Yves Missi",
+          "position": "C",
+          "source": "rotowire",
+          "status": "CONFIRMED",
+          "team": "NOP",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
+        }
+      ],
+      "date": "2026-10-14",
+      "game_id": "401901825",
       "home": "DAL",
       "home_lineup": [
         {
-          "name": "Cooper Flagg",
+          "name": "Naji Marshall",
           "position": "PG",
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "DAL",
-          "updated_at": "2026-10-10T06:09:42.626468+00:00"
-        },
-        {
-          "name": "Max Christie",
-          "position": "SG",
-          "source": "rotowire",
-          "status": "CONFIRMED",
-          "team": "DAL",
-          "updated_at": "2026-10-10T06:09:42.626468+00:00"
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
         },
         {
           "name": "Zaccharie Risacher",
-          "position": "SF",
-          "source": "rotowire",
-          "status": "CONFIRMED",
-          "team": "DAL",
-          "updated_at": "2026-10-10T06:09:42.626468+00:00"
-        },
-        {
-          "name": "Naji Marshall",
-          "position": "PF",
-          "source": "rotowire",
-          "status": "CONFIRMED",
-          "team": "DAL",
-          "updated_at": "2026-10-10T06:09:42.626468+00:00"
-        },
-        {
-          "name": "Morez Johnson",
-          "position": "C",
-          "source": "rotowire",
-          "status": "CONFIRMED",
-          "team": "DAL",
-          "updated_at": "2026-10-10T06:09:42.626468+00:00"
-        }
-      ],
-      "time": "2026-10-09T12:00Z"
-    },
-    {
-      "away": "MEM",
-      "away_lineup": [
-        {
-          "name": "Ty Jerome",
-          "position": "PG",
-          "source": "rotowire",
-          "status": "CONFIRMED",
-          "team": "MEM",
-          "updated_at": "2026-10-10T06:09:42.626468+00:00"
-        },
-        {
-          "name": "Cedric Coward",
           "position": "SG",
           "source": "rotowire",
           "status": "CONFIRMED",
-          "team": "MEM",
-          "updated_at": "2026-10-10T06:09:42.626468+00:00"
+          "team": "DAL",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
         },
         {
-          "name": "Jaylen Wells",
+          "name": "Max Christie",
           "position": "SF",
           "source": "rotowire",
           "status": "CONFIRMED",
-          "team": "MEM",
-          "updated_at": "2026-10-10T06:09:42.626468+00:00"
+          "team": "DAL",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
         },
         {
-          "name": "Cameron Boozer",
+          "name": "P.J. Washington",
           "position": "PF",
           "source": "rotowire",
           "status": "CONFIRMED",
-          "team": "MEM",
-          "updated_at": "2026-10-10T06:09:42.626468+00:00"
+          "team": "DAL",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
         },
         {
-          "name": "Zach Edey",
+          "name": "Moussa Cisse",
           "position": "C",
           "source": "rotowire",
-          "status": "CONFIRMED",
-          "team": "MEM",
-          "updated_at": "2026-10-10T06:09:42.626468+00:00"
+          "status": "QUESTIONABLE",
+          "team": "DAL",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
         }
       ],
-      "date": "2026-10-09",
-      "game_id": "401908940",
-      "home": "CHI",
-      "home_lineup": [
+      "time": "2026-10-15T00:00Z"
+    },
+    {
+      "away": "CHI",
+      "away_lineup": [
         {
           "name": "Josh Giddey",
           "position": "PG",
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "CHI",
-          "updated_at": "2026-10-10T06:09:42.626468+00:00"
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
         },
         {
           "name": "Norman Powell",
@@ -157,15 +294,15 @@
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "CHI",
-          "updated_at": "2026-10-10T06:09:42.626468+00:00"
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
         },
         {
           "name": "Matas Buzelis",
           "position": "SF",
           "source": "rotowire",
-          "status": "QUESTIONABLE",
+          "status": "CONFIRMED",
           "team": "CHI",
-          "updated_at": "2026-10-10T06:09:42.626468+00:00"
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
         },
         {
           "name": "Caleb Wilson",
@@ -173,18 +310,336 @@
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "CHI",
-          "updated_at": "2026-10-10T06:09:42.626468+00:00"
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
         },
         {
-          "name": "Tobe Awaka",
+          "name": "Jalen Smith",
           "position": "C",
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "CHI",
-          "updated_at": "2026-10-10T06:09:42.626468+00:00"
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
         }
       ],
-      "time": "2026-10-10T00:00Z"
+      "date": "2026-10-14",
+      "game_id": "401908942",
+      "home": "MIL",
+      "home_lineup": [
+        {
+          "name": "Kasparas Jakucionis",
+          "position": "PG",
+          "source": "rotowire",
+          "status": "CONFIRMED",
+          "team": "MIL",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
+        },
+        {
+          "name": "Brayden Burries",
+          "position": "SG",
+          "source": "rotowire",
+          "status": "CONFIRMED",
+          "team": "MIL",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
+        },
+        {
+          "name": "Ousmane Dieng",
+          "position": "SF",
+          "source": "rotowire",
+          "status": "CONFIRMED",
+          "team": "MIL",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
+        },
+        {
+          "name": "Pete Nance",
+          "position": "PF",
+          "source": "rotowire",
+          "status": "CONFIRMED",
+          "team": "MIL",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
+        },
+        {
+          "name": "Jericho Sims",
+          "position": "C",
+          "source": "rotowire",
+          "status": "CONFIRMED",
+          "team": "MIL",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
+        }
+      ],
+      "time": "2026-10-15T00:00Z"
+    },
+    {
+      "away": "DET",
+      "away_lineup": [
+        {
+          "name": "Cade Cunningham",
+          "position": "PG",
+          "source": "rotowire",
+          "status": "CONFIRMED",
+          "team": "DET",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
+        },
+        {
+          "name": "Duncan Robinson",
+          "position": "SG",
+          "source": "rotowire",
+          "status": "CONFIRMED",
+          "team": "DET",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
+        },
+        {
+          "name": "Ausar Thompson",
+          "position": "SF",
+          "source": "rotowire",
+          "status": "CONFIRMED",
+          "team": "DET",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
+        },
+        {
+          "name": "John Collins",
+          "position": "PF",
+          "source": "rotowire",
+          "status": "CONFIRMED",
+          "team": "DET",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
+        },
+        {
+          "name": "Jalen Duren",
+          "position": "C",
+          "source": "rotowire",
+          "status": "CONFIRMED",
+          "team": "DET",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
+        }
+      ],
+      "date": "2026-10-14",
+      "game_id": "401914125",
+      "home": "MIN",
+      "home_lineup": [
+        {
+          "name": "LaMelo Ball",
+          "position": "PG",
+          "source": "rotowire",
+          "status": "CONFIRMED",
+          "team": "MIN",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
+        },
+        {
+          "name": "Anthony Edwards",
+          "position": "SG",
+          "source": "rotowire",
+          "status": "CONFIRMED",
+          "team": "MIN",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
+        },
+        {
+          "name": "Jaden McDaniels",
+          "position": "SF",
+          "source": "rotowire",
+          "status": "CONFIRMED",
+          "team": "MIN",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
+        },
+        {
+          "name": "Jonathan Kuminga",
+          "position": "PF",
+          "source": "rotowire",
+          "status": "CONFIRMED",
+          "team": "MIN",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
+        },
+        {
+          "name": "Rudy Gobert",
+          "position": "C",
+          "source": "rotowire",
+          "status": "CONFIRMED",
+          "team": "MIN",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
+        }
+      ],
+      "time": "2026-10-15T00:00Z"
+    },
+    {
+      "away": "PHX",
+      "away_lineup": [
+        {
+          "name": "Luke Kennard",
+          "position": "PG",
+          "source": "rotowire",
+          "status": "CONFIRMED",
+          "team": "PHX",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
+        },
+        {
+          "name": "Jamaree Bouyea",
+          "position": "SG",
+          "source": "rotowire",
+          "status": "CONFIRMED",
+          "team": "PHX",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
+        },
+        {
+          "name": "Ryan Dunn",
+          "position": "SF",
+          "source": "rotowire",
+          "status": "CONFIRMED",
+          "team": "PHX",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
+        },
+        {
+          "name": "Haywood Highsmith",
+          "position": "PF",
+          "source": "rotowire",
+          "status": "CONFIRMED",
+          "team": "PHX",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
+        },
+        {
+          "name": "Khaman Maluach",
+          "position": "C",
+          "source": "rotowire",
+          "status": "CONFIRMED",
+          "team": "PHX",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
+        }
+      ],
+      "date": "2026-10-14",
+      "game_id": "401898722",
+      "home": "SAS",
+      "home_lineup": [
+        {
+          "name": "De'Aaron Fox",
+          "position": "PG",
+          "source": "rotowire",
+          "status": "CONFIRMED",
+          "team": "SAS",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
+        },
+        {
+          "name": "Stephon Castle",
+          "position": "SG",
+          "source": "rotowire",
+          "status": "CONFIRMED",
+          "team": "SAS",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
+        },
+        {
+          "name": "Dylan Harper",
+          "position": "SF",
+          "source": "rotowire",
+          "status": "CONFIRMED",
+          "team": "SAS",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
+        },
+        {
+          "name": "Devin Vassell",
+          "position": "PF",
+          "source": "rotowire",
+          "status": "CONFIRMED",
+          "team": "SAS",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
+        },
+        {
+          "name": "Victor Wembanyama",
+          "position": "C",
+          "source": "rotowire",
+          "status": "CONFIRMED",
+          "team": "SAS",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
+        }
+      ],
+      "time": "2026-10-15T00:00Z"
+    },
+    {
+      "away": "DEN",
+      "away_lineup": [
+        {
+          "name": "Jamal Murray",
+          "position": "PG",
+          "source": "rotowire",
+          "status": "CONFIRMED",
+          "team": "DEN",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
+        },
+        {
+          "name": "Christian Braun",
+          "position": "SG",
+          "source": "rotowire",
+          "status": "CONFIRMED",
+          "team": "DEN",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
+        },
+        {
+          "name": "Cameron Johnson",
+          "position": "SF",
+          "source": "rotowire",
+          "status": "CONFIRMED",
+          "team": "DEN",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
+        },
+        {
+          "name": "Aaron Gordon",
+          "position": "PF",
+          "source": "rotowire",
+          "status": "CONFIRMED",
+          "team": "DEN",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
+        },
+        {
+          "name": "Nikola Jokic",
+          "position": "C",
+          "source": "rotowire",
+          "status": "CONFIRMED",
+          "team": "DEN",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
+        }
+      ],
+      "date": "2026-10-14",
+      "game_id": "401918011",
+      "home": "LAC",
+      "home_lineup": [
+        {
+          "name": "Darius Garland",
+          "position": "PG",
+          "source": "rotowire",
+          "status": "CONFIRMED",
+          "team": "LAC",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
+        },
+        {
+          "name": "Keaton Wagler",
+          "position": "SG",
+          "source": "rotowire",
+          "status": "CONFIRMED",
+          "team": "LAC",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
+        },
+        {
+          "name": "Rui Hachimura",
+          "position": "SF",
+          "source": "rotowire",
+          "status": "CONFIRMED",
+          "team": "LAC",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
+        },
+        {
+          "name": "Derrick Jones",
+          "position": "PF",
+          "source": "rotowire",
+          "status": "CONFIRMED",
+          "team": "LAC",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
+        },
+        {
+          "name": "Isaiah Jackson",
+          "position": "C",
+          "source": "rotowire",
+          "status": "CONFIRMED",
+          "team": "LAC",
+          "updated_at": "2026-10-15T06:03:43.520824+00:00"
+        }
+      ],
+      "time": "2026-10-15T02:30Z"
     }
   ],
   "source": "RotoWire starting lineups"

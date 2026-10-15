@@ -1,8 +1,8 @@
 {
   "feeds": {
     "lineups": {
-      "bytes": 5252,
-      "sha256": "45404bde88910e55b8b52dccabddeec1b716e7988629012570dcf35f5f061a4c"
+      "bytes": 17969,
+      "sha256": "a4c964e65f2620d3f408201e4f2543ae2b347e7265764618451fae193b4c0c41"
     },
     "player_advanced": {
       "bytes": 80096,
@@ -13,12 +13,12 @@
       "sha256": "59d7e3f4b7585fb9f5b1f930369b3a7fce71ee4b7dca0d94b7abe9858bfc8527"
     },
     "roster": {
-      "bytes": 68445,
-      "sha256": "eb3795063250914788338409c1218604517afbfcccc31874a925ef3d9aa14094"
+      "bytes": 70391,
+      "sha256": "cbb171979e7373c7e4138d65c3f0aa18e50187d8ef9f22d0ae492060574dc08c"
     },
     "schedule": {
-      "bytes": 6221,
-      "sha256": "1b9062f0abec5f61ffc684cfa876b061d6c5e506b77aba9a0d4b1fb6afff8d5c"
+      "bytes": 5691,
+      "sha256": "371b678ad3631030524ad987e4c6ac6849bdd3ed38cc0bd21243a6c9ea2bec61"
     },
     "standings": {
       "bytes": 13325,
@@ -29,7 +29,7 @@
       "sha256": "e370b4777816c3fb2a1d06711790124492877dab1934b5dd6992df23d59b0e8c"
     }
   },
-  "generated_at": "2026-10-10T06:09:42.626468+00:00",
+  "generated_at": "2026-10-15T06:03:43.520824+00:00",
   "schema_version": 3,
   "season": 2027,
   "source": "desktop-nba-updater"
