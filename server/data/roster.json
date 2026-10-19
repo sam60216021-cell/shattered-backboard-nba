@@ -1,5 +1,5 @@
 {
-  "as_of": "2026-10-17T05:12:33.844073+00:00",
+  "as_of": "2026-10-19T05:01:19.595065+00:00",
   "players": [
     {
       "name": "Aaron Wiggins",
@@ -17,12 +17,6 @@
       "name": "CJ McCollum",
       "player_id": "203468",
       "pos": "G",
-      "team": "ATL"
-    },
-    {
-      "name": "Cameron Corhen",
-      "player_id": "4712902",
-      "pos": "F",
       "team": "ATL"
     },
     {
@@ -44,21 +38,9 @@
       "team": "ATL"
     },
     {
-      "name": "Giorgi Bezhanishvili",
-      "player_id": "4397003",
-      "pos": "F",
-      "team": "ATL"
-    },
-    {
       "name": "Henri Veesaar",
       "player_id": "5105571",
       "pos": "C",
-      "team": "ATL"
-    },
-    {
-      "name": "Isaac McKneely",
-      "player_id": "4712845",
-      "pos": "G",
       "team": "ATL"
     },
     {
@@ -88,12 +70,6 @@
     {
       "name": "Kingston Flemings",
       "player_id": "5149077",
-      "pos": "G",
-      "team": "ATL"
-    },
-    {
-      "name": "Kobe Johnson",
-      "player_id": "4683857",
       "pos": "G",
       "team": "ATL"
     },
@@ -278,18 +254,6 @@
       "team": "BOS"
     },
     {
-      "name": "Gabe McGlothan",
-      "player_id": "4398356",
-      "pos": "F",
-      "team": "BOS"
-    },
-    {
-      "name": "Hayden Gray",
-      "player_id": "1643060",
-      "pos": "G",
-      "team": "BOS"
-    },
-    {
       "name": "Hugo Gonzalez",
       "player_id": "5175647",
       "pos": "G",
@@ -316,12 +280,6 @@
     {
       "name": "Mike Conley",
       "player_id": "201144",
-      "pos": "G",
-      "team": "BOS"
-    },
-    {
-      "name": "Milos Uzan",
-      "player_id": "5106272",
       "pos": "G",
       "team": "BOS"
     },
@@ -358,12 +316,6 @@
     {
       "name": "Sam Hauser",
       "player_id": "1630573",
-      "pos": "F",
-      "team": "BOS"
-    },
-    {
-      "name": "Tucker DeVries",
-      "player_id": "4837238",
       "pos": "F",
       "team": "BOS"
     },
@@ -410,12 +362,6 @@
       "team": "CHA"
     },
     {
-      "name": "Jarkel Joiner",
-      "player_id": "4278729",
-      "pos": "G",
-      "team": "CHA"
-    },
-    {
       "name": "Kon Knueppel",
       "player_id": "1642851",
       "pos": "G",
@@ -424,12 +370,6 @@
     {
       "name": "Kylan Boswell",
       "player_id": "4684269",
-      "pos": "G",
-      "team": "CHA"
-    },
-    {
-      "name": "Latrell Wrightsell Jr.",
-      "player_id": "4702484",
       "pos": "G",
       "team": "CHA"
     },
@@ -482,18 +422,6 @@
       "team": "CHA"
     },
     {
-      "name": "Wyatt Fricks",
-      "player_id": "4897504",
-      "pos": "F",
-      "team": "CHA"
-    },
-    {
-      "name": "Brandon Boston Jr.",
-      "player_id": "4432162",
-      "pos": "G",
-      "team": "CHI"
-    },
-    {
       "name": "Buddy Hield",
       "player_id": "1627741",
       "pos": "G",
@@ -512,12 +440,6 @@
       "team": "CHI"
     },
     {
-      "name": "Drew Peterson",
-      "player_id": "1641809",
-      "pos": "F",
-      "team": "CHI"
-    },
-    {
       "name": "Isaac Okoro",
       "player_id": "1630171",
       "pos": "F",
@@ -527,12 +449,6 @@
       "name": "Isaiah Stevens",
       "player_id": "1641815",
       "pos": "G",
-      "team": "CHI"
-    },
-    {
-      "name": "Jalen Bridges",
-      "player_id": "4432946",
-      "pos": "F",
       "team": "CHI"
     },
     {
@@ -590,12 +506,6 @@
       "team": "CHI"
     },
     {
-      "name": "Orlando Robinson",
-      "player_id": "1631115",
-      "pos": "C",
-      "team": "CHI"
-    },
-    {
       "name": "Patrick Williams",
       "player_id": "1630172",
       "pos": "F",
@@ -622,12 +532,6 @@
     {
       "name": "Craig Porter Jr.",
       "player_id": "1641854",
-      "pos": "G",
-      "team": "CLE"
-    },
-    {
-      "name": "Curtis Jones",
-      "player_id": "1642938",
       "pos": "G",
       "team": "CLE"
     },
@@ -668,12 +572,6 @@
       "team": "CLE"
     },
     {
-      "name": "Kadary Richmond",
-      "player_id": "1642955",
-      "pos": "G",
-      "team": "CLE"
-    },
-    {
       "name": "Khalifa Diop",
       "player_id": "4997530",
       "pos": "C",
@@ -698,21 +596,9 @@
       "team": "CLE"
     },
     {
-      "name": "Noam Yaacov",
-      "player_id": "5457832",
-      "pos": "G",
-      "team": "CLE"
-    },
-    {
       "name": "Peyton Watson",
       "player_id": "1631212",
       "pos": "G",
-      "team": "CLE"
-    },
-    {
-      "name": "Rashaun Agee",
-      "player_id": "4593815",
-      "pos": "F",
       "team": "CLE"
     },
     {
@@ -743,12 +629,6 @@
       "name": "Tyrese Proctor",
       "player_id": "1642878",
       "pos": "G",
-      "team": "CLE"
-    },
-    {
-      "name": "Zack Austin",
-      "player_id": "4702099",
-      "pos": "F",
       "team": "CLE"
     },
     {
@@ -784,12 +664,6 @@
     {
       "name": "Jett Howard",
       "player_id": "1641724",
-      "pos": "G",
-      "team": "DAL"
-    },
-    {
-      "name": "John Poulakidas",
-      "player_id": "1642967",
       "pos": "G",
       "team": "DAL"
     },
@@ -836,12 +710,6 @@
       "team": "DAL"
     },
     {
-      "name": "Quincy Acy",
-      "player_id": "6576",
-      "pos": "F",
-      "team": "DAL"
-    },
-    {
       "name": "Santi Aldama",
       "player_id": "1630583",
       "pos": "F",
@@ -851,12 +719,6 @@
       "name": "Sergio de Larrea",
       "player_id": "5279129",
       "pos": "F",
-      "team": "DAL"
-    },
-    {
-      "name": "Seth Lundy",
-      "player_id": "4431775",
-      "pos": "G",
       "team": "DAL"
     },
     {
@@ -914,33 +776,15 @@
       "team": "DEN"
     },
     {
-      "name": "Coleman Hawkins",
-      "player_id": "4432976",
-      "pos": "F",
-      "team": "DEN"
-    },
-    {
       "name": "DaRon Holmes II",
       "player_id": "1641747",
       "pos": "F",
       "team": "DEN"
     },
     {
-      "name": "Dane Goodwin",
-      "player_id": "4395667",
-      "pos": "G",
-      "team": "DEN"
-    },
-    {
       "name": "DeMar DeRozan",
       "player_id": "201942",
       "pos": "G",
-      "team": "DEN"
-    },
-    {
-      "name": "Emanuel Miller",
-      "player_id": "1641801",
-      "pos": "F",
       "team": "DEN"
     },
     {
@@ -952,12 +796,6 @@
     {
       "name": "Julian Strawther",
       "player_id": "1631124",
-      "pos": "G",
-      "team": "DEN"
-    },
-    {
-      "name": "Lonnie Walker IV",
-      "player_id": "4277890",
       "pos": "G",
       "team": "DEN"
     },
@@ -986,12 +824,6 @@
       "team": "DEN"
     },
     {
-      "name": "Steven Crowl",
-      "player_id": "4588201",
-      "pos": "C",
-      "team": "DEN"
-    },
-    {
       "name": "Trevon Brazile",
       "player_id": "4698719",
       "pos": "F",
@@ -1013,12 +845,6 @@
       "name": "Ausar Thompson",
       "player_id": "1641709",
       "pos": "G",
-      "team": "DET"
-    },
-    {
-      "name": "Brice Williams",
-      "player_id": "4592843",
-      "pos": "F",
       "team": "DET"
     },
     {
@@ -1130,12 +956,6 @@
       "team": "GSW"
     },
     {
-      "name": "Alex Toohey",
-      "player_id": "5170949",
-      "pos": "F",
-      "team": "GSW"
-    },
-    {
       "name": "Brandin Podziemski",
       "player_id": "1641764",
       "pos": "G",
@@ -1151,12 +971,6 @@
       "name": "Charles Bassey",
       "player_id": "1629646",
       "pos": "C",
-      "team": "GSW"
-    },
-    {
-      "name": "Dalen Terry",
-      "player_id": "1631207",
-      "pos": "G",
       "team": "GSW"
     },
     {
@@ -1220,12 +1034,6 @@
       "team": "GSW"
     },
     {
-      "name": "Miles Kelly",
-      "player_id": "1642939",
-      "pos": "G",
-      "team": "GSW"
-    },
-    {
       "name": "Moses Moody",
       "player_id": "1630541",
       "pos": "G",
@@ -1235,12 +1043,6 @@
       "name": "Stephen Curry",
       "player_id": "201939",
       "pos": "G",
-      "team": "GSW"
-    },
-    {
-      "name": "Tyler Burton",
-      "player_id": "1631174",
-      "pos": "F",
       "team": "GSW"
     },
     {
@@ -1277,12 +1079,6 @@
       "name": "Bruce Thornton",
       "player_id": "5105837",
       "pos": "G",
-      "team": "HOU"
-    },
-    {
-      "name": "Cameron Matthews",
-      "player_id": "4432394",
-      "pos": "F",
       "team": "HOU"
     },
     {
@@ -1370,12 +1166,6 @@
       "team": "HOU"
     },
     {
-      "name": "Tyson Chandler",
-      "player_id": "984",
-      "pos": "C",
-      "team": "HOU"
-    },
-    {
       "name": "Aaron Nesmith",
       "player_id": "1630174",
       "pos": "G",
@@ -1408,12 +1198,6 @@
     {
       "name": "Jalen Slawson",
       "player_id": "1641771",
-      "pos": "F",
-      "team": "IND"
-    },
-    {
-      "name": "James Johnson",
-      "player_id": "3999",
       "pos": "F",
       "team": "IND"
     },
@@ -1490,12 +1274,6 @@
       "team": "LAC"
     },
     {
-      "name": "Blake Wesley",
-      "player_id": "1631104",
-      "pos": "G",
-      "team": "LAC"
-    },
-    {
       "name": "Bradley Beal",
       "player_id": "203078",
       "pos": "G",
@@ -1526,21 +1304,9 @@
       "team": "LAC"
     },
     {
-      "name": "DeAndre Williams",
-      "player_id": "4397355",
-      "pos": "F",
-      "team": "LAC"
-    },
-    {
       "name": "Derrick Jones Jr.",
       "player_id": "1627884",
       "pos": "F",
-      "team": "LAC"
-    },
-    {
-      "name": "Fletcher Loyer",
-      "player_id": "5105853",
-      "pos": "G",
       "team": "LAC"
     },
     {
@@ -1552,12 +1318,6 @@
     {
       "name": "Isaiah Jackson",
       "player_id": "1630543",
-      "pos": "F",
-      "team": "LAC"
-    },
-    {
-      "name": "Jahmyl Telfort",
-      "player_id": "1643141",
       "pos": "F",
       "team": "LAC"
     },
@@ -1616,12 +1376,6 @@
       "team": "LAC"
     },
     {
-      "name": "Yuki Kawamura",
-      "player_id": "1642530",
-      "pos": "G",
-      "team": "LAC"
-    },
-    {
       "name": "AK Okereke",
       "player_id": "5114350",
       "pos": "F",
@@ -1631,12 +1385,6 @@
       "name": "Adou Thiero",
       "player_id": "1642876",
       "pos": "F",
-      "team": "LAL"
-    },
-    {
-      "name": "Aniwaniwa Tait-Jones",
-      "player_id": "4711203",
-      "pos": "G",
       "team": "LAL"
     },
     {
@@ -1724,12 +1472,6 @@
       "team": "LAL"
     },
     {
-      "name": "Rafael Castro",
-      "player_id": "4684443",
-      "pos": "F",
-      "team": "LAL"
-    },
-    {
       "name": "Sandro Mamukelashvili",
       "player_id": "1630572",
       "pos": "F",
@@ -1739,12 +1481,6 @@
       "name": "Walker Kessler",
       "player_id": "1631117",
       "pos": "C",
-      "team": "LAL"
-    },
-    {
-      "name": "William Kyle III",
-      "player_id": "5107258",
-      "pos": "F",
       "team": "LAL"
     },
     {
@@ -1868,12 +1604,6 @@
       "team": "MEM"
     },
     {
-      "name": "Zach Cleveland",
-      "player_id": "5107069",
-      "pos": "F",
-      "team": "MEM"
-    },
-    {
       "name": "Zach Edey",
       "player_id": "1641744",
       "pos": "C",
@@ -1892,12 +1622,6 @@
       "team": "MIA"
     },
     {
-      "name": "Bez Mbeng",
-      "player_id": "1643016",
-      "pos": "G",
-      "team": "MIA"
-    },
-    {
       "name": "Bobby Portis",
       "player_id": "1626171",
       "pos": "F",
@@ -1910,44 +1634,14 @@
       "team": "MIA"
     },
     {
-      "name": "Dennis Smith Jr.",
-      "player_id": "4065697",
-      "pos": "G",
-      "team": "MIA"
-    },
-    {
       "name": "Dru Smith",
       "player_id": "1630696",
       "pos": "G",
       "team": "MIA"
     },
     {
-      "name": "Ezra Ausar",
-      "player_id": "5106051",
-      "pos": "F",
-      "team": "MIA"
-    },
-    {
-      "name": "Gabe Madsen",
-      "player_id": "4432753",
-      "pos": "G",
-      "team": "MIA"
-    },
-    {
       "name": "Giannis Antetokounmpo",
       "player_id": "203507",
-      "pos": "F",
-      "team": "MIA"
-    },
-    {
-      "name": "Ian Schieffelin",
-      "player_id": "4693954",
-      "pos": "F",
-      "team": "MIA"
-    },
-    {
-      "name": "J'Vonne Hadley",
-      "player_id": "4702784",
       "pos": "F",
       "team": "MIA"
     },
@@ -1960,18 +1654,6 @@
     {
       "name": "Klay Thompson",
       "player_id": "202691",
-      "pos": "G",
-      "team": "MIA"
-    },
-    {
-      "name": "Kylor Kelley",
-      "player_id": "3950760",
-      "pos": "C",
-      "team": "MIA"
-    },
-    {
-      "name": "Lester Quinones",
-      "player_id": "4431720",
       "pos": "G",
       "team": "MIA"
     },
@@ -2072,27 +1754,9 @@
       "team": "MIL"
     },
     {
-      "name": "Jake Stephens",
-      "player_id": "4398257",
-      "pos": "C",
-      "team": "MIL"
-    },
-    {
       "name": "Jericho Sims",
       "player_id": "1630579",
       "pos": "C",
-      "team": "MIL"
-    },
-    {
-      "name": "John Butler Jr.",
-      "player_id": "4432588",
-      "pos": "F",
-      "team": "MIL"
-    },
-    {
-      "name": "Johni Broome",
-      "player_id": "1641780",
-      "pos": "F",
       "team": "MIL"
     },
     {
@@ -2144,12 +1808,6 @@
       "team": "MIL"
     },
     {
-      "name": "Pete Nance",
-      "player_id": "1631250",
-      "pos": "F",
-      "team": "MIL"
-    },
-    {
       "name": "Ryan Rollins",
       "player_id": "1631157",
       "pos": "G",
@@ -2164,12 +1822,6 @@
     {
       "name": "Anthony Edwards",
       "player_id": "1630162",
-      "pos": "G",
-      "team": "MIN"
-    },
-    {
-      "name": "Antonio Reeves",
-      "player_id": "1641810",
       "pos": "G",
       "team": "MIN"
     },
@@ -2195,18 +1847,6 @@
       "name": "Donte DiVincenzo",
       "player_id": "1628978",
       "pos": "G",
-      "team": "MIN"
-    },
-    {
-      "name": "Drew Timme",
-      "player_id": "1631166",
-      "pos": "F",
-      "team": "MIN"
-    },
-    {
-      "name": "Enrique Freeman",
-      "player_id": "1642402",
-      "pos": "F",
       "team": "MIN"
     },
     {
@@ -2240,21 +1880,9 @@
       "team": "MIN"
     },
     {
-      "name": "KJ Martin",
-      "player_id": "4431828",
-      "pos": "F",
-      "team": "MIN"
-    },
-    {
       "name": "LaMelo Ball",
       "player_id": "1630163",
       "pos": "G",
-      "team": "MIN"
-    },
-    {
-      "name": "Norchad Omier",
-      "player_id": "1641807",
-      "pos": "F",
       "team": "MIN"
     },
     {
@@ -2306,12 +1934,6 @@
       "team": "NOP"
     },
     {
-      "name": "Christian Koloko",
-      "player_id": "1631132",
-      "pos": "C",
-      "team": "NOP"
-    },
-    {
       "name": "DeAndre Jordan",
       "player_id": "201599",
       "pos": "C",
@@ -2332,12 +1954,6 @@
     {
       "name": "Herbert Jones",
       "player_id": "1630529",
-      "pos": "F",
-      "team": "NOP"
-    },
-    {
-      "name": "Jalon Moore",
-      "player_id": "4701819",
       "pos": "F",
       "team": "NOP"
     },
@@ -2369,12 +1985,6 @@
       "name": "Karlo Matkovic",
       "player_id": "4997538",
       "pos": "F",
-      "team": "NOP"
-    },
-    {
-      "name": "Kobe Bufkin",
-      "player_id": "1641723",
-      "pos": "G",
       "team": "NOP"
     },
     {
@@ -2417,18 +2027,6 @@
       "name": "Andre Drummond",
       "player_id": "203083",
       "pos": "C",
-      "team": "NYK"
-    },
-    {
-      "name": "Bruce Brown",
-      "player_id": "1628971",
-      "pos": "G",
-      "team": "NYK"
-    },
-    {
-      "name": "Drew Eubanks",
-      "player_id": "1629234",
-      "pos": "F",
       "team": "NYK"
     },
     {
@@ -2510,21 +2108,9 @@
       "team": "NYK"
     },
     {
-      "name": "Ochai Agbaji",
-      "player_id": "1630534",
-      "pos": "G",
-      "team": "NYK"
-    },
-    {
       "name": "Pacome Dadiet",
       "player_id": "5211983",
       "pos": "F",
-      "team": "NYK"
-    },
-    {
-      "name": "Tony Bradley",
-      "player_id": "1628396",
-      "pos": "C",
       "team": "NYK"
     },
     {
@@ -2582,12 +2168,6 @@
       "team": "OKC"
     },
     {
-      "name": "Christoph Tilly",
-      "player_id": "5109790",
-      "pos": "C",
-      "team": "OKC"
-    },
-    {
       "name": "Isaiah Hartenstein",
       "player_id": "1628392",
       "pos": "C",
@@ -2632,12 +2212,6 @@
     {
       "name": "Otega Oweh",
       "player_id": "5106270",
-      "pos": "G",
-      "team": "OKC"
-    },
-    {
-      "name": "Robert McCray V",
-      "player_id": "4685802",
       "pos": "G",
       "team": "OKC"
     },
@@ -2726,12 +2300,6 @@
       "team": "ORL"
     },
     {
-      "name": "Mike Sharavjamts",
-      "player_id": "5105875",
-      "pos": "G",
-      "team": "ORL"
-    },
-    {
       "name": "Nikola Vucevic",
       "player_id": "6478",
       "pos": "C",
@@ -2786,20 +2354,8 @@
       "team": "PHI"
     },
     {
-      "name": "Cris Carroll",
-      "player_id": "5241706",
-      "pos": "F",
-      "team": "PHI"
-    },
-    {
       "name": "Dean Wade",
       "player_id": "1629731",
-      "pos": "F",
-      "team": "PHI"
-    },
-    {
-      "name": "Dillon Jones",
-      "player_id": "1641794",
       "pos": "F",
       "team": "PHI"
     },
@@ -2810,21 +2366,9 @@
       "team": "PHI"
     },
     {
-      "name": "Duke Miles",
-      "player_id": "4702049",
-      "pos": "G",
-      "team": "PHI"
-    },
-    {
       "name": "Jabari Walker",
       "player_id": "1631133",
       "pos": "F",
-      "team": "PHI"
-    },
-    {
-      "name": "Jameer Nelson Jr.",
-      "player_id": "4592444",
-      "pos": "G",
       "team": "PHI"
     },
     {
@@ -2870,21 +2414,9 @@
       "team": "PHI"
     },
     {
-      "name": "Saint Thomas",
-      "player_id": "4897471",
-      "pos": "F",
-      "team": "PHI"
-    },
-    {
       "name": "Tacko Fall",
       "player_id": "3904625",
       "pos": "C",
-      "team": "PHI"
-    },
-    {
-      "name": "Taye Fields",
-      "player_id": "5239799",
-      "pos": "G",
       "team": "PHI"
     },
     {
@@ -2930,12 +2462,6 @@
       "team": "PHX"
     },
     {
-      "name": "Haywood Highsmith",
-      "player_id": "1629312",
-      "pos": "F",
-      "team": "PHX"
-    },
-    {
       "name": "Jalen Green",
       "player_id": "1630224",
       "pos": "G",
@@ -2950,12 +2476,6 @@
     {
       "name": "Jordan Goodwin",
       "player_id": "1630692",
-      "pos": "G",
-      "team": "PHX"
-    },
-    {
-      "name": "Kennedy Chandler",
-      "player_id": "1631113",
       "pos": "G",
       "team": "PHX"
     },
@@ -3008,12 +2528,6 @@
       "team": "PHX"
     },
     {
-      "name": "Phillip Wheeler",
-      "player_id": "4909710",
-      "pos": "F",
-      "team": "PHX"
-    },
-    {
       "name": "Rasheer Fleming",
       "player_id": "1642853",
       "pos": "F",
@@ -3062,21 +2576,9 @@
       "team": "POR"
     },
     {
-      "name": "Jaylen Martin",
-      "player_id": "4684737",
-      "pos": "G",
-      "team": "POR"
-    },
-    {
       "name": "Jayson Kent",
       "player_id": "1643257",
       "pos": "G",
-      "team": "POR"
-    },
-    {
-      "name": "Jeremy Sochan",
-      "player_id": "1631110",
-      "pos": "F",
       "team": "POR"
     },
     {
@@ -3188,12 +2690,6 @@
       "team": "SAC"
     },
     {
-      "name": "Elfrid Payton",
-      "player_id": "2583639",
-      "pos": "G",
-      "team": "SAC"
-    },
-    {
       "name": "Emanuel Sharp",
       "player_id": "5106058",
       "pos": "G",
@@ -3238,18 +2734,6 @@
     {
       "name": "Precious Achiuwa",
       "player_id": "1630173",
-      "pos": "F",
-      "team": "SAC"
-    },
-    {
-      "name": "Tristen Newton",
-      "player_id": "1641803",
-      "pos": "G",
-      "team": "SAC"
-    },
-    {
-      "name": "Viktor Lakhin",
-      "player_id": "4701192",
       "pos": "F",
       "team": "SAC"
     },
@@ -3308,12 +2792,6 @@
       "team": "SAS"
     },
     {
-      "name": "Jon Elmore",
-      "player_id": "3155937",
-      "pos": "G",
-      "team": "SAS"
-    },
-    {
       "name": "Jordan McLaughlin",
       "player_id": "1629162",
       "pos": "G",
@@ -3338,21 +2816,9 @@
       "team": "SAS"
     },
     {
-      "name": "Malik Williams",
-      "player_id": "4277880",
-      "pos": "C",
-      "team": "SAS"
-    },
-    {
       "name": "Maliq Brown",
       "player_id": "5105337",
       "pos": "F",
-      "team": "SAS"
-    },
-    {
-      "name": "RJ Davis",
-      "player_id": "4433176",
-      "pos": "G",
       "team": "SAS"
     },
     {
@@ -3362,21 +2828,9 @@
       "team": "SAS"
     },
     {
-      "name": "Taelon Peter",
-      "player_id": "1643007",
-      "pos": "G",
-      "team": "SAS"
-    },
-    {
       "name": "Tarris Reed Jr.",
       "player_id": "5105809",
       "pos": "C",
-      "team": "SAS"
-    },
-    {
-      "name": "Terry Taylor",
-      "player_id": "4279815",
-      "pos": "F",
       "team": "SAS"
     },
     {
@@ -3401,18 +2855,6 @@
       "name": "Allen Graves",
       "player_id": "5149115",
       "pos": "F",
-      "team": "TOR"
-    },
-    {
-      "name": "Andre Jackson Jr.",
-      "player_id": "1641748",
-      "pos": "G",
-      "team": "TOR"
-    },
-    {
-      "name": "Chucky Hepburn",
-      "player_id": "1642935",
-      "pos": "G",
       "team": "TOR"
     },
     {
@@ -3452,12 +2894,6 @@
       "team": "TOR"
     },
     {
-      "name": "Jamarion Sharp",
-      "player_id": "4897696",
-      "pos": "C",
-      "team": "TOR"
-    },
-    {
       "name": "Jamison Battle",
       "player_id": "1642419",
       "pos": "F",
@@ -3488,12 +2924,6 @@
       "team": "TOR"
     },
     {
-      "name": "Nimari Burnett",
-      "player_id": "4433138",
-      "pos": "G",
-      "team": "TOR"
-    },
-    {
       "name": "RJ Barrett",
       "player_id": "1629628",
       "pos": "F",
@@ -3508,24 +2938,6 @@
     {
       "name": "Trayce Jackson-Davis",
       "player_id": "1631218",
-      "pos": "F",
-      "team": "TOR"
-    },
-    {
-      "name": "Trey Jemison III",
-      "player_id": "1641998",
-      "pos": "C",
-      "team": "TOR"
-    },
-    {
-      "name": "Tyreke Key",
-      "player_id": "4279143",
-      "pos": "G",
-      "team": "TOR"
-    },
-    {
-      "name": "Tyson Degenhart",
-      "player_id": "4898260",
       "pos": "F",
       "team": "TOR"
     },
@@ -3578,12 +2990,6 @@
       "team": "UTA"
     },
     {
-      "name": "Jonas Aidoo",
-      "player_id": "4684682",
-      "pos": "C",
-      "team": "UTA"
-    },
-    {
       "name": "Josh Green",
       "player_id": "1630182",
       "pos": "G",
@@ -3632,21 +3038,9 @@
       "team": "UTA"
     },
     {
-      "name": "Tamar Bates",
-      "player_id": "4683933",
-      "pos": "G",
-      "team": "UTA"
-    },
-    {
-      "name": "Taylor Funk",
-      "player_id": "4278395",
-      "pos": "F",
-      "team": "UTA"
-    },
-    {
-      "name": "Terrell Brown Jr.",
-      "player_id": "4395997",
-      "pos": "G",
+      "name": "Tony Bradley",
+      "player_id": "1628396",
+      "pos": "C",
       "team": "UTA"
     },
     {
@@ -3665,12 +3059,6 @@
       "name": "Alex Sarr",
       "player_id": "1642259",
       "pos": "C",
-      "team": "WAS"
-    },
-    {
-      "name": "Alondes Williams",
-      "player_id": "1631214",
-      "pos": "G",
       "team": "WAS"
     },
     {
@@ -3698,12 +3086,6 @@
       "team": "WAS"
     },
     {
-      "name": "Chris Livingston",
-      "player_id": "1641753",
-      "pos": "F",
-      "team": "WAS"
-    },
-    {
       "name": "Deandre Ayton",
       "player_id": "1629028",
       "pos": "C",
@@ -3718,12 +3100,6 @@
     {
       "name": "Jamir Watkins",
       "player_id": "1642364",
-      "pos": "G",
-      "team": "WAS"
-    },
-    {
-      "name": "Jazian Gortman",
-      "player_id": "4708972",
       "pos": "G",
       "team": "WAS"
     },
@@ -3752,18 +3128,6 @@
       "team": "WAS"
     },
     {
-      "name": "Skal Labissiere",
-      "player_id": "1627746",
-      "pos": "C",
-      "team": "WAS"
-    },
-    {
-      "name": "Steve Settle III",
-      "player_id": "4704043",
-      "pos": "F",
-      "team": "WAS"
-    },
-    {
       "name": "Trae Young",
       "player_id": "1629027",
       "pos": "G",
@@ -3778,12 +3142,6 @@
     {
       "name": "Tre Mann",
       "player_id": "1630544",
-      "pos": "G",
-      "team": "WAS"
-    },
-    {
-      "name": "Trevor Keels",
-      "player_id": "1631211",
       "pos": "G",
       "team": "WAS"
     },
