@@ -706,6 +706,8 @@ struct GameRowView: View {
             let proj = projection
             let awayMean = sim?.awayMean ?? (proj?.awayPts ?? 0)
             let homeMean = sim?.homeMean ?? (proj?.homePts ?? 0)
+            let projectedSpread = sim?.projectedSpread ?? (homeMean - awayMean)
+            let projectedTotal = awayMean + homeMean
             if awayMean > 0, homeMean > 0 {
                 HStack {
                     Label("Prediction", systemImage: "chart.line.uptrend.xyaxis")
@@ -717,6 +719,15 @@ struct GameRowView: View {
                 .font(.caption.bold())
                 .padding(.horizontal, 16)
                 .padding(.vertical, 12)
+
+                HStack(spacing: 14) {
+                    Text("Projected spread: \(projectedSpread >= 0 ? homeDisplayName : awayDisplayName) -\(abs(projectedSpread), specifier: "%.1f")")
+                    Text("Projected total: \(projectedTotal, specifier: "%.1f")")
+                }
+                .font(.caption2)
+                .foregroundColor(.white.opacity(0.55))
+                .padding(.horizontal, 16)
+                .padding(.bottom, 10)
             }
 
             // ── Win probability (if simulation available) ────────────────────
@@ -793,6 +804,8 @@ struct GameRowView: View {
         let proj = projection
         let awayMean = sim?.awayMean ?? (proj?.awayPts ?? 0)
         let homeMean = sim?.homeMean ?? (proj?.homePts ?? 0)
+        let projectedSpread = sim?.projectedSpread ?? (homeMean - awayMean)
+        let projectedTotal = awayMean + homeMean
         let homeFavored = homeMean > awayMean
         let awayFavored = awayMean > homeMean
         let timeLabel = game.displayTipTime
@@ -846,6 +859,14 @@ struct GameRowView: View {
                 .padding(.horizontal, 12)
                 .padding(.vertical, 9)
                 .background(Color.white.opacity(0.06), in: RoundedRectangle(cornerRadius: 12))
+
+                HStack {
+                    Text("Spread: \(projectedSpread >= 0 ? homeDisplayName : awayDisplayName) -\(abs(projectedSpread), specifier: "%.1f")")
+                    Spacer()
+                    Text("Total: \(projectedTotal, specifier: "%.1f")")
+                }
+                .font(.caption2.bold())
+                .foregroundColor(.white.opacity(0.55))
             }
 
             compactFooter(propCount: propCount, simAvailable: sim != nil)

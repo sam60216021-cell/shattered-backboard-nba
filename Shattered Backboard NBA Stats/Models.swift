@@ -110,7 +110,7 @@ struct ScheduleGame: Identifiable, Codable, Hashable {
         if lower == "tbd" || lower == "tba" { return nil }
 
         var cleaned = raw
-        for suffix in [" EDT", " EST", " ET", " MDT", " MST"] where cleaned.uppercased().hasSuffix(suffix) {
+        for suffix in [" EDT", " EST", " ET", " MDT", " MST", " AZ"] where cleaned.uppercased().hasSuffix(suffix) {
             cleaned = String(cleaned.dropLast(suffix.count)).trimmingCharacters(in: .whitespaces)
         }
 

@@ -2851,7 +2851,7 @@ final class LocalDataService: ObservableObject {
             if upper.contains(" ET") || upper.contains(" EDT") || upper.contains(" EST") {
                 return "America/New_York"
             }
-            if upper.contains(" MST") || upper.contains(" MDT") {
+            if upper.contains(" MST") || upper.contains(" MDT") || upper.contains(" AZ") {
                 return SportConfig.appTimeZoneID
             }
             // Server schedule strings are typically ET when no suffix is provided.
@@ -2864,6 +2864,7 @@ final class LocalDataService: ObservableObject {
             .replacingOccurrences(of: " EST", with: "", options: .caseInsensitive)
             .replacingOccurrences(of: " MST", with: "", options: .caseInsensitive)
             .replacingOccurrences(of: " MDT", with: "", options: .caseInsensitive)
+            .replacingOccurrences(of: " AZ", with: "", options: .caseInsensitive)
             .trimmingCharacters(in: .whitespacesAndNewlines)
 
         if let date = parseClockTime(cleanedClock, gameDateString: gameDateString, sourceTimeZoneID: sourceTimeZoneID) {
