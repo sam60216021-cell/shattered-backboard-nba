@@ -172,7 +172,7 @@ struct QuickPicksView: View {
                     Text("\(router.parlayPicks.count) picks")
                         .font(.subheadline.bold())
                         .foregroundColor(.white)
-                    Text(simParlayProb != nil ? "Monte Carlo · \(SimulationEngine.defaultSimulationCount) simulations" : "Combined probability")
+                    Text(simParlayProb != nil ? "Performance-adjusted probability" : "Combined probability")
                         .font(.caption)
                         .foregroundColor(.white.opacity(0.5))
                 }

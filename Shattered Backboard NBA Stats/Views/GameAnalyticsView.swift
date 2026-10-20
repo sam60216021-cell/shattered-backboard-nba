@@ -1,7 +1,7 @@
 //
 //  GameAnalyticsView.swift — Per-game analytics card embedded in GamePicksView.
 //
-//  Shows projected final score, moneyline, spread, and team stats.
+//  Shows projected final score, win probability, and team performance.
 //  Score projection sources (priority order):
 //    1. Engine totals — sum of PTS projections from PredictionEngine (most accurate)
 //    2. TeamProjection — blended season averages from StandingsEntry
@@ -55,49 +55,11 @@ struct GameAnalyticsView: View {
         return standingsProj?.homePts
     }
 
-    // MARK: - Spread / moneyline
-
-    private var spread: Double? {
-        guard let h = homeFinal, let a = awayFinal else { return standingsProj?.spread }
-        let raw = h - a
-        return (max(-30, min(30, raw)) * 2).rounded() / 2
-    }
-
-    private var homeFavored: Bool { (spread ?? 0) > 0 }
-
-    private var homeMLStr: String { mlString(favored: true) }
-    private var awayMLStr: String { mlString(favored: false) }
-
-    private func mlString(favored: Bool) -> String {
-        guard let s = spread else { return "—" }
-        let p = OddsMath.homeWinProbability(spread: s)
-        let isFavored = favored ? homeFavored : !homeFavored
-        let val = OddsMath.americanOdds(fromWinProbability: isFavored ? p : 1.0 - p)
-        return val >= 0 ? "+\(val)" : "\(val)"
-    }
-
-    private func fmtSpread(_ v: Double) -> String {
-        v == v.rounded() ? String(format: "%.0f", v) : String(format: "%.1f", v)
-    }
-
-    private var homeSpreadStr: String {
-        guard let s = spread else { return "—" }
-        let v = -s
-        return v > 0 ? "+\(fmtSpread(v))" : fmtSpread(v)
-    }
-    private var awaySpreadStr: String {
-        guard let s = spread else { return "—" }
-        let v = s
-        return v > 0 ? "+\(fmtSpread(v))" : fmtSpread(v)
-    }
-
     // MARK: - Body
 
     var body: some View {
         VStack(spacing: 0) {
             scoreLine
-            Divider().background(Color.skyBorder)
-            bettingStrip
             if let sim = gameSimResult {
                 Divider().background(Color.skyBorder)
                 winProbabilityRow(sim: sim)
@@ -175,43 +137,6 @@ struct GameAnalyticsView: View {
             }
         }
         .frame(maxWidth: .infinity)
-    }
-
-    // MARK: - Betting strip
-
-    private var bettingStrip: some View {
-        HStack(spacing: 0) {
-            bettingCell(away: awayMLStr,     label: "MONEYLINE", home: homeMLStr,
-                        awayBold: !homeFavored, homeBold: homeFavored)
-            Rectangle().fill(Color.skyBorder).frame(width: 1)
-            bettingCell(away: awaySpreadStr, label: "SPREAD",    home: homeSpreadStr,
-                        awayBold: !homeFavored, homeBold: homeFavored)
-            Rectangle().fill(Color.skyBorder).frame(width: 1)
-            bettingCell(away: awayFinal.map { "\(Int($0.rounded()))" } ?? "—",
-                        label: "PROJ SCORE",
-                        home: homeFinal.map { "\(Int($0.rounded()))" } ?? "—",
-                        awayBold: (awayFinal ?? 0) > (homeFinal ?? 0),
-                        homeBold: (homeFinal ?? 0) > (awayFinal ?? 0))
-        }
-    }
-
-    @ViewBuilder
-    private func bettingCell(away: String, label: String, home: String,
-                             awayBold: Bool, homeBold: Bool) -> some View {
-        VStack(spacing: 4) {
-            Text(away)
-                .font(.system(size: 15, weight: awayBold ? .bold : .regular, design: .rounded))
-                .foregroundColor(awayBold ? .white : .white.opacity(0.5))
-            Text(label)
-                .font(.system(size: 8, weight: .semibold))
-                .foregroundColor(.white.opacity(0.28))
-                .tracking(0.8)
-            Text(home)
-                .font(.system(size: 15, weight: homeBold ? .bold : .regular, design: .rounded))
-                .foregroundColor(homeBold ? .white : .white.opacity(0.5))
-        }
-        .frame(maxWidth: .infinity)
-        .padding(.vertical, 12)
     }
 
     // MARK: - Team stats row

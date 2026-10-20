@@ -11,7 +11,7 @@ struct SportConfig {
 
     // ── App time zone (all user-facing times) ─────────────────────────────────
     static let appTimeZoneID    = "America/Phoenix"
-    static let appTimeZoneLabel = "MST"
+    static let appTimeZoneLabel = "AZ"
 
     // ── Data mode ─────────────────────────────────────────────────────────────
     // When true, the app syncs from the server at runtime and uses local SwiftData

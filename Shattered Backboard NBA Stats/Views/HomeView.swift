@@ -442,105 +442,6 @@ struct GameRowView: View {
         return "Series tied \(h)-\(h)"
     }
 
-    // MARK: - Analytics blurb (all games)
-
-    private var analyticsBlurb: String {
-        let away = awayDisplayName, home = homeDisplayName
-        var sentences: [String] = []
-
-        if let h = homeStanding, let a = awayStanding {
-            let hNR  = h.netRating
-            let aNR  = a.netRating
-            let diff = hNR - aNR
-            let fmt: (Double) -> String = { r in
-                let s = String(format: "%.1f", abs(r))
-                return r >= 0 ? "+\(s)" : "-\(s)"
-            }
-            if abs(diff) >= 6 {
-                let better = diff > 0 ? home : away
-                let worse  = diff > 0 ? away : home
-                let bNR    = diff > 0 ? hNR : aNR
-                let wNR    = diff > 0 ? aNR : hNR
-                sentences.append("\(better) (\(fmt(bNR)) net) has a \(String(format: "%.1f", abs(diff)))-pt efficiency edge on \(worse) (\(fmt(wNR))) — a gap that typically decides outcomes.")
-            } else if abs(diff) >= 2.5 {
-                let better = diff > 0 ? home : away
-                let worse  = diff > 0 ? away : home
-                let bNR    = diff > 0 ? hNR : aNR
-                let wNR    = diff > 0 ? aNR : hNR
-                sentences.append("\(better) (\(fmt(bNR)) net) edges \(worse) (\(fmt(wNR))) in efficiency — slight but real advantage.")
-            } else {
-                sentences.append("Net ratings nearly identical: \(home) \(fmt(hNR)) vs \(away) \(fmt(aNR)) — either team can take this.")
-            }
-
-            let aStr = a.streak
-            let hStr = h.streak
-            let aNum = Int(String(aStr.dropFirst())) ?? 1
-            let hNum = Int(String(hStr.dropFirst())) ?? 1
-            let aWin = aStr.hasPrefix("W")
-            let hWin = hStr.hasPrefix("W")
-
-            if aWin && aNum >= 4 && !hWin {
-                sentences.append("\(away) is rolling (\(aStr.lowercased())) with genuine road momentum; \(home) (\(hStr.lowercased())) needs to disrupt that rhythm early.")
-            } else if hWin && hNum >= 4 && !aWin {
-                sentences.append("\(home) (\(hStr.lowercased())) is locked in and the crowd amplifies every stop; \(away) (\(aStr.lowercased())) must silence this building.")
-            } else if aWin && hWin {
-                sentences.append("Both squads arrive in form — \(away) (\(aStr.lowercased())) and \(home) (\(hStr.lowercased())) — expect a fast, physical start.")
-            } else if !aWin && !hWin && aNum >= 3 && hNum >= 3 {
-                sentences.append("\(away) (\(aStr.lowercased())) and \(home) (\(hStr.lowercased())) both in rough form — pressure peaks for whoever blinks first.")
-            } else {
-                sentences.append("\(home) went \(h.homeRecord) at home this season; \(away) posted \(a.roadRecord) on the road.")
-            }
-        }
-
-        let awayOut = game.missingAwayPlayers.filter { $0.status == "OUT" }
-        let homeOut = game.missingHomePlayers.filter { $0.status == "OUT" }
-        var injParts: [String] = []
-        if !awayOut.isEmpty {
-            let names = awayOut.prefix(2).compactMap(\.name).joined(separator: " & ")
-            injParts.append("\(away): \(names) out")
-        }
-        if !homeOut.isEmpty {
-            let names = homeOut.prefix(2).compactMap(\.name).joined(separator: " & ")
-            injParts.append("\(home): \(names) out")
-        }
-        if !injParts.isEmpty {
-            sentences.append("Injuries to watch — \(injParts.joined(separator: "; ")).")
-        }
-
-        return sentences.joined(separator: " ")
-    }
-
-    // MARK: - Betting cell helper
-
-    @ViewBuilder
-    private func bettingCell(awayVal: String, label: String, homeVal: String,
-                             awayBold: Bool, homeBold: Bool) -> some View {
-        VStack(spacing: 4) {
-            Text(awayVal)
-                .font(.system(size: 15, weight: awayBold ? .bold : .regular, design: .rounded))
-                .foregroundColor(awayBold ? .white : .white.opacity(0.5))
-            Text(label)
-                .font(.system(size: 8, weight: .semibold))
-                .foregroundColor(.white.opacity(0.28))
-                .tracking(0.8)
-            Text(homeVal)
-                .font(.system(size: 15, weight: homeBold ? .bold : .regular, design: .rounded))
-                .foregroundColor(homeBold ? .white : .white.opacity(0.5))
-        }
-        .frame(maxWidth: .infinity)
-        .padding(.vertical, 12)
-    }
-
-    // MARK: - Moneyline calculation helpers
-
-    private func homeMoneyline(spread: Double) -> Int {
-        OddsMath.americanOdds(fromWinProbability: OddsMath.homeWinProbability(spread: spread))
-    }
-
-    private func awayMoneyline(spread: Double) -> Int {
-        OddsMath.americanOdds(fromWinProbability: 1.0 - OddsMath.homeWinProbability(spread: spread))
-    }
-
     private var cardFill: LinearGradient {
         LinearGradient(
             colors: [
@@ -553,38 +454,19 @@ struct GameRowView: View {
         )
     }
 
-    private func compactMetric(_ value: String, label: String, tint: Color) -> some View {
-        VStack(spacing: 5) {
-            Text(value)
-                .font(.system(size: 16, weight: .black, design: .rounded))
-                .foregroundColor(.white)
-            Text(label)
-                .font(.system(size: 9, weight: .bold))
-                .foregroundColor(tint.opacity(0.9))
-                .tracking(0.7)
-        }
-        .frame(maxWidth: .infinity)
-        .padding(.vertical, 12)
-        .background(tint.opacity(0.10), in: RoundedRectangle(cornerRadius: 12))
-        .overlay(
-            RoundedRectangle(cornerRadius: 12)
-                .stroke(tint.opacity(0.22), lineWidth: 1)
-        )
-    }
-
     private func teamPanel(team: String, standing: StandingsEntry?, emphasis: Bool) -> some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: 8) {
             HStack(alignment: .top) {
                 ZStack {
                     Circle()
                         .fill((emphasis ? Color.skyBright : .white).opacity(0.14))
-                        .frame(width: 42, height: 42)
+                        .frame(width: 36, height: 36)
                     Text(SportConfig.teamNickname(for: team))
                         .font(.system(size: 14, weight: .black, design: .rounded))
                         .foregroundColor(emphasis ? .skyBright : .white)
                         .lineLimit(1)
                         .minimumScaleFactor(0.35)
-                        .frame(width: 36)
+                        .frame(width: 31)
                 }
                 Spacer(minLength: 8)
                 if let standing {
@@ -598,21 +480,15 @@ struct GameRowView: View {
             }
 
             Text(SportConfig.teamNickname(for: team))
-                .font(.system(size: 28, weight: .black, design: .rounded))
+                .font(.title3.bold())
                 .foregroundColor(.white)
                 .lineLimit(1)
                 .minimumScaleFactor(0.55)
 
             if let standing {
-                VStack(alignment: .leading, spacing: 3) {
-                    Text("\(standing.wins)-\(standing.losses) record")
-                        .font(.system(size: 11, weight: .semibold))
-                        .foregroundColor(.white.opacity(0.65))
-                    Text("Home \(standing.homeRecord) · Road \(standing.roadRecord)")
-                        .font(.system(size: 10, weight: .medium))
-                        .foregroundColor(.white.opacity(0.38))
-                        .lineLimit(1)
-                }
+                Text("\(standing.wins)-\(standing.losses)")
+                    .font(.caption.bold())
+                    .foregroundColor(.white.opacity(0.65))
             } else {
                 Text("Standings syncing…")
                     .font(.system(size: 11, weight: .medium))
@@ -620,7 +496,7 @@ struct GameRowView: View {
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(14)
+        .padding(12)
         .background((emphasis ? Color.skyBright : Color.white).opacity(0.08), in: RoundedRectangle(cornerRadius: 16))
         .overlay(
             RoundedRectangle(cornerRadius: 16)
@@ -653,65 +529,6 @@ struct GameRowView: View {
         .frame(width: 56)
     }
 
-    private func winProbabilityPanel(sim: GameSimulationResult) -> some View {
-        let awayPct = Int((1 - sim.homeWinProbability) * 100)
-        let homePct = Int(sim.homeWinProbability * 100)
-
-        return VStack(alignment: .leading, spacing: 8) {
-            HStack {
-                Text("Win Probability")
-                    .font(.caption.bold())
-                    .foregroundColor(.white)
-                Spacer()
-                Text("\(SimulationEngine.defaultSimulationCount) trials")
-                    .font(.system(size: 9, weight: .bold))
-                    .foregroundColor(.white.opacity(0.35))
-            }
-
-            GeometryReader { geo in
-                let width = geo.size.width
-                let awayWidth = max(18, width * CGFloat(1 - sim.homeWinProbability))
-                let homeWidth = max(18, width * CGFloat(sim.homeWinProbability))
-
-                HStack(spacing: 0) {
-                    RoundedRectangle(cornerRadius: 10)
-                        .fill(Color.white.opacity(0.16))
-                        .frame(width: awayWidth)
-                        .overlay(alignment: .leading) {
-                            Text("\(awayDisplayName) \(awayPct)%")
-                                .font(.system(size: 10, weight: .bold))
-                                .foregroundColor(.white)
-                                .lineLimit(1)
-                                .minimumScaleFactor(0.6)
-                                .padding(.leading, 10)
-                        }
-                    RoundedRectangle(cornerRadius: 10)
-                        .fill(Color.skyBright.opacity(0.75))
-                        .frame(width: homeWidth)
-                        .overlay(alignment: .trailing) {
-                            Text("\(homeDisplayName) \(homePct)%")
-                                .font(.system(size: 10, weight: .bold))
-                                .foregroundColor(.skyDeep)
-                                .lineLimit(1)
-                                .minimumScaleFactor(0.6)
-                                .padding(.trailing, 10)
-                        }
-                }
-            }
-            .frame(height: 24)
-
-            Text("Ranges: \(awayDisplayName) \(sim.awayRangeStr)  •  \(homeDisplayName) \(sim.homeRangeStr)")
-                .font(.system(size: 11, weight: .medium))
-                .foregroundColor(.white.opacity(0.48))
-        }
-        .padding(14)
-        .background(Color.white.opacity(0.05), in: RoundedRectangle(cornerRadius: 14))
-        .overlay(
-            RoundedRectangle(cornerRadius: 14)
-                .stroke(Color.white.opacity(0.08), lineWidth: 1)
-        )
-    }
-
     private func compactFooter(propCount: Int, simAvailable: Bool) -> some View {
         HStack(spacing: 8) {
             Label(
@@ -723,7 +540,7 @@ struct GameRowView: View {
 
             Spacer()
 
-            Text(simAvailable ? "Tap for sims + picks" : "Tap for breakdown")
+            Text(simAvailable ? "Teams, players + predictions" : "Team + player details")
                 .font(.caption)
                 .foregroundColor(.white.opacity(0.42))
             Image(systemName: "chevron.right")
@@ -835,9 +652,8 @@ struct GameRowView: View {
                         Text("@")
                             .font(.caption.bold())
                             .foregroundColor(.white.opacity(0.3))
-                        let timeStr = game.gameTime ?? ""
-                        if !timeStr.isEmpty {
-                            Text(timeStr)
+                        if game.tipTimeSortKey != nil {
+                            Text(game.displayTipTime)
                                 .font(.caption2)
                                 .foregroundColor(.white.opacity(0.4))
                         }
@@ -885,81 +701,23 @@ struct GameRowView: View {
 
             Divider().background(Color.skyBorder)
 
-            // ── Betting lines strip ─────────────────────────────────────────
-            // ── Betting lines strip: use simulation results if available ────────
+            // ── Model performance summary ───────────────────────────────────
             let sim = simResult
             let proj = projection
             let awayMean = sim?.awayMean ?? (proj?.awayPts ?? 0)
             let homeMean = sim?.homeMean ?? (proj?.homePts ?? 0)
-            let projTotal = awayMean + homeMean
-            let spread = sim?.projectedSpread ?? (homeMean > 0 && awayMean > 0
-                ? ((homeMean - awayMean) * 2).rounded() / 2
-                : 0)
-            let homeML = sim?.impliedHomeML ?? homeMoneyline(spread: spread)
-            let awayML = sim?.impliedAwayML ?? awayMoneyline(spread: spread)
-            
-            HStack(spacing: 0) {
-                bettingCell(
-                    awayVal: String(format: "%+d", awayML), label: "MONEYLINE",
-                    homeVal: String(format: "%+d", homeML),
-                    awayBold: spread < 0,
-                    homeBold: spread > 0
-                )
-                Rectangle().fill(Color.skyBorder).frame(width: 1)
-                bettingCell(
-                    awayVal: String(format: "%+.1f", spread),  label: "SPREAD",
-                    homeVal: String(format: "%+.1f", -spread),
-                    awayBold: spread < 0,
-                    homeBold: spread > 0
-                )
-                Rectangle().fill(Color.skyBorder).frame(width: 1)
-                // Show simulated score ranges if available
-                if let s = sim {
-                    VStack(spacing: 4) {
-                        Text("\(Int(s.awayMean.rounded()))")
-                            .font(.system(size: 15, weight: .bold, design: .rounded))
-                            .foregroundColor(.white)
-                        Text("SIMULATED")
-                            .font(.system(size: 8, weight: .semibold))
-                            .foregroundColor(.white.opacity(0.28))
-                            .tracking(0.8)
-                        Text("\(Int(s.homeMean.rounded()))")
-                            .font(.system(size: 15, weight: .bold, design: .rounded))
-                            .foregroundColor(.white)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 12)
-                } else {
-                    bettingCell(
-                        awayVal: proj?.awayPtsDisplay ?? "—", label: "PROJ FINAL",
-                        homeVal: proj?.homePtsDisplay ?? "—",
-                        awayBold: (proj?.awayPts ?? 0) > (proj?.homePts ?? 0),
-                        homeBold: (proj?.homePts ?? 0) > (proj?.awayPts ?? 0)
-                    )
+            if awayMean > 0, homeMean > 0 {
+                HStack {
+                    Label("Prediction", systemImage: "chart.line.uptrend.xyaxis")
+                        .foregroundColor(.skyBright)
+                    Spacer()
+                    Text("\(awayDisplayName) \(Int(awayMean.rounded())) · \(homeDisplayName) \(Int(homeMean.rounded()))")
+                        .foregroundColor(.white)
                 }
+                .font(.caption.bold())
+                .padding(.horizontal, 16)
+                .padding(.vertical, 12)
             }
-
-            Divider().background(Color.skyBorder)
-            HStack {
-                Text("Projected O/U total: \(Int(projTotal.rounded()))")
-                    .font(.caption2)
-                    .foregroundColor(.white.opacity(0.6))
-                Spacer()
-                Text(sim != nil ? "Source: Game Simulation" : "Source: Team Projection Fallback")
-                    .font(.caption2)
-                    .foregroundColor(.white.opacity(0.45))
-            }
-            .padding(.horizontal, 16)
-            .padding(.top, 10)
-
-            HStack {
-                Text("Spread: \(awayDisplayName) \(String(format: "%+.1f", spread))  ·  \(homeDisplayName) \(String(format: "%+.1f", -spread))")
-                    .font(.caption2)
-                    .foregroundColor(.white.opacity(0.55))
-                Spacer()
-            }
-            .padding(.horizontal, 16)
-            .padding(.bottom, 10)
 
             // ── Win probability (if simulation available) ────────────────────
             if let s = simResult {
@@ -981,38 +739,12 @@ struct GameRowView: View {
                         Text("Score ranges · \(awayDisplayName) \(s.awayRangeStr)  |  \(homeDisplayName) \(s.homeRangeStr)")
                             .font(.caption2)
                             .foregroundColor(.white.opacity(0.45))
-                        Text("Projected total: \(Int(s.projTotal.rounded()))")
-                            .font(.caption2)
-                            .foregroundColor(.white.opacity(0.45))
                     }
                     Spacer()
-                    Text("\(SimulationEngine.defaultSimulationCount) MC trials")
-                        .font(.system(size: 8, weight: .semibold))
-                        .foregroundColor(.white.opacity(0.35))
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, 16)
                 .padding(.vertical, 12)
-            }
-
-            // ── Analytics blurb ─────────────────────────────────────────────
-            let blurb = analyticsBlurb
-            if !blurb.isEmpty {
-                Divider().background(Color.skyBorder)
-                HStack(alignment: .top, spacing: 8) {
-                    Image(systemName: "chart.line.uptrend.xyaxis")
-                        .font(.caption2)
-                        .foregroundColor(.skyBright.opacity(0.55))
-                        .padding(.top, 1)
-                    Text(blurb)
-                        .font(.caption)
-                        .foregroundColor(.white.opacity(0.55))
-                        .multilineTextAlignment(.leading)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.horizontal, 16)
-                .padding(.vertical, 13)
             }
 
             Divider().background(Color.skyBorder)
@@ -1061,51 +793,34 @@ struct GameRowView: View {
         let proj = projection
         let awayMean = sim?.awayMean ?? (proj?.awayPts ?? 0)
         let homeMean = sim?.homeMean ?? (proj?.homePts ?? 0)
-        let projTotal = awayMean + homeMean
-        let spread = sim?.projectedSpread ?? (homeMean > 0 && awayMean > 0
-            ? ((homeMean - awayMean) * 2).rounded() / 2
-            : 0)
-        let awayML = sim?.impliedAwayML ?? awayMoneyline(spread: spread)
-        let homeML = sim?.impliedHomeML ?? homeMoneyline(spread: spread)
-        let homeFavored = spread > 0
-        let awayFavored = spread < 0
-        let timeLabel = (game.gameTime?.isEmpty == false ? game.gameTime! : "Tip TBD")
+        let homeFavored = homeMean > awayMean
+        let awayFavored = awayMean > homeMean
+        let timeLabel = game.displayTipTime
         let propCount = game.playerProps.count
         let injuries = (game.missingAwayPlayers + game.missingHomePlayers)
             .filter { $0.status == "OUT" }
 
-        return VStack(spacing: 16) {
-            HStack(alignment: .top) {
-                VStack(alignment: .leading, spacing: 6) {
-                    Text("Gameday Forecast")
-                        .font(.system(size: 11, weight: .bold))
-                        .foregroundColor(.skyBright)
-                        .tracking(0.8)
+        return VStack(spacing: 12) {
+            HStack {
+                VStack(alignment: .leading, spacing: 3) {
                     Text(game.displayDate)
-                        .font(.system(size: 11, weight: .semibold))
-                        .foregroundColor(.white.opacity(0.65))
-                        .tracking(0.4)
+                        .font(.caption.bold())
+                        .foregroundColor(.skyBright)
                     Text(timeLabel)
-                        .font(.system(size: 20, weight: .black, design: .rounded))
+                        .font(.title3.bold())
                         .foregroundColor(.white)
-                    Text(sim == nil ? "Projection card" : "Simulation card")
-                        .font(.system(size: 11, weight: .medium))
-                        .foregroundColor(.white.opacity(0.45))
-                    Text(sim == nil ? "Using standings fallback" : "Using Monte Carlo simulation")
-                        .font(.system(size: 10, weight: .semibold))
-                        .foregroundColor(.white.opacity(0.38))
                 }
                 Spacer()
-                VStack(alignment: .trailing, spacing: 8) {
-                    Text(propCount > 0 ? "\(propCount) targets" : "Game hub")
-                        .font(.system(size: 10, weight: .bold))
+                VStack(alignment: .trailing, spacing: 5) {
+                    Text(propCount > 0 ? "\(propCount) player predictions" : "Predictions loading")
+                        .font(.caption2.bold())
                         .foregroundColor(.black.opacity(0.85))
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 6)
+                        .padding(.horizontal, 9)
+                        .padding(.vertical, 5)
                         .background(Color.skyBright, in: Capsule())
                     if !injuries.isEmpty {
                         Label("\(injuries.count) out", systemImage: "bandage.fill")
-                            .font(.system(size: 10, weight: .bold))
+                            .font(.caption2.bold())
                             .foregroundColor(.red.opacity(0.9))
                     }
                 }
@@ -1119,38 +834,18 @@ struct GameRowView: View {
                 teamPanel(team: game.homeTeam, standing: homeStanding, emphasis: homeFavored)
             }
 
-            HStack(spacing: 10) {
-                compactMetric(String(format: "%+d", awayML), label: "AWAY ML", tint: awayFavored ? .skyBright : .white)
-                compactMetric(String(format: "%+d", homeML), label: "HOME ML", tint: homeFavored ? .skyBright : .white)
-                compactMetric("\(Int(projTotal.rounded()))", label: "O/U TOTAL", tint: .mint)
-            }
-
-            HStack(spacing: 10) {
-                compactMetric("\(Int(awayMean.rounded()))", label: "AWAY SCORE", tint: .white)
-                compactMetric(String(format: "%+.1f", spread), label: "SPREAD (HOME)", tint: homeFavored ? .skyBright : .orange)
-                compactMetric("\(Int(homeMean.rounded()))", label: "HOME SCORE", tint: .skyBright)
-            }
-
-            if let s = sim {
-                winProbabilityPanel(sim: s)
-            }
-
-            let blurb = analyticsBlurb
-            if !blurb.isEmpty {
-                HStack(alignment: .top, spacing: 10) {
-                    Image(systemName: "sparkles.rectangle.stack")
-                        .font(.caption.bold())
-                        .foregroundColor(.skyBright.opacity(0.8))
-                        .padding(.top, 2)
-                    Text(blurb)
-                        .font(.system(size: 12, weight: .medium))
-                        .foregroundColor(.white.opacity(0.62))
-                        .lineLimit(4)
-                        .multilineTextAlignment(.leading)
+            if awayMean > 0, homeMean > 0 {
+                HStack {
+                    Label("Prediction", systemImage: "chart.line.uptrend.xyaxis")
+                        .foregroundColor(.skyBright)
+                    Spacer()
+                    Text("\(awayDisplayName) \(Int(awayMean.rounded())) · \(homeDisplayName) \(Int(homeMean.rounded()))")
+                        .foregroundColor(.white)
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(14)
-                .background(Color.black.opacity(0.16), in: RoundedRectangle(cornerRadius: 14))
+                .font(.caption.bold())
+                .padding(.horizontal, 12)
+                .padding(.vertical, 9)
+                .background(Color.white.opacity(0.06), in: RoundedRectangle(cornerRadius: 12))
             }
 
             compactFooter(propCount: propCount, simAvailable: sim != nil)

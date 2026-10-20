@@ -514,7 +514,7 @@ struct PickStatRow: View {
                     .font(.caption.bold())
                     .foregroundStyle(.white.opacity(0.7))
                 Spacer()
-                Text("Sportsbook reference")
+                Text("Your comparison number")
                     .font(.system(size: 9, weight: .medium))
                     .foregroundStyle(.white.opacity(0.35))
             }

@@ -84,6 +84,18 @@ struct ScheduleGame: Identifiable, Codable, Hashable {
         ScheduleGame.tipMinutesSinceMidnight(from: gameTime)
     }
 
+    /// Consistent Phoenix-local, 12-hour display used throughout the schedule UI.
+    /// Incoming values are normalized during sync; this also cleans older cached
+    /// 24-hour strings and legacy MST/MDT labels.
+    var displayTipTime: String {
+        guard let minutes = tipTimeSortKey else { return "Tip TBD" }
+        let hour24 = minutes / 60
+        let minute = minutes % 60
+        let hour12 = hour24 % 12 == 0 ? 12 : hour24 % 12
+        let meridiem = hour24 < 12 ? "AM" : "PM"
+        return String(format: "%d:%02d %@ %@", hour12, minute, meridiem, SportConfig.appTimeZoneLabel)
+    }
+
     /// Parses a display tip string into minutes since midnight.
     /// Display tips are formatted "h:mm a 'MST'" (see LocalDataService.formatDisplayTip),
     /// e.g. "7:00 PM MST", but raw passthroughs may carry ET/EDT/MST/MDT suffixes,

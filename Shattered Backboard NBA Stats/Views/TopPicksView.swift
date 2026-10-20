@@ -622,7 +622,7 @@ struct TopPicksView: View {
                         .font(.caption)
                         .foregroundColor(.white.opacity(0.4))
                     Spacer()
-                    Label("Monte Carlo", systemImage: "waveform.path.ecg")
+                    Label("Prediction performance", systemImage: "chart.line.uptrend.xyaxis")
                         .font(.caption2.bold())
                         .foregroundColor(.skyBright.opacity(0.5))
                 }
@@ -654,7 +654,7 @@ struct TopPicksView: View {
                 .font(.system(size: 14, weight: .bold))
                 .foregroundColor(selectedCategory.color)
             Spacer()
-            Text("Monte Carlo")
+            Text("Player predictions")
                 .font(.caption2.weight(.semibold))
                 .foregroundColor(.white.opacity(0.45))
         }
@@ -669,10 +669,10 @@ struct TopPicksView: View {
             ProgressView()
                 .progressViewStyle(CircularProgressViewStyle(tint: .skyBright))
                 .scaleEffect(1.2)
-            Text("Running simulations…")
+            Text("Calculating player predictions…")
                 .font(.subheadline)
                 .foregroundColor(.white.opacity(0.45))
-            Text("\(SimulationEngine.defaultSimulationCount) Monte Carlo trials per player stat")
+            Text("Analyzing recent performance, roles, teams, and matchups")
                 .font(.caption)
                 .foregroundColor(.white.opacity(0.25))
         }
