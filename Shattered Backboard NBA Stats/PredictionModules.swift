@@ -117,7 +117,7 @@ struct PredictionNumberEngine {
 }
 
 struct AnalyticsPredictionModule {
-    let modelVersion = "nba-analytics-v1"
+    let modelVersion = "nba-analytics-v2"
 
     func projections(from entries: [TopPickEntry]) -> [ModuleProjection] {
         entries.compactMap { entry in
@@ -137,7 +137,10 @@ struct AnalyticsPredictionModule {
                 direction: entry.direction,
                 line: entry.suggestedLine,
                 projectedValue: entry.projection.value(for: entry.stat),
-                confidence: entry.confidence,
+                // This is model reliability at the projected value. The entry's
+                // confidence is the probability of clearing a separately chosen
+                // target number and is not a valid blend weight.
+                confidence: entry.projection.confidence(for: entry.stat),
                 sampleSize: entry.projection.gameCount,
                 reasoning: [
                     "Analytics combines recency-weighted production, opponent context, simulations, and availability."
@@ -276,17 +279,23 @@ struct OnDeviceAIPredictionModule {
 }
 
 struct BlendedPredictionModule {
-    let modelVersion = "nba-blended-v1"
+    let modelVersion = "nba-blended-v2"
 
     func projections(analytics: [ModuleProjection], ai: [ModuleProjection]) -> [ModuleProjection] {
         let aiByProjection = Dictionary(uniqueKeysWithValues: ai.map { ($0.projectionID, $0) })
         return analytics.compactMap { analyticsResult in
             guard let aiResult = aiByProjection[analyticsResult.projectionID] else { return nil }
-            let analyticsWeight = max(0.01, analyticsResult.confidence)
-            let aiWeight = max(0.01, aiResult.confidence)
+            let analyticsWeight = max(0.01, min(1, analyticsResult.confidence))
+            let aiWeight = max(0.01, min(1, aiResult.confidence))
             let totalWeight = analyticsWeight + aiWeight
             let value = (analyticsResult.projectedValue * analyticsWeight
                          + aiResult.projectedValue * aiWeight) / totalWeight
+            let scale = max(1, (analyticsResult.projectedValue + aiResult.projectedValue) / 2)
+            let relativeDisagreement = abs(analyticsResult.projectedValue - aiResult.projectedValue) / scale
+            let agreementMultiplier = max(0.65, 1 - min(0.35, relativeDisagreement * 0.75))
+            let sourceConfidence = (analyticsResult.confidence * analyticsWeight
+                                    + aiResult.confidence * aiWeight) / totalWeight
+            let blendedConfidence = min(0.95, sourceConfidence * agreementMultiplier)
             return ModuleProjection(
                 id: "\(modelVersion)|blend|\(analyticsResult.projectionID)",
                 projectionID: analyticsResult.projectionID,
@@ -302,10 +311,10 @@ struct BlendedPredictionModule {
                 direction: analyticsResult.direction,
                 line: analyticsResult.line,
                 projectedValue: value,
-                confidence: min(0.95, (analyticsResult.confidence + aiResult.confidence) / 2),
+                confidence: blendedConfidence,
                 sampleSize: max(analyticsResult.sampleSize, aiResult.sampleSize),
                 reasoning: [
-                    "Confidence-weighted blend of Analytics (\(analyticsResult.projectedValue.cleanLine)) and AI (\(aiResult.projectedValue.cleanLine))."
+                    "Confidence-weighted blend of Analytics (\(analyticsResult.projectedValue.cleanLine)) and AI (\(aiResult.projectedValue.cleanLine)); confidence is reduced when the models disagree."
                 ] + Array(aiResult.reasoning.prefix(3))
             )
         }

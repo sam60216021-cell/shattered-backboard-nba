@@ -8,8 +8,8 @@
 //    • Opponent historical matchup (≥ 3 prior games required)
 //    • Home / away split (±2.5% — pronounced NBA home-court advantage)
 //    • Back-to-back / rest-day fatigue (0.93×–1.04×)
-//    • Aggressive baseline (+10%) in regular season — slightly above typical lines
-//    • Conservative mode (−22%, extra −8% stacking) for playoffs
+//    • Neutral regular-season baseline with rolling player/stat calibration
+//    • Conservative postseason adjustments for pace and rotation uncertainty
 //
 //  Generates: PTS, REB, AST, PR, PA, RA, PRA, FPTS, 3PM, STL, BLK
 //
@@ -192,10 +192,8 @@ final class PredictionEngine {
     // the short-season WNBA build.
     private let maxLogs        = 40     // cap at ~half an NBA season of logs
     private let decayLambda    = 0.04   // exp(-i × λ) — gentle recency bias
-    private let aggressiveMult        = 1.10   // +10% regular season (legacy NBA calibration)
-    private let playoffMult           = 0.78   // −22% playoffs — tighter defence, lower pace
-    private let playoffExtraMult      = 0.92   // additional −8% in playoffs on top of playoffMult
-    private let playoffFirstRoundMult = 0.90   // additional −10% for first-round games
+    private let playoffMult           = 0.96   // modest postseason pace/rotation adjustment
+    private let playoffFirstRoundMult = 0.99   // small first-round uncertainty adjustment
     private let playoffMaxConf        = 0.75   // confidence capped at 75% in playoffs
     private let regularSeasonBiasMult = 1.00   // neutral global calibration for regular-season projections
 
@@ -624,7 +622,10 @@ final class PredictionEngine {
             }
         }()
         let restMult = restMultiplier(logs: logs, gameDate: context.gameDate)
-        let modeMult = context.isPlayoffs ? playoffMult : aggressiveMult
+        // Regular-season output is neutral. Rolling player calibration and the
+        // persisted stat tuner own bias correction; a second blanket boost would
+        // double-count that correction and systematically inflate projections.
+        let modeMult = context.isPlayoffs ? playoffMult : 1.0
 
         // Minutes trend penalty: recent minutes drop vs baseline lowers projection.
         let minutesTrendMult: Double = {
@@ -694,8 +695,9 @@ final class PredictionEngine {
         let clampedToBase = max(base * 0.70, min(base * 1.12, combined))
         let biasAdjusted  = context.isPlayoffs ? clampedToBase : (clampedToBase * regularSeasonBiasMult)
 
-        let postExtra      = context.isPlayoffs ? biasAdjusted * playoffExtraMult : biasAdjusted
-        let adjusted       = (context.isPlayoffs && context.isFirstRound) ? postExtra * playoffFirstRoundMult : postExtra
+        let adjusted = (context.isPlayoffs && context.isFirstRound)
+            ? biasAdjusted * playoffFirstRoundMult
+            : biasAdjusted
         let tunedValue = tuned(statLabel(for: keyPath), adjusted)
         return max(0, roundHalf(tunedValue))
     }
@@ -1159,25 +1161,26 @@ final class PredictionEngine {
             playerPosition: playerPosition
         )
 
+        let environmentMult: Double
         if keyPath == \GameLog.pts || keyPath == \GameLog.threepm || keyPath == \GameLog.ftm {
             let boost = (paceDelta * 0.12) + (defDelta * 0.20)
-            return 1.0 + max(-0.05, min(0.05, boost))
-        }
-        if keyPath == \GameLog.ast {
+            environmentMult = 1.0 + max(-0.05, min(0.05, boost))
+        } else if keyPath == \GameLog.ast {
             let boost = (paceDelta * 0.10) + (defDelta * 0.14)
-            return 1.0 + max(-0.05, min(0.05, boost))
-        }
-        if keyPath == \GameLog.reb {
+            environmentMult = 1.0 + max(-0.05, min(0.05, boost))
+        } else if keyPath == \GameLog.reb {
             let boost = (paceDelta * 0.08) + (rebDelta * 0.18)
-            return 1.0 + max(-0.04, min(0.04, boost))
-        }
-        if keyPath == \GameLog.stl || keyPath == \GameLog.blk {
+            environmentMult = 1.0 + max(-0.04, min(0.04, boost))
+        } else if keyPath == \GameLog.stl || keyPath == \GameLog.blk {
             let boost = (paceDelta * 0.08) + (tovDelta * 0.24)
-            return 1.0 + max(-0.05, min(0.05, boost))
+            environmentMult = 1.0 + max(-0.05, min(0.05, boost))
+        } else {
+            environmentMult = 1.0 + max(-0.04, min(0.04, (paceDelta * 0.08) + (defDelta * 0.10)))
         }
 
-        let generic = 1.0 + max(-0.04, min(0.04, (paceDelta * 0.08) + (defDelta * 0.10)))
-        return max(0.90, min(1.10, generic * posMult))
+        // Position splits and team environment describe different matchup
+        // layers. Apply both for every supported stat, with a shared safety cap.
+        return max(0.90, min(1.10, environmentMult * posMult))
     }
 
     private func positionGroup(for raw: String?) -> String {
@@ -1296,10 +1299,10 @@ final class PredictionEngine {
             .dateComponents([.day], from: lastDate, to: gameD).day ?? 2
         // NBA congested schedule → meaningful fatigue swings.
         switch days {
-        case 0:    return 0.93   // back-to-back — fatigue penalty
-        case 1:    return 1.00   // one rest day — normal
-        case 2:    return 1.02   // slightly better rested
-        default:   return 1.04   // well rested (3+ days off)
+        case ...1: return 0.93   // next calendar day (or same-day anomaly): back-to-back
+        case 2:    return 1.00   // one full rest day — normal
+        case 3:    return 1.02   // two full rest days
+        default:   return 1.04   // well rested (3+ full days off)
         }
     }
 

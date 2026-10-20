@@ -614,8 +614,8 @@ struct PlayerStatsView: View {
     // MARK: - Best Bet insight
 
     /// Scores core single stats by hit-rate confidence PLUS matchup edge
-    /// (projection vs season average), penalized where the opposing defender
-    /// suppresses that stat. Returns the winner + reason.
+    /// (projection vs season average), adjusted for the opposing defender's
+    /// stat-specific impact. Returns the winner + reason.
     private func bestBet(for proj: PlayerProjection) -> (stat: String, reason: String)? {
         guard logs.count >= 3 else { return nil }
 
@@ -635,7 +635,7 @@ struct PlayerStatsView: View {
             // season average (the engine already baked opponent & defender in).
             let edge = avg > 0 ? max(-0.10, min(0.10, ((value / avg) - 1.0) * 0.30)) : 0
             var score = proj.confidence(for: stat) + edge
-            // Defender suppression mirrors the engine's projection cut.
+            // Defender adjustment mirrors the engine's favorable or difficult matchup effect.
             if let m = matchup {
                 score *= max(0.6, m.multiplier(for: stat))
             }
@@ -741,13 +741,15 @@ struct PlayerStatsView: View {
     @ViewBuilder
     private var defenderMatchupChip: some View {
         if let m = matchup, m.isSignificant {
+            let favorable = m.impact < 0.15
+            let accent: Color = favorable ? .green : .orange
             HStack(spacing: 8) {
                 Image(systemName: "shield.lefthalf.filled")
                     .font(.caption.bold())
-                    .foregroundColor(.orange)
+                    .foregroundColor(accent)
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("Matchup risk — \(m.riskLabel)")
-                        .font(.caption.bold()).foregroundColor(.orange)
+                    Text("Matchup — \(m.riskLabel)")
+                        .font(.caption.bold()).foregroundColor(accent)
                     Text("vs \(m.defenderName)\(m.defenderPosition.map { " (\($0))" } ?? "") — projections adjusted")
                         .font(.caption2).foregroundColor(.white.opacity(0.5))
                 }
@@ -755,8 +757,8 @@ struct PlayerStatsView: View {
             }
             .padding(.horizontal, 12)
             .padding(.vertical, 9)
-            .background(Color.orange.opacity(0.08), in: RoundedRectangle(cornerRadius: 12))
-            .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color.orange.opacity(0.35), lineWidth: 1))
+            .background(accent.opacity(0.08), in: RoundedRectangle(cornerRadius: 12))
+            .overlay(RoundedRectangle(cornerRadius: 12).stroke(accent.opacity(0.35), lineWidth: 1))
         }
     }
 

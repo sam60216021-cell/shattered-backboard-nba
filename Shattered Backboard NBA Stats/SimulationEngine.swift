@@ -131,7 +131,7 @@ final class SimulationEngine {
             guard let opp = opponent else { return 1.0 }
             let standings = LocalDataService.shared.standingsMap[opp]
             guard let oppDef = standings else { return 1.0 }
-            let leagueAvgOppPts = 88.0
+            let leagueAvgOppPts = leagueAverageOpponentPoints()
             let defRatio = oppDef.oppPointsPG / leagueAvgOppPts
             return 1.0 + (1.0 - defRatio) * 0.12
         }()
@@ -593,9 +593,16 @@ final class SimulationEngine {
     private func defenseVolatilityMult(for opponentTeam: String) -> Double {
         let standings = LocalDataService.shared.standingsMap[opponentTeam]
         guard let oppDef = standings else { return 1.0 }
-        let leagueAvgOppPts = 88.0
+        let leagueAvgOppPts = leagueAverageOpponentPoints()
         let defRatio = oppDef.oppPointsPG / leagueAvgOppPts
         return 1.0 + (1.0 - defRatio) * 0.12
+    }
+
+    private func leagueAverageOpponentPoints() -> Double {
+        let values = LocalDataService.shared.standingsMap.values
+            .map(\.oppPointsPG)
+            .filter { $0 > 0 }
+        return values.isEmpty ? 114.0 : values.reduce(0, +) / Double(values.count)
     }
 
     private func adjustedTeamMeans(game: ScheduleGame, awayBase: Double, homeBase: Double) -> (away: Double, home: Double) {

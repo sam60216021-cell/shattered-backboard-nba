@@ -24,33 +24,43 @@ struct DefenderMatchup {
     /// Perimeter defenders influence scoring, threes, assists, and turnovers;
     /// interior defenders influence rebounds and paint-dependent production.
     func multiplier(for stat: String) -> Double {
-        guard impact > 0 else { return 1.0 }
+        // Activity scores are centered around 0.35. Above-average defenders
+        // suppress the projection; below-average defenders provide a modest
+        // boost. The prior one-sided formula could only penalize players, which
+        // contradicted the UI's favorable-matchup reasoning.
+        func adjusted(_ activity: Double, maxEffect: Double) -> Double {
+            let centered = max(-0.35, min(0.65, activity - 0.35))
+            return 1.0 - centered * maxEffect * assignmentConfidence
+        }
+
         switch stat {
         case "REB", "RA":
-            return 1.0 - interiorImpact * 0.10 * assignmentConfidence
+            return adjusted(interiorImpact, maxEffect: 0.10)
         case "3PM":
-            return 1.0 - perimeterImpact * 0.07 * assignmentConfidence
+            return adjusted(perimeterImpact, maxEffect: 0.07)
         case "AST":
-            return 1.0 - perimeterImpact * 0.05 * assignmentConfidence
+            return adjusted(perimeterImpact, maxEffect: 0.05)
         case "PTS", "PA", "PR", "PRA":
             let combined = perimeterImpact * 0.60 + interiorImpact * 0.40
-            return 1.0 - combined * 0.075 * assignmentConfidence
+            return adjusted(combined, maxEffect: 0.075)
         case "FPTS", "DD", "TD":
             let combined = perimeterImpact * 0.45 + interiorImpact * 0.55
-            return 1.0 - combined * 0.08 * assignmentConfidence
+            return adjusted(combined, maxEffect: 0.08)
         case "TOV":
-            return 1.0 + perimeterImpact * 0.08 * assignmentConfidence
+            let centered = max(-0.35, min(0.65, perimeterImpact - 0.35))
+            return 1.0 + centered * 0.08 * assignmentConfidence
         default:
             return 1.0
         }
     }
 
     /// True when the impact is large enough to warn about in the UI.
-    var isSignificant: Bool { impact >= 0.35 }
+    var isSignificant: Bool { abs(impact - 0.35) >= 0.20 }
 
     var riskLabel: String {
         switch impact {
-        case ..<0.20: return "Light pressure"
+        case ..<0.15: return "Favorable matchup"
+        case ..<0.35: return "Light pressure"
         case ..<0.40: return "Moderate pressure"
         case ..<0.65: return "Strong matchup pressure"
         default:      return "Elite matchup pressure"
