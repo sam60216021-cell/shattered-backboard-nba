@@ -21,14 +21,12 @@ struct PlayerStatsView: View {
     @State private var logs: [GameLog] = []
     @State private var projection: PlayerProjection?
     @State private var simResults: [String: SimulationResult] = [:]
-    @State private var activeSheet: PickSheet? = nil
     @State private var chartStat: String = "PTS"
     @State private var avgWindow: Int = 0  // 0 = season; N = last N games
     @State private var customLines: [String: Double] = [:]  // per-stat user-adjusted line
     @State private var matchup: DefenderMatchup? = nil
     @State private var isLoadingPlayerLogs = false
 
-    private let allStats    = ["PTS", "REB", "AST", "PR", "PA", "RA", "PRA", "FPTS", "3PM", "FTM", "STL", "BLK", "DD", "TD"]
     private let chartStats  = ["PTS", "REB", "AST", "PR", "PA", "RA", "PRA", "FPTS", "3PM", "STL", "BLK", "DD", "TD"]
     private let chartGameOptions  = [10, 15, 20, 30]
     private let avgWindowOptions: [(label: String, window: Int)] = [
@@ -131,11 +129,6 @@ struct PlayerStatsView: View {
         #if DEBUG
         .onChange(of: forcePlayoffMode) { _, _ in Task { await loadLogs() } }
         #endif
-        .sheet(item: $activeSheet) { sheet in
-            LinePickerSheet(sheet: sheet, playerName: player.name) { prop in
-                _ = router.addToParlay(prop)
-            }
-        }
     }
 
     // MARK: - Data loading
@@ -618,157 +611,6 @@ struct PlayerStatsView: View {
         .overlay(RoundedRectangle(cornerRadius: 14).stroke(Color.skyBorder, lineWidth: 1))
     }
 
-    // MARK: - Add to Picks section
-
-    private var addPicksSection: some View {
-        VStack(spacing: 0) {
-            HStack {
-                Label("Add to Picks", systemImage: "plus.circle.fill")
-                    .font(.caption.bold())
-                    .foregroundColor(.skyBright)
-                Spacer()
-                Text("Tap stat to choose a line")
-                    .font(.caption2)
-                    .foregroundColor(.white.opacity(0.3))
-            }
-            .padding(.horizontal, 14)
-            .padding(.top, 14)
-            .padding(.bottom, 8)
-
-            Divider().background(Color.skyBorder)
-
-            VStack(spacing: 0) {
-                ForEach(allStats, id: \.self) { stat in
-                    statPickRow(stat)
-                    if stat != allStats.last {
-                        Divider().background(Color.white.opacity(0.05)).padding(.leading, 14)
-                    }
-                }
-            }
-            .padding(.bottom, 4)
-        }
-        .background(Color.skyCard, in: RoundedRectangle(cornerRadius: 14))
-        .overlay(RoundedRectangle(cornerRadius: 14).stroke(Color.skyBorder, lineWidth: 1))
-    }
-
-    @ViewBuilder
-    private func statPickRow(_ stat: String) -> some View {
-        let engineLine = projection?.line(for: stat)  ?? 0
-        let engineProj = projection?.value(for: stat) ?? 0
-        let engineConf = projection?.confidence(for: stat) ?? 0
-        let hasData    = (projection?.gameCount ?? 0) > 0
-
-        // Build a stable prop for parlay tracking
-        let enginePropID = "\(game?.gameID ?? "engine")_\(player.name)_\(stat)"
-        let engineProp: PlayerProp? = hasData ? PlayerProp(
-            id: enginePropID,
-            gameID: game?.gameID,
-            playerName: player.name,
-            team: player.team,
-            statLabel: stat,
-            line: max(0.5, engineLine),
-            direction: .over,
-            overPct: engineConf,
-            projectedValue: engineProj > 0 ? engineProj : nil
-        ) : nil
-
-        let inParlay = engineProp.map { router.isInParlay($0) } ?? false
-
-        // Compute L10 average for this stat
-        let recentAvg: Double? = {
-            let values: [Double]
-            switch stat {
-            case "PTS":  values = logs.prefix(10).compactMap(\.pts)
-            case "REB":  values = logs.prefix(10).compactMap(\.reb)
-            case "AST":  values = logs.prefix(10).compactMap(\.ast)
-            case "PR":   values = logs.prefix(10).map { ($0.pts ?? 0) + ($0.reb ?? 0) }
-            case "PA":   values = logs.prefix(10).map { ($0.pts ?? 0) + ($0.ast ?? 0) }
-            case "RA":   values = logs.prefix(10).map { ($0.reb ?? 0) + ($0.ast ?? 0) }
-            case "3PM":  values = logs.prefix(10).compactMap(\.threepm)
-            case "FTM":  values = logs.prefix(10).compactMap(\.ftm)
-            case "PRA":  values = logs.prefix(10).map { ($0.pts ?? 0) + ($0.reb ?? 0) + ($0.ast ?? 0) }
-            case "FPTS": values = logs.prefix(10).map(\.fantasyScore)
-            case "STL":  values = logs.prefix(10).compactMap(\.stl)
-            case "BLK":  values = logs.prefix(10).compactMap(\.blk)
-            default:     values = []
-            }
-            return values.isEmpty ? nil : values.reduce(0, +) / Double(values.count)
-        }()
-
-        HStack(spacing: 10) {
-            Text(stat)
-                .font(.caption2.bold())
-                .lineLimit(1)
-                .fixedSize()
-                .foregroundColor(.black.opacity(0.85))
-                .padding(.horizontal, 10)
-                .padding(.vertical, 4)
-                .background(statColor(stat), in: Capsule())
-                .frame(minWidth: 44)
-
-            VStack(alignment: .leading, spacing: 1) {
-                if hasData && engineLine > 0 {
-                    Text("OVER \(engineLine.cleanLine)")
-                        .font(.caption.bold())
-                        .foregroundColor(.white.opacity(0.85))
-                    if ["DD","TD"].contains(stat) {
-                        Text("\(Int(round(engineConf * 100)))% of recent games")
-                            .font(.system(size: 9))
-                            .foregroundColor(Color.skyBright.opacity(0.65))
-                    } else {
-                        Text("proj \(engineProj.cleanLine)")
-                            .font(.system(size: 9))
-                            .foregroundColor(Color.skyBright.opacity(0.65))
-                    }
-                } else {
-                    Text("Set your line")
-                        .font(.caption)
-                        .foregroundColor(.white.opacity(0.3))
-                }
-                if let ra = recentAvg {
-                    Text("L10 avg: \(String(format: "%.1f", ra))")
-                        .font(.system(size: 9))
-                        .foregroundColor(.white.opacity(0.3))
-                }
-            }
-
-            Spacer()
-
-            if hasData {
-                let color: Color = engineConf >= 0.80 ? .green : engineConf >= 0.65 ? .skyBright : .orange
-                Text("\(Int(round(engineConf * 100)))%")
-                    .font(.caption.bold())
-                    .foregroundColor(color)
-                    .frame(width: 36, alignment: .trailing)
-            }
-
-            if inParlay, let ep = engineProp {
-                Button { router.removeFromParlay(ep) } label: {
-                    Image(systemName: "checkmark.circle.fill")
-                        .font(.title3).foregroundColor(.skyBright)
-                }
-            } else {
-                Button {
-                    haptic(.light)
-                    let defLine = max(0.5, engineLine > 0 ? engineLine : defaultLine(stat))
-                    activeSheet = PickSheet(
-                        stat: stat,
-                        serverProp: engineProp,
-                        defaultLine: defLine,
-                        defaultDirection: .over,
-                        gameID: game?.gameID
-                    )
-                } label: {
-                    Image(systemName: "plus.circle.fill")
-                        .font(.title3).foregroundColor(.skyBright)
-                }
-            }
-        }
-        .padding(.horizontal, 14)
-        .padding(.vertical, 10)
-        .background(inParlay ? Color.skyBright.opacity(0.08) : Color.clear)
-    }
-
     // MARK: - Best Bet insight
 
     /// Scores core single stats by hit-rate confidence PLUS matchup edge
@@ -1073,29 +915,6 @@ struct PlayerStatsView: View {
 
     // MARK: - Helpers
 
-    private func defaultLine(_ stat: String) -> Double {
-        let pos = (player.position ?? "").uppercased()
-        let isG = pos.hasPrefix("PG") || pos.hasPrefix("SG") || pos == "G"
-        let isC = pos == "C" || pos == "FC" || pos == "C-F" || pos == "CF"
-        switch stat {
-        case "PTS":  return isG ? 12.5 : isC ? 9.5  : 10.5
-        case "REB":  return isG ? 2.5  : isC ? 7.5  : 5.5
-        case "AST":  return isG ? 3.5  : isC ? 1.5  : 2.5
-        case "PR":   return isG ? 15.5 : isC ? 16.5 : 16.0
-        case "PA":   return isG ? 15.5 : isC ? 11.5 : 14.0
-        case "RA":   return isG ? 6.5  : isC ? 9.5  : 8.0
-        case "PRA":  return isG ? 17.5 : isC ? 17.5 : 17.5
-        case "FPTS": return isG ? 24.5 : isC ? 25.5 : 25.0
-        case "3PM":  return isG ? 1.5  : isC ? 0.5  : 1.5
-        case "FTM":  return isG ? 2.5  : isC ? 2.5  : 2.5
-        case "STL":  return 0.5
-        case "BLK":  return isC ? 1.5  : 0.5
-        case "DD":   return 0.5
-        case "TD":   return 0.5
-        default:     return 10.5
-        }
-    }
-
     private func statColor(_ stat: String) -> Color { nbaStatColor(stat) }
 
     // MARK: - Projection Range Card
@@ -1349,159 +1168,5 @@ private struct PlayerUsageBadge: View {
             .background(Color.orange.opacity(0.14), in: Capsule())
             .accessibilityLabel("Estimated usage \(usagePct, specifier: "%.1f") percent across \(games) games")
         }
-    }
-}
-
-// MARK: - PickSheet model
-
-struct PickSheet: Identifiable {
-    let id = UUID()
-    let stat: String
-    let serverProp: PlayerProp?
-    let defaultLine: Double
-    let defaultDirection: PropDirection
-    let gameID: String?
-}
-
-// MARK: - LinePickerSheet
-
-struct LinePickerSheet: View {
-    let sheet: PickSheet
-    let playerName: String
-    let onAdd: (PlayerProp) -> Void
-
-    @ObservedObject private var router = AppRouter.shared
-    @Environment(\.dismiss) private var dismiss
-    @State private var line: Double
-    @State private var direction: PropDirection
-    @State private var showBlocked = false
-    @State private var blockedMsg  = ""
-
-    init(sheet: PickSheet, playerName: String, onAdd: @escaping (PlayerProp) -> Void) {
-        self.sheet      = sheet
-        self.playerName = playerName
-        self.onAdd      = onAdd
-        _line = State(initialValue: sheet.defaultLine)
-        _direction = State(initialValue: sheet.defaultDirection)
-    }
-
-    private var builtProp: PlayerProp {
-        PlayerProp(
-            id: "manual_\(UUID().uuidString)",
-            gameID: sheet.serverProp?.gameID ?? sheet.gameID,
-            playerName: playerName,
-            team: sheet.serverProp?.team,
-            statLabel: sheet.stat,
-            line: line,
-            direction: direction,
-            overPct: sheet.serverProp?.overPct,
-            projectedValue: sheet.serverProp?.projectedValue
-        )
-    }
-
-    var body: some View {
-        NavigationStack {
-            ZStack {
-                NightSkyBackground()
-                VStack(spacing: 28) {
-                    VStack(spacing: 8) {
-                        Text(playerName)
-                            .font(.title3.bold()).foregroundColor(.white)
-                        Text(sheet.stat)
-                            .font(.caption.bold()).foregroundColor(.skyDeep)
-                            .padding(.horizontal, 14).padding(.vertical, 5)
-                            .background(nbaStatColor(sheet.stat), in: Capsule())
-                    }
-                    .padding(.top, 8)
-
-                    VStack(spacing: 2) {
-                        HStack(spacing: 8) {
-                            sideChip(.over)
-                            sideChip(.under)
-                        }
-                        Text(direction.rawValue)
-                            .font(.caption2.bold())
-                            .foregroundColor(.white.opacity(0.4))
-                            .tracking(3)
-                        Text(line.cleanLine)
-                            .font(.system(size: 64, weight: .black, design: .rounded))
-                            .foregroundColor(.white)
-                            .contentTransition(.numericText())
-                            .animation(.easeInOut(duration: 0.1), value: line)
-                    }
-
-                    HStack(spacing: 48) {
-                        Button {
-                            haptic(.light); line = max(0.5, line - 0.5)
-                        } label: {
-                            Image(systemName: "minus.circle.fill")
-                                .font(.system(size: 48)).foregroundColor(.skyBright)
-                        }
-                        Button {
-                            haptic(.light); line += 0.5
-                        } label: {
-                            Image(systemName: "plus.circle.fill")
-                                .font(.system(size: 48)).foregroundColor(.skyBright)
-                        }
-                    }
-
-                    if let sp = sheet.serverProp {
-                        let sidePct = direction == .over ? sp.overProbability : sp.underProbability
-                        HStack(spacing: 5) {
-                            Image(systemName: "info.circle").font(.caption2)
-                            Text("Projected: \(direction.rawValue) \(sp.line.cleanLine)")
-                            Text("· \(Int(round(sidePct * 100)))%")
-                        }
-                        .font(.caption2)
-                        .foregroundColor(.white.opacity(0.35))
-                    }
-
-                    Spacer()
-
-                    Button {
-                        let p = builtProp
-                        if let reason = router.blockedReason(for: p) {
-                            blockedMsg = reason; showBlocked = true
-                        } else {
-                            onAdd(p); haptic(.medium); dismiss()
-                        }
-                    } label: {
-                        Text("Add to Picks")
-                            .font(.headline.bold()).foregroundColor(.skyDeep)
-                            .frame(maxWidth: .infinity).padding(.vertical, 16)
-                            .background(Color.skyBright, in: RoundedRectangle(cornerRadius: 14))
-                    }
-                    .padding(.horizontal, 24)
-                    .padding(.bottom, 32)
-                }
-            }
-            .navigationTitle("Choose Line")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") { dismiss() }.foregroundColor(.skyBright)
-                }
-            }
-            .alert("Can't Add", isPresented: $showBlocked) {
-                Button("OK", role: .cancel) {}
-            } message: {
-                Text(blockedMsg)
-            }
-        }
-    }
-
-    private func sideChip(_ side: PropDirection) -> some View {
-        Button {
-            haptic(.light)
-            direction = side
-        } label: {
-            Text(side.rawValue)
-                .font(.system(size: 11, weight: .bold))
-                .foregroundColor(direction == side ? .skyDeep : .white.opacity(0.75))
-                .padding(.horizontal, 10)
-                .padding(.vertical, 5)
-                .background(direction == side ? Color.skyBright : Color.white.opacity(0.08), in: Capsule())
-        }
-        .buttonStyle(.plain)
     }
 }

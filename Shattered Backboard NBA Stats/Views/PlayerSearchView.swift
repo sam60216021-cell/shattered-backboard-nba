@@ -11,7 +11,6 @@ struct PlayerSearchView: View {
 
     @ObservedObject private var dataService = LocalDataService.shared
     @State private var searchText = ""
-    @State private var selectedPlayer: Player? = nil
 
     // MARK: - Derived
 
@@ -63,7 +62,9 @@ struct PlayerSearchView: View {
         ScrollView {
             LazyVStack(spacing: 0) {
                 ForEach(filteredPlayers) { player in
-                    NavigationLink(destination: PlayerStatsView(player: player, game: nil)) {
+                    NavigationLink {
+                        PlayerStatsView(player: player, game: nil)
+                    } label: {
                         PlayerSearchRow(player: player)
                     }
                     .buttonStyle(.plain)

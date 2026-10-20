@@ -1129,33 +1129,6 @@ final class LocalDataService: ObservableObject {
         }
     }
 
-    /// Concurrently fetches and persists logs for any playerIDs that have no rows in the local DB.
-    /// Does not update any published state — safe to call from any view.
-    func prefetchMissingLogs(playerIDs: [String]) async {
-        if !SportConfig.usesServerSync {
-            syncLog("[prefetch] bundle-only mode — skipping network fetch")
-            return
-        }
-
-        guard serverReachable else {
-            syncLog("[prefetch] skipping — server marked unreachable")
-            return
-        }
-        let ctx = modelContext
-        let missing = playerIDs.filter { pid in
-            var d = FetchDescriptor<StoredGameLog>(predicate: #Predicate { $0.playerID == pid })
-            d.fetchLimit = 1
-            return ((try? ctx.fetch(d)) ?? []).isEmpty
-        }
-        guard !missing.isEmpty else { return }
-        syncLog("[prefetch] fetching logs for \(missing.count) player(s) with no local data")
-        await fetchBulkPlayerLogs(
-            playerIDs: missing,
-            season: SportConfig.currentSeason,
-            maxAge: Self.playerLogRefreshInterval
-        )
-    }
-
     /// Fetches and persists player logs from the server without touching published state.
     private func silentFetchLogs(playerID: String,
                                  season: Int = SportConfig.currentSeason,
@@ -3228,46 +3201,7 @@ final class LocalDataService: ObservableObject {
 
     // MARK: - Direct server test (debug panel)
 
-    /// Fetches play-by-play JSON for a game and persists it to local response cache.
-    /// Returns cached data when fresh, falls back to stale cache if offline.
-    func fetchPlayByPlayRaw(gameID: String) async -> String {
-        if !SportConfig.usesServerSync {
-            return "Bundle-only mode enabled (SportConfig.usesServerSync=false). Play-by-play server endpoint is disabled."
-        }
-        let base = serverURL.trimmingCharacters(in: .whitespaces)
-        let encoded = gameID.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? gameID
-        guard let url = URL(string: "\(base)\(SportConfig.playByPlayEndpoint)?game_id=\(encoded)") else {
-            return "Bad URL"
-        }
-        do {
-            let data = try await fetchDataWithCache(from: url, maxAge: 60 * 60, tag: "play_by_play_\(gameID)")
-            return String(data: data, encoding: .utf8) ?? "<non-UTF8 body>"
-        } catch {
-            return "ERROR: \(error.localizedDescription)"
-        }
-    }
-
-    /// Fetches box-score JSON for a game and persists it to local response cache.
-    /// Returns cached data when fresh, falls back to stale cache if offline.
-    func fetchBoxScoreRaw(gameID: String) async -> String {
-        if !SportConfig.usesServerSync {
-            return "Bundle-only mode enabled (SportConfig.usesServerSync=false). Box-score server endpoint is disabled."
-        }
-        let base = serverURL.trimmingCharacters(in: .whitespaces)
-        let encoded = gameID.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? gameID
-        guard let url = URL(string: "\(base)\(SportConfig.boxScoreEndpoint)?game_id=\(encoded)") else {
-            return "Bad URL"
-        }
-        do {
-            let data = try await fetchDataWithCache(from: url, maxAge: 60 * 60, tag: "box_score_\(gameID)")
-            return String(data: data, encoding: .utf8) ?? "<non-UTF8 body>"
-        } catch {
-            return "ERROR: \(error.localizedDescription)"
-        }
-    }
-
-    /// Fetches box-score JSON for pick tracking. Unlike fetchBoxScoreRaw(), this
-    /// is allowed in bundle-only mode so Picks can still track live progress.
+    /// Fetches box-score JSON for pick tracking and keeps a short-lived local cache.
     func fetchBoxScoreRawForTracking(gameID: String) async -> String {
         let base = serverURL.trimmingCharacters(in: .whitespaces)
         let encoded = gameID.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? gameID

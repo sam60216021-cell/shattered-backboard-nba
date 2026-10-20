@@ -9,6 +9,9 @@ from __future__ import annotations
 import json
 from functools import lru_cache
 from pathlib import Path
+from typing import Optional
+from urllib.error import HTTPError, URLError
+from urllib.request import Request, urlopen
 
 from fastapi import FastAPI, HTTPException, Query
 
@@ -19,7 +22,7 @@ app = FastAPI(title="Shattered Backboard NBA Data", version="2.0")
 
 
 @lru_cache(maxsize=16)
-def load_json(name: str, default_json: str | None = None):
+def load_json(name: str, default_json: Optional[str] = None):
     default = json.loads(default_json) if default_json is not None else None
     path = DATA / name
     if not path.exists():
@@ -54,7 +57,7 @@ def manifest():
 
 
 @app.get("/nba/schedule")
-def schedule(date: str | None = Query(default=None)):
+def schedule(date: Optional[str] = Query(default=None)):
     payload = load_json("schedule.json", '{"games": []}')
     games = payload.get("games") or []
     if date:
@@ -100,9 +103,9 @@ def player_advanced():
 @app.get("/nba/player_logs")
 def player_logs(
     player_id: str = Query(min_length=1, max_length=80),
-    season: int | None = Query(default=None, ge=1947, le=2200),
+    season: Optional[int] = Query(default=None, ge=1947, le=2200),
     days: int = Query(default=90, ge=1, le=730),
-    start_date: str | None = Query(default=None, pattern=r"^\d{4}-\d{2}-\d{2}$"),
+    start_date: Optional[str] = Query(default=None, pattern=r"^\d{4}-\d{2}-\d{2}$"),
 ):
     payload = load_json("player_logs.json", '{"logs_by_player": {}}')
     logs = list((payload.get("logs_by_player") or {}).get(str(player_id), []))
@@ -117,7 +120,7 @@ def player_logs(
 @app.get("/nba/player_logs_bulk")
 def player_logs_bulk(
     player_ids: str = Query(min_length=1, max_length=4_000),
-    season: int | None = Query(default=None, ge=1947, le=2200),
+    season: Optional[int] = Query(default=None, ge=1947, le=2200),
     days: int = Query(default=90, ge=1, le=730),
 ):
     payload = load_json("player_logs.json", '{"logs_by_player": {}}')
@@ -131,3 +134,23 @@ def player_logs_bulk(
         rows.sort(key=lambda row: str(row.get("game_date") or ""), reverse=True)
         result[player_id] = rows[:days]
     return {"season": season or payload.get("season"), "logs_by_player": result}
+
+
+@app.get("/nba/box_score")
+def box_score(game_id: str = Query(min_length=1, max_length=80, pattern=r"^[A-Za-z0-9_-]+$")):
+    """Return ESPN's live summary shape used by the in-app pick tracker."""
+    url = f"https://site.api.espn.com/apis/site/v2/sports/basketball/nba/summary?event={game_id}"
+    request = Request(
+        url,
+        headers={
+            "User-Agent": "Mozilla/5.0 ShatteredBackboard/1.0",
+            "Accept": "application/json",
+        },
+    )
+    try:
+        with urlopen(request, timeout=15) as response:
+            return json.load(response)
+    except HTTPError as error:
+        raise HTTPException(status_code=error.code, detail="Box score is not available") from error
+    except (URLError, TimeoutError, json.JSONDecodeError) as error:
+        raise HTTPException(status_code=502, detail="Box score provider is unavailable") from error

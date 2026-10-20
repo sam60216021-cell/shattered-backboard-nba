@@ -86,23 +86,6 @@ private struct SeededRandom {
     }
 }
 
-// MARK: - View Modifier
-
-struct NightSkyModifier: ViewModifier {
-    func body(content: Content) -> some View {
-        ZStack {
-            NightSkyBackground()
-            content
-        }
-    }
-}
-
-extension View {
-    func nightSky() -> some View {
-        modifier(NightSkyModifier())
-    }
-}
-
 // MARK: - Haptic Feedback
 
 #if canImport(UIKit)

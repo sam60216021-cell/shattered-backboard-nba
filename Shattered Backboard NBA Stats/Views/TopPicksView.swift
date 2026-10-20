@@ -501,10 +501,6 @@ struct TopPicksView: View {
         }
     }
 
-    private var totalFilteredPicks: Int {
-        filteredGroups.reduce(0) { $0 + $1.picks.count }
-    }
-
     /// Rank score: blend stability, simulation confidence, and role volume.
     /// Volume (recent minutes per game) keeps low-usage bench players with tiny
     /// steady stat lines from outranking high-usage stars, which the previous
@@ -781,7 +777,9 @@ struct TopPicksView: View {
 
     @ViewBuilder
     private func topRankLink(entry: TopPickEntry, rank: Int) -> some View {
-        NavigationLink(destination: PlayerStatsView(player: entry.player, game: entry.game)) {
+        NavigationLink {
+            PlayerStatsView(player: entry.player, game: entry.game)
+        } label: {
             VStack(alignment: .leading, spacing: 10) {
                 HStack {
                     Text("#\(rank)")
@@ -827,7 +825,9 @@ private struct GamePicksSection: View {
         VStack(spacing: 6) {
             topPickBanner
             ForEach(Array(group.picks.enumerated()), id: \.element.id) { idx, entry in
-                NavigationLink(destination: PlayerStatsView(player: entry.player, game: entry.game)) {
+                NavigationLink {
+                    PlayerStatsView(player: entry.player, game: entry.game)
+                } label: {
                     SimPickRow(entry: entry, rank: idx + 1)
                 }
                 .buttonStyle(.plain)
@@ -1393,7 +1393,9 @@ private struct ConsistencyParlaySheet: View {
     private func legRow(_ leg: ConsistencyLeg, rank: Int) -> some View {
         let entry = leg.entry
         let color = statColor(entry.stat)
-        return NavigationLink(destination: PlayerStatsView(player: entry.player, game: entry.game)) {
+        return NavigationLink {
+            PlayerStatsView(player: entry.player, game: entry.game)
+        } label: {
             HStack(spacing: 10) {
             Text("\(rank)")
                 .font(.system(size: 10, weight: .black, design: .rounded))
@@ -2196,7 +2198,9 @@ private struct NBASimilarParlayCard: View {
                 .lineLimit(2)
 
             ForEach(Array(legs.enumerated()), id: \.element.id) { index, leg in
-                NavigationLink(destination: PlayerStatsView(player: leg.entry.player, game: leg.entry.game)) {
+                NavigationLink {
+                    PlayerStatsView(player: leg.entry.player, game: leg.entry.game)
+                } label: {
                     HStack(spacing: 10) {
                         Text("\(index + 1)")
                             .font(.system(size: 10, weight: .black))

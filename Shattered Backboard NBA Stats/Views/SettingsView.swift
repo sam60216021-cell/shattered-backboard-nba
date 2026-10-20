@@ -45,7 +45,7 @@ struct SettingsView: View {
                     }
 
                     // ── Data ──────────────────────────────────────────────────
-                    Section(header: Text("Data")) {
+                    Section {
                         if localData.isLoadingAllLogs {
                             HStack(spacing: 10) {
                                 ProgressView()
@@ -90,10 +90,12 @@ struct SettingsView: View {
                                     .foregroundColor(.secondary)
                             }
                         }
+                    } header: {
+                        Text("Data")
                     }
 
                     // ── Watchlist ──────────────────────────────────────────────
-                    Section(header: Text("Watchlist Alerts")) {
+                    Section {
                         HStack {
                             Text("Watched players")
                             Spacer()
@@ -118,10 +120,12 @@ struct SettingsView: View {
                             )
                             .tint(.skyBright)
                         }
+                    } header: {
+                        Text("Watchlist Alerts")
                     }
 
                     // ── Model health (lightweight backtest) ───────────────────
-                    Section(header: Text("Model Health")) {
+                    Section {
                         NavigationLink {
                             ProjectionAccuracyView()
                         } label: {
@@ -160,15 +164,19 @@ struct SettingsView: View {
                         Button("Recompute Calibration") {
                             Task { await recomputeModelHealth() }
                         }
+                    } header: {
+                        Text("Model Health")
                     }
 
                     // ── About ─────────────────────────────────────────────────
-                    Section(header: Text("About")) {
+                    Section {
                         HStack {
                             Text(SportConfig.appDisplayName)
                             Spacer()
                             versionLabel
                         }
+                    } header: {
+                        Text("About")
                     }
                 }
                 .scrollContentBackground(.hidden)

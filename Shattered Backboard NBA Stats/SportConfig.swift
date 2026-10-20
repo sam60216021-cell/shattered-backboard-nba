@@ -34,7 +34,6 @@ struct SportConfig {
     static let rosterEndpoint        = "/nba/roster"
     static let playerLogsEndpoint     = "/nba/player_logs"        // ?player_id=X&season=Y&days=N
     static let playerLogsBulkEndpoint = "/nba/player_logs_bulk"   // ?player_ids=X,Y,Z&season=Y&days=N
-    static let playByPlayEndpoint     = "/nba/play_by_play"       // ?game_id=X
     static let boxScoreEndpoint       = "/nba/box_score"          // ?game_id=X
 
     // ── Current NBA season year (e.g. 2026 for the 2025–26 season) ────────────
