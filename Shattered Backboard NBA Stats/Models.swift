@@ -54,8 +54,17 @@ struct ScheduleGame: Identifiable, Codable, Hashable {
         let formatter = DateFormatter()
         formatter.calendar = Calendar(identifier: .gregorian)
         formatter.locale = Locale(identifier: "en_US_POSIX")
-        formatter.timeZone = TimeZone(secondsFromGMT: 0)
+        formatter.timeZone = TimeZone(identifier: SportConfig.appTimeZoneID)
         formatter.dateFormat = "yyyy-MM-dd"
+        return formatter
+    }()
+
+    private static let isoMinuteParser: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.calendar = Calendar(identifier: .gregorian)
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.timeZone = TimeZone(secondsFromGMT: 0)
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mmX"
         return formatter
     }()
 
@@ -69,7 +78,8 @@ struct ScheduleGame: Identifiable, Codable, Hashable {
     /// Human-friendly date label, e.g. "Today", "Tomorrow", or "Sat, Aug 16".
     var displayDate: String {
         guard let d = ScheduleGame.isoDayParser.date(from: date) else { return date }
-        let cal = Calendar.current
+        var cal = Calendar(identifier: .gregorian)
+        cal.timeZone = TimeZone(identifier: SportConfig.appTimeZoneID) ?? .current
         if cal.isDateInToday(d)     { return "Today" }
         if cal.isDateInTomorrow(d)  { return "Tomorrow" }
         if cal.isDateInYesterday(d) { return "Yesterday" }
@@ -108,6 +118,18 @@ struct ScheduleGame: Identifiable, Codable, Hashable {
 
         let lower = raw.lowercased()
         if lower == "tbd" || lower == "tba" { return nil }
+
+        // The server uses valid ISO timestamps without seconds, such as
+        // 2026-10-20T19:00Z. Convert them to Phoenix clock minutes before
+        // attempting the display-clock formats below.
+        if let date = ScheduleGame.isoMinuteParser.date(from: raw) {
+            var calendar = Calendar(identifier: .gregorian)
+            calendar.timeZone = TimeZone(identifier: SportConfig.appTimeZoneID) ?? .current
+            let components = calendar.dateComponents([.hour, .minute], from: date)
+            if let hour = components.hour, let minute = components.minute {
+                return hour * 60 + minute
+            }
+        }
 
         var cleaned = raw
         for suffix in [" EDT", " EST", " ET", " MDT", " MST", " AZ"] where cleaned.uppercased().hasSuffix(suffix) {

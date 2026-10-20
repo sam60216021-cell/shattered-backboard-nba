@@ -2835,6 +2835,17 @@ final class LocalDataService: ObservableObject {
             return formatDisplayTip(from: date)
         }
 
+        // Render's schedule feed omits seconds (for example,
+        // "2026-10-20T19:00Z"), which ISO8601DateFormatter rejects above.
+        let isoMinute = DateFormatter()
+        isoMinute.calendar = Calendar(identifier: .gregorian)
+        isoMinute.locale = Locale(identifier: "en_US_POSIX")
+        isoMinute.timeZone = TimeZone(secondsFromGMT: 0)
+        isoMinute.dateFormat = "yyyy-MM-dd'T'HH:mmX"
+        if let date = isoMinute.date(from: trimmed) {
+            return formatDisplayTip(from: date)
+        }
+
         // Handles fallback values like "2026-08-05 19:00:00".
         let fallback = DateFormatter()
         fallback.locale = Locale(identifier: "en_US_POSIX")
