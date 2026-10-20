@@ -1,5 +1,5 @@
 {
-  "as_of": "2026-10-19T05:01:19.595065+00:00",
+  "as_of": "2026-10-20T15:53:06.257972+00:00",
   "players": [
     {
       "name": "Aaron Wiggins",
@@ -446,12 +446,6 @@
       "team": "CHI"
     },
     {
-      "name": "Isaiah Stevens",
-      "player_id": "1641815",
-      "pos": "G",
-      "team": "CHI"
-    },
-    {
       "name": "Jalen Smith",
       "player_id": "1630188",
       "pos": "F",
@@ -653,12 +647,6 @@
       "name": "Dereck Lively II",
       "player_id": "1641726",
       "pos": "C",
-      "team": "DAL"
-    },
-    {
-      "name": "Dwight Powell",
-      "player_id": "203939",
-      "pos": "F",
       "team": "DAL"
     },
     {
@@ -1148,12 +1136,6 @@
       "team": "HOU"
     },
     {
-      "name": "Sean Pedulla",
-      "player_id": "1642951",
-      "pos": "G",
-      "team": "HOU"
-    },
-    {
       "name": "Steven Adams",
       "player_id": "203500",
       "pos": "C",
@@ -1424,12 +1406,6 @@
       "team": "LAL"
     },
     {
-      "name": "Dalton Knecht",
-      "player_id": "1642261",
-      "pos": "F",
-      "team": "LAL"
-    },
-    {
       "name": "Jaden Hardy",
       "player_id": "1630702",
       "pos": "G",
@@ -1562,12 +1538,6 @@
       "team": "MEM"
     },
     {
-      "name": "Micah Peavy",
-      "player_id": "1642877",
-      "pos": "G",
-      "team": "MEM"
-    },
-    {
       "name": "Olivier-Maxence Prosper",
       "player_id": "1641765",
       "pos": "F",
@@ -1594,12 +1564,6 @@
     {
       "name": "Ty Jerome",
       "player_id": "1629660",
-      "pos": "G",
-      "team": "MEM"
-    },
-    {
-      "name": "Walter Clayton Jr.",
-      "player_id": "1642383",
       "pos": "G",
       "team": "MEM"
     },
@@ -1775,12 +1739,6 @@
       "name": "Kel'el Ware",
       "player_id": "1642276",
       "pos": "C",
-      "team": "MIL"
-    },
-    {
-      "name": "Kevin Porter Jr.",
-      "player_id": "1629645",
-      "pos": "G",
       "team": "MIL"
     },
     {
@@ -2432,12 +2390,6 @@
       "team": "PHI"
     },
     {
-      "name": "CJ Huntley",
-      "player_id": "1643047",
-      "pos": "F",
-      "team": "PHX"
-    },
-    {
       "name": "Collin Gillespie",
       "player_id": "1631221",
       "pos": "G",
@@ -2452,6 +2404,12 @@
     {
       "name": "Dillon Brooks",
       "player_id": "1628415",
+      "pos": "F",
+      "team": "PHX"
+    },
+    {
+      "name": "Drew Timme",
+      "player_id": "1631166",
       "pos": "F",
       "team": "PHX"
     },
@@ -2489,12 +2447,6 @@
       "name": "Koa Peat",
       "player_id": "5041953",
       "pos": "F",
-      "team": "PHX"
-    },
-    {
-      "name": "Koby Brea",
-      "player_id": "1642886",
-      "pos": "G",
       "team": "PHX"
     },
     {
@@ -2640,12 +2592,6 @@
       "player_id": "1642905",
       "pos": "C",
       "team": "POR"
-    },
-    {
-      "name": "Adam Flagler",
-      "player_id": "4397654",
-      "pos": "G",
-      "team": "SAC"
     },
     {
       "name": "Alex Karaban",
