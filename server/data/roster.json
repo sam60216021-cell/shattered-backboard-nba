@@ -1,5 +1,5 @@
 {
-  "as_of": "2026-10-21T21:22:11.406067+00:00",
+  "as_of": "2026-10-23T06:31:42.926142+00:00",
   "players": [
     {
       "name": "Aaron Wiggins",
@@ -536,12 +536,6 @@
       "team": "CLE"
     },
     {
-      "name": "Ernest Udeh Jr.",
-      "player_id": "5106261",
-      "pos": "C",
-      "team": "CLE"
-    },
-    {
       "name": "Evan Mobley",
       "player_id": "1630596",
       "pos": "C",
@@ -566,12 +560,6 @@
       "team": "CLE"
     },
     {
-      "name": "Khalifa Diop",
-      "player_id": "4997530",
-      "pos": "C",
-      "team": "CLE"
-    },
-    {
       "name": "Mario Hezonja",
       "player_id": "2995706",
       "pos": "F",
@@ -581,12 +569,6 @@
       "name": "Meleek Thomas",
       "player_id": "5041951",
       "pos": "G",
-      "team": "CLE"
-    },
-    {
-      "name": "Nae'Qwan Tomlin",
-      "player_id": "1641772",
-      "pos": "F",
       "team": "CLE"
     },
     {
@@ -719,6 +701,12 @@
       "name": "Tobi Lawal",
       "player_id": "5106040",
       "pos": "F",
+      "team": "DAL"
+    },
+    {
+      "name": "Walter Clayton Jr.",
+      "player_id": "1642383",
+      "pos": "G",
       "team": "DAL"
     },
     {
@@ -1762,6 +1750,12 @@
     {
       "name": "Ousmane Dieng",
       "player_id": "1631172",
+      "pos": "F",
+      "team": "MIL"
+    },
+    {
+      "name": "Pete Nance",
+      "player_id": "1631250",
       "pos": "F",
       "team": "MIL"
     },
