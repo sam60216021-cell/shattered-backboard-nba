@@ -9,6 +9,7 @@ written atomically into ``server/data`` before Git deploys it to Render.
 from __future__ import annotations
 
 import argparse
+from collections import defaultdict
 import hashlib
 import html
 import json
@@ -53,6 +54,34 @@ def normalized_name(value: str | None) -> str:
     value = html.unescape(str(value or "")).lower()
     value = value.replace("’", "'").replace(".", "").replace("'", "")
     return re.sub(r"[^a-z0-9]+", " ", value).strip()
+
+
+def season_end_year(now: datetime | None = None) -> int:
+    now = now or datetime.now().astimezone()
+    return now.year + 1 if now.month >= 10 else now.year
+
+
+def number(value, default: float = 0.0) -> float:
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return default
+
+
+def made_attempted(value: str | None) -> tuple[float, float]:
+    try:
+        made, attempted = str(value or "0-0").split("-", 1)
+        return number(made), number(attempted)
+    except ValueError:
+        return 0.0, 0.0
+
+
+def minutes_seconds(value: str | None) -> float:
+    text = str(value or "0").strip()
+    if ":" in text:
+        minutes, seconds = text.split(":", 1)
+        return number(minutes) * 60 + number(seconds)
+    return number(text) * 60
 
 
 def load_existing_players(output: Path) -> dict[str, dict]:
@@ -160,6 +189,223 @@ def refresh_schedule(generated_at: str, days: int = 5) -> dict:
     }
 
 
+def refresh_player_logs(output: Path, generated_at: str, season: int, lookback_days: int = 7) -> dict:
+    """Merge recent completed ESPN box scores into the historical player log feed."""
+    existing_path = output / "player_logs.json"
+    try:
+        existing_payload = json.loads(existing_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        existing_payload = {"logs_by_player": {}}
+    existing_by_player = existing_payload.get("logs_by_player") or {}
+
+    known_players = load_existing_players(output)
+    today = datetime.now().astimezone().date()
+    completed: list[tuple[dict, dict]] = []
+    for offset in range(lookback_days):
+        day = today - timedelta(days=offset)
+        token = day.strftime("%Y%m%d")
+        scoreboard = fetch_json(
+            f"https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates={token}"
+        )
+        for event in scoreboard.get("events") or []:
+            status_type = (event.get("status") or {}).get("type") or {}
+            if not status_type.get("completed"):
+                continue
+            competition = (event.get("competitions") or [{}])[0]
+            completed.append((event, competition))
+
+    merged: dict[str, list[dict]] = {
+        str(player_id): list(rows or []) for player_id, rows in existing_by_player.items()
+    }
+    imported_games = 0
+    imported_rows = 0
+    for event, competition in completed:
+        game_id = str(event.get("id") or "")
+        if not game_id:
+            continue
+        summary = fetch_json(
+            f"https://site.api.espn.com/apis/site/v2/sports/basketball/nba/summary?event={game_id}"
+        )
+        competitors = {row.get("homeAway"): row for row in competition.get("competitors") or []}
+        away = normalize_team(competitors.get("away", {}).get("team", {}).get("abbreviation"))
+        home = normalize_team(competitors.get("home", {}).get("team", {}).get("abbreviation"))
+        game_date = str(event.get("date") or "")[:10]
+        game_rows = 0
+
+        for team_block in ((summary.get("boxscore") or {}).get("players") or []):
+            team = normalize_team((team_block.get("team") or {}).get("abbreviation"))
+            opponent = home if team == away else away
+            for stat_group in team_block.get("statistics") or []:
+                labels = stat_group.get("labels") or []
+                for athlete_row in stat_group.get("athletes") or []:
+                    if athlete_row.get("didNotPlay"):
+                        continue
+                    athlete = athlete_row.get("athlete") or {}
+                    name = athlete.get("displayName")
+                    values = athlete_row.get("stats") or []
+                    if not name or not values:
+                        continue
+                    stats = dict(zip(labels, values))
+                    player_id = str(
+                        (known_players.get(normalized_name(name)) or {}).get("player_id")
+                        or athlete.get("id") or ""
+                    )
+                    if not player_id:
+                        continue
+                    fgm, fga = made_attempted(stats.get("FG"))
+                    three_p, three_pa = made_attempted(stats.get("3PT"))
+                    ftm, fta = made_attempted(stats.get("FT"))
+                    row = {
+                        "game_id": game_id,
+                        "game_date": game_date,
+                        "player_id": player_id,
+                        "season": season,
+                        "team": team,
+                        "opponent": opponent,
+                        "mp_seconds": minutes_seconds(stats.get("MIN")),
+                        "pts": number(stats.get("PTS")),
+                        "reb": number(stats.get("REB")),
+                        "ast": number(stats.get("AST")),
+                        "stl": number(stats.get("STL")),
+                        "blk": number(stats.get("BLK")),
+                        "tov": number(stats.get("TO")),
+                        "fgm": fgm,
+                        "fga": fga,
+                        "three_p": three_p,
+                        "three_pa": three_pa,
+                        "ftm": ftm,
+                        "fta": fta,
+                        "plus_minus": number(stats.get("+/-")),
+                    }
+                    rows = merged.setdefault(player_id, [])
+                    rows[:] = [old for old in rows if not (
+                        str(old.get("game_id") or "") == game_id
+                        or (str(old.get("game_date") or "") == game_date
+                            and normalize_team(old.get("team")) == team)
+                    )]
+                    rows.append(row)
+                    game_rows += 1
+        if game_rows:
+            imported_games += 1
+            imported_rows += game_rows
+
+    for rows in merged.values():
+        rows.sort(key=lambda row: str(row.get("game_date") or ""), reverse=True)
+    return {
+        "season": season,
+        "last_updated": generated_at,
+        "source": "ESPN completed game box scores",
+        "games_imported": imported_games,
+        "rows_imported": imported_rows,
+        "logs_by_player": merged,
+    }
+
+
+def rebuild_stats(logs_payload: dict, roster: dict, generated_at: str, season: int) -> dict:
+    roster_by_id = {str(row.get("player_id")): row for row in roster.get("players") or []}
+    players = []
+    for player_id, all_rows in (logs_payload.get("logs_by_player") or {}).items():
+        rows = [row for row in all_rows if int(row.get("season") or 0) == season and number(row.get("mp_seconds")) > 0]
+        if not rows:
+            continue
+        totals = {key: sum(number(row.get(key)) for row in rows) for key in (
+            "mp_seconds", "pts", "reb", "ast", "stl", "blk", "tov",
+            "fgm", "fga", "three_p", "three_pa", "ftm", "fta", "plus_minus",
+        )}
+        gp = len(rows)
+        info = roster_by_id.get(str(player_id), {})
+        players.append({
+            "player_id": str(player_id),
+            "name": info.get("name") or str(player_id),
+            "team": info.get("team") or rows[0].get("team"),
+            "gp": gp,
+            "min": round(totals["mp_seconds"] / 60 / gp, 1),
+            "pts": round(totals["pts"] / gp, 1),
+            "reb": round(totals["reb"] / gp, 1),
+            "ast": round(totals["ast"] / gp, 1),
+            "stl": round(totals["stl"] / gp, 1),
+            "blk": round(totals["blk"] / gp, 1),
+            "tov": round(totals["tov"] / gp, 1),
+            "fg_pct": round(totals["fgm"] / totals["fga"], 3) if totals["fga"] else 0,
+            "fg3_pct": round(totals["three_p"] / totals["three_pa"], 3) if totals["three_pa"] else 0,
+            "ft_pct": round(totals["ftm"] / totals["fta"], 3) if totals["fta"] else 0,
+            "plus_minus": round(totals["plus_minus"] / gp, 1),
+        })
+    players.sort(key=lambda row: (row.get("team") or "", row.get("name") or ""))
+    return {"season": season, "last_updated": generated_at, "source": "ESPN box score aggregates", "players": players}
+
+
+def rebuild_player_advanced(logs_payload: dict, roster: dict, generated_at: str, season: int) -> dict:
+    team_possessions: dict[tuple[str, str], float] = defaultdict(float)
+    current: dict[str, list[dict]] = {}
+    for player_id, all_rows in (logs_payload.get("logs_by_player") or {}).items():
+        rows = [row for row in all_rows if int(row.get("season") or 0) == season and number(row.get("mp_seconds")) > 0]
+        if rows:
+            current[str(player_id)] = rows
+        for row in rows:
+            key = (normalize_team(row.get("team")), str(row.get("game_date") or ""))
+            team_possessions[key] += number(row.get("fga")) + 0.44 * number(row.get("fta")) + number(row.get("tov"))
+    roster_by_id = {str(row.get("player_id")): row for row in roster.get("players") or []}
+    players = []
+    for player_id, rows in current.items():
+        minutes = sum(number(row.get("mp_seconds")) for row in rows) / 60
+        used = sum(number(row.get("fga")) + 0.44 * number(row.get("fta")) + number(row.get("tov")) for row in rows)
+        shares = []
+        for row in rows:
+            key = (normalize_team(row.get("team")), str(row.get("game_date") or ""))
+            total = team_possessions.get(key, 0)
+            if total:
+                shares.append((number(row.get("fga")) + 0.44 * number(row.get("fta")) + number(row.get("tov"))) / total)
+        info = roster_by_id.get(player_id, {})
+        players.append({
+            "player_id": player_id,
+            "name": info.get("name") or player_id,
+            "team": info.get("team") or rows[0].get("team"),
+            "games": len(rows),
+            "minutes_per_game": round(minutes / len(rows), 2),
+            "estimated_usage_pct": round(100 * sum(shares) / len(shares), 2) if shares else None,
+            "possessions_used_per_36": round(36 * used / minutes, 2) if minutes else None,
+        })
+    players.sort(key=lambda row: (row.get("team") or "", row.get("name") or ""))
+    return {"season": season, "last_updated": generated_at, "method": "FGA + 0.44*FTA + TOV share", "players": players}
+
+
+def refresh_standings(generated_at: str, season: int) -> dict:
+    payload = fetch_json(
+        f"https://site.api.espn.com/apis/v2/sports/basketball/nba/standings?season={season}"
+    )
+    rows = []
+    for conference in payload.get("children") or []:
+        conference_name = str(conference.get("name") or "").replace("ern Conference", "")
+        for entry in ((conference.get("standings") or {}).get("entries") or []):
+            team = entry.get("team") or {}
+            stats = {str(stat.get("name")): stat for stat in entry.get("stats") or []}
+            value = lambda name: number((stats.get(name) or {}).get("value"))
+            display = lambda name: str((stats.get(name) or {}).get("displayValue") or "")
+            rows.append({
+                "team_id": int(team.get("id") or 0),
+                "team_name": team.get("name"),
+                "team_city": team.get("location"),
+                "abbr": normalize_team(team.get("abbreviation")),
+                "conference": conference_name,
+                "division": "",
+                "wins": int(value("wins")),
+                "losses": int(value("losses")),
+                "pct": value("winPercent"),
+                "games_back": value("gamesBehind"),
+                "home_record": display("Home"),
+                "road_record": display("Road"),
+                "last_10": display("Last Ten Games"),
+                "streak": display("streak"),
+                "points_pg": value("avgPointsFor"),
+                "opp_points_pg": value("avgPointsAgainst"),
+                "clinch_indicator": "",
+            })
+    if len(rows) != 30:
+        raise RuntimeError(f"Standings validation failed: expected 30 teams, received {len(rows)}")
+    return {"season": season, "last_updated": generated_at, "source": "ESPN standings", "standings": rows}
+
+
 def parse_lineup_players(list_html: str, team: str, lineup_status: str, generated_at: str) -> list[dict]:
     players = []
     pattern = re.compile(
@@ -252,19 +498,31 @@ def main() -> None:
     parser.add_argument("--output", type=Path, default=DATA)
     args = parser.parse_args()
     generated_at = datetime.now(timezone.utc).isoformat()
+    season = season_end_year()
 
     roster = refresh_roster(args.output, generated_at)
     schedule = refresh_schedule(generated_at)
     lineups = refresh_lineups(schedule, generated_at)
+    player_logs = refresh_player_logs(args.output, generated_at, season)
+    stats = rebuild_stats(player_logs, roster, generated_at, season)
+    player_advanced = rebuild_player_advanced(player_logs, roster, generated_at, season)
+    standings = refresh_standings(generated_at, season)
 
     # Write only after all downloads and validation succeed, avoiding partial publishes.
     write_json(args.output / "roster.json", roster)
     write_json(args.output / "schedule.json", schedule)
     write_json(args.output / "lineups.json", lineups)
+    write_json(args.output / "player_logs.json", player_logs)
+    write_json(args.output / "stats.json", stats)
+    write_json(args.output / "player_advanced.json", player_advanced)
+    write_json(args.output / "standings.json", standings)
     refresh_manifest(args.output, generated_at)
     print(f"Roster: {len(roster['players'])} players")
     print(f"Schedule: {len(schedule['games'])} games across the next 5 days")
     print(f"RotoWire: {len(lineups['rows'])} games with starting lineups")
+    print(f"Game logs: {player_logs['rows_imported']} rows from {player_logs['games_imported']} completed games")
+    print(f"Current-season stats: {len(stats['players'])} players")
+    print(f"Standings: {len(standings['standings'])} teams")
 
 
 if __name__ == "__main__":

@@ -2,7 +2,7 @@
   "date": "2026-10-22",
   "game_count": 2,
   "games_with_lineups": 2,
-  "last_updated": "2026-10-23T06:31:42.926142+00:00",
+  "last_updated": "2026-10-23T06:50:43.133961+00:00",
   "rows": [
     {
       "away": "CLE",
@@ -13,7 +13,7 @@
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "CLE",
-          "updated_at": "2026-10-23T06:31:42.926142+00:00"
+          "updated_at": "2026-10-23T06:50:43.133961+00:00"
         },
         {
           "name": "Donovan Mitchell",
@@ -21,7 +21,7 @@
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "CLE",
-          "updated_at": "2026-10-23T06:31:42.926142+00:00"
+          "updated_at": "2026-10-23T06:50:43.133961+00:00"
         },
         {
           "name": "Peyton Watson",
@@ -29,7 +29,7 @@
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "CLE",
-          "updated_at": "2026-10-23T06:31:42.926142+00:00"
+          "updated_at": "2026-10-23T06:50:43.133961+00:00"
         },
         {
           "name": "Evan Mobley",
@@ -37,7 +37,7 @@
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "CLE",
-          "updated_at": "2026-10-23T06:31:42.926142+00:00"
+          "updated_at": "2026-10-23T06:50:43.133961+00:00"
         },
         {
           "name": "Jarrett Allen",
@@ -45,7 +45,7 @@
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "CLE",
-          "updated_at": "2026-10-23T06:31:42.926142+00:00"
+          "updated_at": "2026-10-23T06:50:43.133961+00:00"
         }
       ],
       "date": "2026-10-22",
@@ -58,7 +58,7 @@
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "PHI",
-          "updated_at": "2026-10-23T06:31:42.926142+00:00"
+          "updated_at": "2026-10-23T06:50:43.133961+00:00"
         },
         {
           "name": "VJ Edgecombe",
@@ -66,7 +66,7 @@
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "PHI",
-          "updated_at": "2026-10-23T06:31:42.926142+00:00"
+          "updated_at": "2026-10-23T06:50:43.133961+00:00"
         },
         {
           "name": "Jaylen Brown",
@@ -74,7 +74,7 @@
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "PHI",
-          "updated_at": "2026-10-23T06:31:42.926142+00:00"
+          "updated_at": "2026-10-23T06:50:43.133961+00:00"
         },
         {
           "name": "LeBron James",
@@ -82,7 +82,7 @@
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "PHI",
-          "updated_at": "2026-10-23T06:31:42.926142+00:00"
+          "updated_at": "2026-10-23T06:50:43.133961+00:00"
         },
         {
           "name": "Joel Embiid",
@@ -90,7 +90,7 @@
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "PHI",
-          "updated_at": "2026-10-23T06:31:42.926142+00:00"
+          "updated_at": "2026-10-23T06:50:43.133961+00:00"
         }
       ],
       "time": "2026-10-22T23:00Z"
@@ -104,7 +104,7 @@
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "DEN",
-          "updated_at": "2026-10-23T06:31:42.926142+00:00"
+          "updated_at": "2026-10-23T06:50:43.133961+00:00"
         },
         {
           "name": "Christian Braun",
@@ -112,7 +112,7 @@
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "DEN",
-          "updated_at": "2026-10-23T06:31:42.926142+00:00"
+          "updated_at": "2026-10-23T06:50:43.133961+00:00"
         },
         {
           "name": "Cameron Johnson",
@@ -120,7 +120,7 @@
           "source": "rotowire",
           "status": "QUESTIONABLE",
           "team": "DEN",
-          "updated_at": "2026-10-23T06:31:42.926142+00:00"
+          "updated_at": "2026-10-23T06:50:43.133961+00:00"
         },
         {
           "name": "Aaron Gordon",
@@ -128,7 +128,7 @@
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "DEN",
-          "updated_at": "2026-10-23T06:31:42.926142+00:00"
+          "updated_at": "2026-10-23T06:50:43.133961+00:00"
         },
         {
           "name": "Nikola Jokic",
@@ -136,7 +136,7 @@
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "DEN",
-          "updated_at": "2026-10-23T06:31:42.926142+00:00"
+          "updated_at": "2026-10-23T06:50:43.133961+00:00"
         }
       ],
       "date": "2026-10-22",
@@ -149,7 +149,7 @@
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "OKC",
-          "updated_at": "2026-10-23T06:31:42.926142+00:00"
+          "updated_at": "2026-10-23T06:50:43.133961+00:00"
         },
         {
           "name": "Cason Wallace",
@@ -157,7 +157,7 @@
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "OKC",
-          "updated_at": "2026-10-23T06:31:42.926142+00:00"
+          "updated_at": "2026-10-23T06:50:43.133961+00:00"
         },
         {
           "name": "Jalen Williams",
@@ -165,7 +165,7 @@
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "OKC",
-          "updated_at": "2026-10-23T06:31:42.926142+00:00"
+          "updated_at": "2026-10-23T06:50:43.133961+00:00"
         },
         {
           "name": "Chet Holmgren",
@@ -173,7 +173,7 @@
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "OKC",
-          "updated_at": "2026-10-23T06:31:42.926142+00:00"
+          "updated_at": "2026-10-23T06:50:43.133961+00:00"
         },
         {
           "name": "Isaiah Hartenstein",
@@ -181,7 +181,7 @@
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "OKC",
-          "updated_at": "2026-10-23T06:31:42.926142+00:00"
+          "updated_at": "2026-10-23T06:50:43.133961+00:00"
         }
       ],
       "time": "2026-10-23T01:30Z"

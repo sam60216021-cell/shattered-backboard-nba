@@ -3,14 +3,16 @@
 This directory follows the same deployment model as GridPicks:
 
 1. Double-click the `NBA Publish.command` desktop shortcut on the Mac.
-2. `update_server.py` downloads the upcoming schedule and all 30 active
-   rosters from ESPN, plus projected or confirmed starting lineups from
-   RotoWire.
+2. `update_server.py` downloads the upcoming schedule, all 30 active rosters,
+   current standings, and the last seven days of completed ESPN box scores.
+   It merges and deduplicates player game logs, rebuilds current-season player
+   averages and advanced usage, and downloads projected or confirmed starting
+   lineups from RotoWire.
 3. The updater validates the responses and atomically saves them in
    `server/data`. Incomplete rosters and mismatched lineup slates are rejected.
-4. The launcher commits only `server/data`, pushes `main` to GitHub, and Render
-   deploys the static feeds automatically. Render does not scrape third-party
-   sites during app requests.
+4. The launcher commits the server updater and generated feeds, pushes `main`
+   to GitHub, and Render deploys them automatically. Render does not scrape
+   third-party sites during app requests.
 
 `build_feeds.py` remains available for importing historical game logs and
 advanced feeds from an older local dataset, but routine publishing no longer

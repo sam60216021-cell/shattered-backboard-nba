@@ -7,7 +7,7 @@ REPO_DIR="${SCRIPT_DIR:h}"
 cd "$REPO_DIR"
 python3 "$SCRIPT_DIR/update_server.py"
 
-git add server/data
+git add server
 
 if git diff --cached --quiet; then
     echo ""
