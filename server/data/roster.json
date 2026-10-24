@@ -1,5 +1,5 @@
 {
-  "as_of": "2026-10-23T06:50:43.133961+00:00",
+  "as_of": "2026-10-24T06:04:16.723917+00:00",
   "players": [
     {
       "name": "Aaron Wiggins",
@@ -1982,6 +1982,12 @@
       "team": "NYK"
     },
     {
+      "name": "Dalton Knecht",
+      "player_id": "4897943",
+      "pos": "F",
+      "team": "NYK"
+    },
+    {
       "name": "Jaden Akins",
       "player_id": "4683730",
       "pos": "G",
@@ -2021,12 +2027,6 @@
       "name": "Karl-Anthony Towns",
       "player_id": "1626157",
       "pos": "C",
-      "team": "NYK"
-    },
-    {
-      "name": "Kevin McCullar Jr.",
-      "player_id": "1641755",
-      "pos": "G",
       "team": "NYK"
     },
     {
@@ -2152,6 +2152,12 @@
     {
       "name": "Kenrich Williams",
       "player_id": "1629026",
+      "pos": "G",
+      "team": "OKC"
+    },
+    {
+      "name": "Micah Peavy",
+      "player_id": "4432185",
       "pos": "G",
       "team": "OKC"
     },
@@ -2675,6 +2681,12 @@
       "name": "Precious Achiuwa",
       "player_id": "1630173",
       "pos": "F",
+      "team": "SAC"
+    },
+    {
+      "name": "Sean Pedulla",
+      "player_id": "4709131",
+      "pos": "G",
       "team": "SAC"
     },
     {
