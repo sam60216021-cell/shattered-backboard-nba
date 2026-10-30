@@ -41,6 +41,8 @@ struct QuickPicksView: View {
     @State private var trackingByPickID: [String: PickTrackingState] = [:]
     @State private var trackerRows: [TrackerRow] = []
     @State private var showAddPlayerSheet = false
+    @State private var isComputingSimProbability = false
+    @State private var isRefreshingTrackedPicks = false
     private let liveTicker = Timer.publish(every: 45, on: .main, in: .common).autoconnect()
 
     private var correlationWarning: String? {
@@ -313,6 +315,10 @@ struct QuickPicksView: View {
     /// Runs 500-trial Monte Carlo to compute a correlated parlay probability.
     /// Falls back to simple multiplication when player logs are unavailable.
     private func computeSimProb() async {
+        guard !isComputingSimProbability else { return }
+        isComputingSimProbability = true
+        defer { isComputingSimProbability = false }
+
         let picks = router.parlayPicks
         guard !picks.isEmpty else { simParlayProb = nil; return }
 
@@ -338,6 +344,12 @@ struct QuickPicksView: View {
     }
 
     private func refreshTrackedPicks() async {
+        // Snapshot, logs, game-detail updates, manual refresh, and the live timer
+        // can arrive together. Only one box-score sweep may run at a time.
+        guard !isRefreshingTrackedPicks else { return }
+        isRefreshingTrackedPicks = true
+        defer { isRefreshingTrackedPicks = false }
+
         let picks = router.parlayPicks
         let trackedPlayers = router.trackedPlayers
         guard !picks.isEmpty || !trackedPlayers.isEmpty else {

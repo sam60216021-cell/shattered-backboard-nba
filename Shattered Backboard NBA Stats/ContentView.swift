@@ -74,7 +74,9 @@ struct ContentView: View {
             guard phase == .active else { return }
             guard !LocalDataService.shared.isFetching else { return }
             Task {
-                _ = try? await LocalDataService.shared.fetchAll(fetchLogs: true)
+                // Foreground transitions can happen repeatedly during normal use.
+                // Refresh the slate, but do not restart player-log warmup each time.
+                _ = try? await LocalDataService.shared.fetchAll(fetchLogs: false)
                 AppRouter.shared.pruneCompletedPicks()
             }
         }
@@ -90,4 +92,3 @@ struct ContentView: View {
 #Preview {
     ContentView()
 }
-

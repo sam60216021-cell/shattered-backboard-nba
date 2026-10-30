@@ -143,15 +143,10 @@ struct GamePicksView: View {
             PlayerStatsView(player: ctx.player, game: ctx.game)
         }
         .task { await loadProjections() }
-        .onAppear {
-            NotificationCenter.default.addObserver(forName: .didRefreshPlayerLogs, object: nil, queue: .main) { _ in
-                Task { await loadProjections() }
-            }
-        }
-        .onDisappear {
-            NotificationCenter.default.removeObserver(self, name: .didRefreshPlayerLogs, object: nil)
-        }
         .onChange(of: dataService.snapshotID) { _, _ in Task { await loadProjections() } }
+        // logsRevision is the single authoritative projection invalidation. The
+        // previous NotificationCenter observer leaked on every appearance because
+        // its returned token was never retained, and duplicated this same work.
         .onChange(of: dataService.logsRevision) { _, _ in Task { await loadProjections() } }
         .onReceive(dataService.$standingsMap) { _ in Task { await loadProjections() } }
         #if DEBUG

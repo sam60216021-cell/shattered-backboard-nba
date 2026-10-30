@@ -51,7 +51,7 @@ struct HomeView: View {
         }
         .onReceive(autoRefreshTimer) { _ in
             guard !dataService.isFetching, !isClearing else { return }
-            Task { await refresh() }
+            Task { await refresh(includePlayerLogs: false) }
         }
     }
 
@@ -87,7 +87,7 @@ struct HomeView: View {
             .padding(.horizontal, 16)
             .padding(.vertical, 12)
         }
-        .refreshable { await refresh() }
+        .refreshable { await refresh(includePlayerLogs: true) }
         .navigationTitle(isPlayoff ? "\(SportConfig.currentSeason) NBA Playoffs" : scheduleTitle(for: games))
     }
 
@@ -124,7 +124,7 @@ struct HomeView: View {
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 32)
             }
-            Button("Refresh") { Task { await refresh() } }
+            Button("Refresh") { Task { await refresh(includePlayerLogs: true) } }
                 .buttonStyle(BrightButtonStyle())
             #if DEBUG
             Button("Debug Schedule") { showDebug = true }
@@ -192,7 +192,7 @@ struct HomeView: View {
 
         ToolbarItem(placement: .navigationBarTrailing) {
             Menu {
-                Button { Task { await refresh() } } label: {
+                Button { Task { await refresh(includePlayerLogs: true) } } label: {
                     Label("Refresh", systemImage: "arrow.clockwise")
                 }
                 .disabled(dataService.isFetching || isClearing)
@@ -228,8 +228,8 @@ struct HomeView: View {
 
     // MARK: - Actions
 
-    private func refresh() async {
-        _ = try? await LocalDataService.shared.fetchAll(fetchLogs: true)
+    private func refresh(includePlayerLogs: Bool) async {
+        _ = try? await LocalDataService.shared.fetchAll(fetchLogs: includePlayerLogs)
     }
 }
 

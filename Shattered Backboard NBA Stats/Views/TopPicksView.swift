@@ -142,6 +142,7 @@ final class TopPicksStore: ObservableObject {
     private var lastSnapshotID: Int     = -1
     private var lastLogsRevision: Int   = -1
     private var lastComputedDay: String = ""
+    private var isComputing = false
     private let staleInterval: TimeInterval = 1800  // 30 min
 
     private let evaluatedStats  = ["PTS", "REB", "AST", "PR", "PA", "RA", "PRA", "FPTS", "3PM", "FTM", "STL", "BLK"]
@@ -158,7 +159,7 @@ final class TopPicksStore: ObservableObject {
     // MARK: - Public trigger
 
     func computeIfNeeded(snapshotID: Int, playerCount: Int, gameCount: Int, logsRevision: Int) {
-        guard !isLoading else { return }
+        guard !isComputing else { return }
         let today         = isoToday()
         let rosterChanged = playerCount != lastPlayerCount && playerCount > 0
         let gamesChanged  = gameCount != lastGameCount
@@ -167,7 +168,14 @@ final class TopPicksStore: ObservableObject {
         let newDay        = today != lastComputedDay
         let isStale       = lastComputedAt.map { Date().timeIntervalSince($0) > staleInterval } ?? true
         guard rosterChanged || gamesChanged || snapChanged || logsChanged || isStale || newDay || playerGroups.isEmpty else { return }
-        Task { await compute(snapshotID: snapshotID, playerCount: playerCount, gameCount: gameCount, logsRevision: logsRevision) }
+        // Claim the compute synchronously. Several observed snapshot properties can
+        // change in one run-loop pass; previously each change queued another full
+        // Monte Carlo pass before `compute` had a chance to set isLoading.
+        isComputing = true
+        Task {
+            defer { isComputing = false }
+            await compute(snapshotID: snapshotID, playerCount: playerCount, gameCount: gameCount, logsRevision: logsRevision)
+        }
     }
 
     // MARK: - Compute
@@ -261,7 +269,7 @@ final class TopPicksStore: ObservableObject {
             for player in gamePlayers {
                 guard !isUnavailable(player: player, in: game) else { continue }
 
-                let logs = dataService.localLogs(playerID: player.playerID)
+                let logs = dataService.localLogs(for: player)
                 guard logs.count >= 5 else { continue }
                 guard let projection = gameProjections[player.playerID] else { continue }
 

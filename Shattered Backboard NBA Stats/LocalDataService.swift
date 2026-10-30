@@ -175,7 +175,7 @@ private struct RawStandingsEntry: Decodable {
     let opp_points_pg: Double?
 }
 
-private struct RawGameLog: Decodable {
+private struct RawGameLog: Decodable, Sendable {
     let season: Int?
     let player_id: String?
     let game_date: String?
@@ -298,11 +298,13 @@ final class LocalDataService: ObservableObject {
 
     private let session: URLSession = {
         let cfg = URLSessionConfiguration.default
-        // Render free tier can take 50+ s to wake from a cold start.
-        // The warmup ping in fetchAll absorbs that cost before the heavy
-        // parallel requests fire, but set a generous cap here as a safety net.
-        cfg.timeoutIntervalForRequest  = 60
-        cfg.timeoutIntervalForResource = 180
+        // Local data is the primary UI source. A sleeping Render instance must
+        // not hold a user refresh (or seven parallel supplemental feeds) for
+        // one-to-three minutes. Cached payloads and the ESPN schedule fallback
+        // remain available when this short network budget expires.
+        cfg.timeoutIntervalForRequest  = 15
+        cfg.timeoutIntervalForResource = 30
+        cfg.waitsForConnectivity = false
         return URLSession(configuration: cfg)
     }()
 
@@ -310,6 +312,7 @@ final class LocalDataService: ObservableObject {
     /// Used to suppress background log prefetches after a connectivity failure.
     private var serverReachable = true
     private var isPrimingPredictionData = false
+    private var playerLogFetchesInFlight: Set<String> = []
 
     /// Game-log window kept in the local DB.  Older rows are pruned on launch.
     /// 365 days covers the full prior NBA season so 2025 seed data stays alive
@@ -518,6 +521,18 @@ final class LocalDataService: ObservableObject {
 
     @discardableResult
     func fetchAll(fetchLogs: Bool = false) async throws -> DataSnapshot {
+        // Service-level single-flight protection covers pull-to-refresh, toolbar,
+        // timers, startup, settings, and debug entry points. The old guard lived
+        // mostly in views and `isFetching` was set after an await, allowing rapid
+        // refreshes to overlap before the flag became visible.
+        if isFetching {
+            syncLog("[fetchAll] coalesced — a full sync is already running")
+            if let snapshot { return snapshot }
+            throw CancellationError()
+        }
+        isFetching = true
+        defer { isFetching = false }
+
         if !SportConfig.usesServerSync {
             importBundledLogsIfNeeded()
             await hydratePlaceholderPlayerNamesIfNeeded()
@@ -579,9 +594,7 @@ final class LocalDataService: ObservableObject {
             let posSplitURL  = URL(string: base + SportConfig.teamPositionSplitsEndpoint)
         else { throw URLError(.badURL) }
 
-        isFetching = true
         lastError  = nil
-        defer { isFetching = false }
 
         syncLog("[fetchAll] Starting sync — server: \(base)")
 
@@ -656,18 +669,19 @@ final class LocalDataService: ObservableObject {
             }
             syncLog("[fetchAll] Schedule snapshot published early — \(built.games.count) games")
 
-            Task { @MainActor in
-                await self.applySupplementalSync(
-                    schedule: schedule,
-                    lineupsURL: lineupsURL,
-                    statsURL: statsURL,
-                    rosterURL: rosterURL,
-                    standingsURL: standingsURL,
-                    teamAdvURL: teamAdvURL,
-                    playerAdvURL: playerAdvURL,
-                    posSplitURL: posSplitURL
-                )
-            }
+            // Keep the sync single-flight until the dependent roster/stat feeds
+            // finish. The schedule is already published above, so the UI remains
+            // useful while this completes, but another refresh cannot pile onto it.
+            await self.applySupplementalSync(
+                schedule: schedule,
+                lineupsURL: lineupsURL,
+                statsURL: statsURL,
+                rosterURL: rosterURL,
+                standingsURL: standingsURL,
+                teamAdvURL: teamAdvURL,
+                playerAdvURL: playerAdvURL,
+                posSplitURL: posSplitURL
+            )
 
             if fetchLogs {
                 startPredictionWarmupIfNeeded(reason: "post-schedule sync")
@@ -687,6 +701,13 @@ final class LocalDataService: ObservableObject {
     // MARK: - Player game logs (offline-first)
 
     func fetchPlayerLogs(playerID: String, season: Int = SportConfig.currentSeason) async {
+        let requestKey = "\(playerID)|\(season)"
+        guard playerLogFetchesInFlight.insert(requestKey).inserted else {
+            syncLog("[fetchPlayerLogs] coalesced duplicate request for \(requestKey)")
+            return
+        }
+        defer { playerLogFetchesInFlight.remove(requestKey) }
+
         logsPlayerID  = playerID
         isLoadingLogs = true
         defer { isLoadingLogs = false }
@@ -749,43 +770,41 @@ final class LocalDataService: ObservableObject {
     /// predictions are ready quickly. Falls back to the broader stored roster only
     /// when today's player set can't be resolved.
     func fetchLogsForTodaysPlayers() async {
+        guard !isLoadingAllLogs else {
+            syncLog("[fetchLogsForTodaysPlayers] skipped — log refresh already running")
+            return
+        }
         if !SportConfig.usesServerSync {
             syncLog("[fetchLogsForTodaysPlayers] bundle-only mode — local logs only")
             await recomputeBacktestAndAutoTune()
             return
         }
 
-        let allStored = (try? modelContext.fetch(FetchDescriptor<StoredPlayer>())) ?? []
         let todayTeams = Set((snapshot?.games ?? []).flatMap {
             [$0.awayTeam.uppercased(), $0.homeTeam.uppercased()]
         })
-
-        var playerIDs: [String] = []
-        if !todayTeams.isEmpty {
-            playerIDs = allStored
-                .filter { player in
-                    guard let team = player.team?.uppercased() else { return false }
-                    return todayTeams.contains(team)
-                }
-                .map(\.playerID)
-        }
-
-        // Merge in any snapshot players not yet persisted (e.g. first-run bootstrap).
-        if let snapIDs = snapshot?.players
-            .filter({ player in
-                todayTeams.isEmpty || todayTeams.contains((player.team ?? "").uppercased())
-            })
-            .map({ $0.playerID }) {
-            let existing = Set(playerIDs)
-            playerIDs += snapIDs.filter { !existing.contains($0) }
-        }
 
         if todayTeams.isEmpty {
             syncLog("[fetchLogsForTodaysPlayers] no teams on current snapshot — skipping log warmup")
             return
         }
 
-        playerIDs = Array(Set(playerIDs)).sorted()
+        // The snapshot is the current server roster. Do not warm stale StoredPlayer
+        // rows accumulated by past roster imports; that previously expanded a normal
+        // slate into 500+ player downloads and blocked the UI for minutes.
+        var playerIDs = Array(Set((snapshot?.players ?? [])
+            .filter { todayTeams.contains(($0.team ?? "").uppercased()) }
+            .map(\.playerID))).sorted()
+
+        // First-run compatibility only: use locally stored players when the current
+        // server snapshot has games but no roster payload yet.
+        if playerIDs.isEmpty {
+            let stored = (try? modelContext.fetch(FetchDescriptor<StoredPlayer>())) ?? []
+            playerIDs = Array(Set(stored.compactMap { player in
+                guard let team = player.team?.uppercased(), todayTeams.contains(team) else { return nil }
+                return player.playerID
+            })).sorted()
+        }
 
         syncLog("[fetchLogsForTodaysPlayers] ▶ called — \(playerIDs.count) target players")
 
@@ -1042,13 +1061,13 @@ final class LocalDataService: ObservableObject {
             }
 
             await self.fetchLogsForTodaysPlayers()
-            await self.recomputeBacktestAndAutoTune()
+            // Auto-tuning scans large player histories and is intentionally not part
+            // of launch. It remains available from the explicit backfill/settings
+            // workflow, while startup publishes the saved predictions immediately.
         }
     }
 
     /// Fetches game logs for all given player IDs, batching into chunks ≤ 100.
-    /// Passes the latest locally-stored game date as `since` so the server only
-    /// returns rows the phone doesn't already have.
     private func fetchBulkPlayerLogs(playerIDs: [String],
                                      season: Int,
                                      maxAge: TimeInterval) async {
@@ -1070,19 +1089,16 @@ final class LocalDataService: ObservableObject {
     }
 
     /// Sends one bulk request for up to 100 player IDs and persists the results.
-    /// Passes the device's latest stored game date as `start_date` so the server
-    /// only returns rows the phone doesn't already have.
+    /// The requested day window is deliberately sent for every player. A single
+    /// global `start_date` is unsafe here: one well-populated player's latest date
+    /// can otherwise suppress the older history needed by every uncached player.
     private func fetchBulkBatch(playerIDs: [String], season: Int,
                                 batchIndex: Int, total: Int,
                                 maxAge: TimeInterval) async {
-        let sinceDate = latestLocalGameDate()
         let base = serverURL.trimmingCharacters(in: .whitespaces)
         let idsJoined = playerIDs.joined(separator: ",")
             .addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
-        var urlStr = "\(base)\(SportConfig.playerLogsBulkEndpoint)?player_ids=\(idsJoined)&season=\(season)&days=\(Self.logFetchDays)"
-        if let since = sinceDate {
-            urlStr += "&start_date=\(since)"
-        }
+        let urlStr = "\(base)\(SportConfig.playerLogsBulkEndpoint)?player_ids=\(idsJoined)&season=\(season)&days=\(Self.logFetchDays)"
         guard let url = URL(string: urlStr) else {
             syncLog("[fetchBulkBatch \(batchIndex)/\(total)] bad URL — falling back to individual fetches")
             await fetchLogsIndividually(playerIDs: playerIDs, season: season, maxAge: maxAge)
@@ -1095,12 +1111,20 @@ final class LocalDataService: ObservableObject {
                                                     tag: "player_logs_bulk_\(batchIndex)")
             if let decoded = try? JSONDecoder().decode(RawBulkLogsResponse.self, from: data),
                let byPlayer = decoded.logs_by_player {
-                var totalRows = 0
-                for (pid, rawLogs) in byPlayer {
-                    persistLogs(rawLogs, defaultPlayerID: pid, defaultSeason: season)
-                    totalRows += rawLogs.count
-                }
+                let totalRows = byPlayer.values.reduce(0) { $0 + $1.count }
+                persistLogBatches(byPlayer, defaultSeason: season)
                 syncLog("[fetchBulkBatch \(batchIndex)/\(total)] persisted \(totalRows) rows across \(byPlayer.count) players")
+                if totalRows == 0 && season == SportConfig.currentSeason {
+                    let priorSeason = season - 1
+                    syncLog("[fetchBulkBatch \(batchIndex)/\(total)] current season has no history — retrying \(priorSeason)")
+                    await fetchBulkBatch(
+                        playerIDs: playerIDs,
+                        season: priorSeason,
+                        batchIndex: batchIndex,
+                        total: total,
+                        maxAge: maxAge
+                    )
+                }
             } else {
                 syncLog("[fetchBulkBatch \(batchIndex)/\(total)] decode failed — falling back to individual fetches")
                 await fetchLogsIndividually(playerIDs: playerIDs, season: season, maxAge: maxAge)
@@ -2054,8 +2078,10 @@ final class LocalDataService: ObservableObject {
                     oppPointsPG: s.opp_points_pg ?? 0
                 )
             }
-            standingsMap = map
-            persistStandings(map)
+            if standingsMap != map {
+                standingsMap = map
+                persistStandings(map)
+            }
             syncLog("[supplemental] standingsMap populated — \(map.count) teams")
         }
 
@@ -2077,8 +2103,10 @@ final class LocalDataService: ObservableObject {
                     astRatio: t.ast_ratio
                 )
             }
-            teamAdvancedMap = map
-            persistTeamAdvanced(map)
+            if teamAdvancedMap != map {
+                teamAdvancedMap = map
+                persistTeamAdvanced(map)
+            }
             syncLog("[supplemental] teamAdvancedMap populated — \(map.count) teams")
         }
 
@@ -2097,8 +2125,10 @@ final class LocalDataService: ObservableObject {
                     possessionsUsedPer36: player.possessions_used_per_36
                 )
             }
-            playerAdvancedMap = map
-            persistPlayerAdvanced(map)
+            if playerAdvancedMap != map {
+                playerAdvancedMap = map
+                persistPlayerAdvanced(map)
+            }
             syncLog("[supplemental] playerAdvancedMap populated — \(map.count) players")
         }
 
@@ -2122,8 +2152,10 @@ final class LocalDataService: ObservableObject {
                 )
                 grouped[team, default: [:]][group] = entry
             }
-            teamPositionSplitsMap = grouped
-            persistTeamPositionSplits(grouped)
+            if teamPositionSplitsMap != grouped {
+                teamPositionSplitsMap = grouped
+                persistTeamPositionSplits(grouped)
+            }
             syncLog("[supplemental] teamPositionSplitsMap populated — \(grouped.count) teams")
         }
 
@@ -2523,6 +2555,67 @@ final class LocalDataService: ObservableObject {
         }
     }
 
+    /// Persists a complete server batch with one SwiftData save and one published
+    /// invalidation. The old per-player save/revision loop caused WAL checkpoints
+    /// and full prediction recomputes hundreds of times during launch.
+    private func persistLogBatches(_ batches: [String: [RawGameLog]], defaultSeason: Int) {
+        guard !batches.isEmpty else { return }
+        let ctx = modelContext
+        let now = Date()
+        let cutoffStr = Self.isoDateString(
+            Calendar.current.date(byAdding: .day, value: -Self.logRetentionDays, to: now) ?? now
+        )
+        let playerIDs = Set(batches.keys)
+        let storedLogs = (try? ctx.fetch(FetchDescriptor<StoredGameLog>())) ?? []
+        var existingIDs = Set(storedLogs.lazy
+            .filter { playerIDs.contains($0.playerID) }
+            .map(\.logID))
+        var changedPlayerIDs = Set<String>()
+
+        for (defaultPlayerID, rawLogs) in batches {
+            for row in rawLogs {
+                let playerID = row.player_id ?? defaultPlayerID
+                guard let date = row.game_date, !date.isEmpty,
+                      date >= cutoffStr,
+                      row.mp_seconds != nil || row.pts != nil else { continue }
+                let logID = "\(playerID)_\(date)"
+                guard existingIDs.insert(logID).inserted else { continue }
+                ctx.insert(StoredGameLog(
+                    logID: logID,
+                    playerID: playerID,
+                    season: row.season ?? defaultSeason,
+                    gameDate: date,
+                    team: row.team,
+                    opponent: row.opponent,
+                    minutesSeconds: row.mp_seconds,
+                    pts: row.pts,
+                    reb: row.reb,
+                    ast: row.ast,
+                    threepm: row.three_p,
+                    ftm: row.ftm,
+                    fga: row.fga,
+                    fta: row.fta,
+                    stl: row.stl,
+                    blk: row.blk,
+                    tov: row.tov,
+                    syncedAt: now
+                ))
+                changedPlayerIDs.insert(playerID)
+            }
+        }
+
+        guard !changedPlayerIDs.isEmpty else { return }
+        do {
+            try ctx.save()
+            for playerID in changedPlayerIDs {
+                logMemoryCache.removeValue(forKey: playerID)
+            }
+            logsRevision &+= 1
+        } catch {
+            syncLog("[persistLogBatches] save failed: \(error.localizedDescription)")
+        }
+    }
+
     /// Public read of cached game logs. Checks the in-memory cache first so that
     /// returning to a previously-viewed player is instant with no SwiftData round-trip.
     func localLogs(playerID: String, season: Int = SportConfig.currentSeason) -> [GameLog] {
@@ -2530,6 +2623,27 @@ final class LocalDataService: ObservableObject {
         let result = loadLocalLogs(playerID: playerID, season: season)
         if !result.isEmpty { logMemoryCache[playerID] = result }
         return result
+    }
+
+    /// Returns the strongest saved history for a roster player, even when the
+    /// upstream roster provider has changed that player's identifier. Old roster
+    /// rows are intentionally retained, so matching by name lets current players
+    /// keep using their already-downloaded history instead of disappearing from
+    /// predictions until every provider has converged on the new identifier.
+    func localLogs(for player: Player, season: Int = SportConfig.currentSeason) -> [GameLog] {
+        var best = localLogs(playerID: player.playerID, season: season)
+        let playerName = player.name
+        let descriptor = FetchDescriptor<StoredPlayer>(
+            predicate: #Predicate { $0.name == playerName }
+        )
+
+        for alias in (try? modelContext.fetch(descriptor)) ?? [] where alias.playerID != player.playerID {
+            let candidate = localLogs(playerID: alias.playerID, season: season)
+            if candidate.count > best.count {
+                best = candidate
+            }
+        }
+        return best
     }
 
     private func loadLocalLogs(playerID: String, season: Int) -> [GameLog] {

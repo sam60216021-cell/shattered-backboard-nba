@@ -198,6 +198,10 @@ struct PlayerStatsView: View {
     }
 
     private func loadLogs() async {
+        guard !isLoadingPlayerLogs else { return }
+        isLoadingPlayerLogs = true
+        defer { isLoadingPlayerLogs = false }
+
         // Direct-defender matchup (official or projected opposing starter), if scheduled.
         if let g = game {
             matchup = MatchupDefenseEvaluator.cached(player: player, game: g, dataService: dataService)
@@ -208,7 +212,6 @@ struct PlayerStatsView: View {
         if cached.isEmpty {
             // Global search includes the full roster, while startup warm-up focuses
             // on today's slate. Fetch an unwarmed player's history on demand.
-            isLoadingPlayerLogs = true
             await dataService.fetchPlayerLogs(playerID: player.playerID)
             cached = dataService.localLogs(playerID: player.playerID)
             if cached.isEmpty {
@@ -221,7 +224,6 @@ struct PlayerStatsView: View {
                 )
                 cached = dataService.localLogs(playerID: player.playerID)
             }
-            isLoadingPlayerLogs = false
         }
         guard !cached.isEmpty else {
             return

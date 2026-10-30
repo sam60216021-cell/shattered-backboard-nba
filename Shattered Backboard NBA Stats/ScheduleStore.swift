@@ -18,18 +18,28 @@ final class ScheduleStore: ObservableObject {
 
     private var lastComputedDay: String = ""
     private var lastStandingsSignature: String = ""
+    private var lastGameSignature: String = ""
+    private var isComputing = false
 
     func computeIfNeeded(games: [ScheduleGame]) {
-        guard !isLoading else { return }
+        guard !isComputing else { return }
         let today = isoToday()
-        let unchanged = games.map(\.id).sorted() == simulations.keys.sorted()
+        let gameSignature = games
+            .map { "\($0.id)|\($0.date)|\($0.gameTime ?? "")|\($0.status ?? "")" }
+            .sorted()
+            .joined(separator: ";")
+        let unchanged = gameSignature == lastGameSignature
         let standingsChanged = standingsSignature() != lastStandingsSignature
         guard !unchanged || lastComputedDay != today || simulations.isEmpty || standingsChanged else { return }
 
-        Task { await compute(games: games) }
+        isComputing = true
+        Task {
+            defer { isComputing = false }
+            await compute(games: games, gameSignature: gameSignature)
+        }
     }
 
-    private func compute(games: [ScheduleGame]) async {
+    private func compute(games: [ScheduleGame], gameSignature: String) async {
         isLoading = true
 
         let dataService = LocalDataService.shared
@@ -60,6 +70,7 @@ final class ScheduleStore: ObservableObject {
         isLoading = false
         lastComputedDay = isoToday()
         lastStandingsSignature = standingsSignature()
+        lastGameSignature = gameSignature
     }
 
     private func standingsSignature() -> String {

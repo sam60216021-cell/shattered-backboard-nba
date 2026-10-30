@@ -14,11 +14,13 @@ from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
 from fastapi import FastAPI, HTTPException, Query
+from fastapi.middleware.gzip import GZipMiddleware
 
 
 ROOT = Path(__file__).resolve().parent
 DATA = ROOT / "data"
 app = FastAPI(title="Shattered Backboard NBA Data", version="2.0")
+app.add_middleware(GZipMiddleware, minimum_size=1_024, compresslevel=5)
 
 
 @lru_cache(maxsize=16)
@@ -46,9 +48,20 @@ def index():
     }
 
 
+@app.head("/", status_code=200)
+def index_head():
+    """Cheap readiness response for Render and external uptime monitors."""
+    return None
+
+
 @app.get("/health")
 def health():
     return {"status": "ok", "manifest": (DATA / "manifest.json").exists()}
+
+
+@app.head("/health", status_code=200)
+def health_head():
+    return None
 
 
 @app.get("/nba/manifest")

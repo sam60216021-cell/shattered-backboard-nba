@@ -244,7 +244,7 @@ final class PredictionEngine {
                 return true
             }
             // Fallback: infer active team from recent logs when roster team code is stale.
-            if let inferred = LocalDataService.shared.localLogs(playerID: player.playerID).first?.team?.uppercased() {
+            if let inferred = LocalDataService.shared.localLogs(for: player).first?.team?.uppercased() {
                 return inferred == awayTeam || inferred == homeTeam
             }
             return false
@@ -287,9 +287,9 @@ final class PredictionEngine {
             let isHome   = (player.team ?? "").uppercased() == game.homeTeam.uppercased()
             let opponent = isHome ? game.awayTeam : game.homeTeam
             let batchedLogs = Array((logsByPlayer[player.playerID] ?? []).prefix(maxLogs))
+            let storedLogs = Array(LocalDataService.shared.localLogs(for: player).prefix(maxLogs))
             var logs: [GameLog] = {
-                if !batchedLogs.isEmpty { return batchedLogs }
-                return Array(LocalDataService.shared.localLogs(playerID: player.playerID).prefix(maxLogs))
+                batchedLogs.count >= storedLogs.count ? batchedLogs : storedLogs
             }()
 
             if logs.isEmpty {
