@@ -1,5 +1,5 @@
 {
-  "as_of": "2026-10-26T05:46:48.381070+00:00",
+  "as_of": "2026-10-30T04:57:00.853387+00:00",
   "players": [
     {
       "name": "Aaron Wiggins",
@@ -533,6 +533,12 @@
       "name": "Donovan Mitchell",
       "player_id": "1628378",
       "pos": "G",
+      "team": "CLE"
+    },
+    {
+      "name": "Ernest Udeh Jr.",
+      "player_id": "5106261",
+      "pos": "C",
       "team": "CLE"
     },
     {
@@ -1244,6 +1250,12 @@
       "team": "LAC"
     },
     {
+      "name": "Blake Wesley",
+      "player_id": "4683935",
+      "pos": "G",
+      "team": "LAC"
+    },
+    {
       "name": "Bradley Beal",
       "player_id": "203078",
       "pos": "G",
@@ -1415,6 +1427,12 @@
       "name": "Kevon Looney",
       "player_id": "1626172",
       "pos": "F",
+      "team": "LAL"
+    },
+    {
+      "name": "Lawson Lovering",
+      "player_id": "4596528",
+      "pos": "C",
       "team": "LAL"
     },
     {
@@ -1802,6 +1820,12 @@
       "team": "MIN"
     },
     {
+      "name": "Enrique Freeman",
+      "player_id": "4592699",
+      "pos": "F",
+      "team": "MIN"
+    },
+    {
       "name": "Isaiah Evans",
       "player_id": "5061585",
       "pos": "F",
@@ -2164,12 +2188,6 @@
     {
       "name": "Nikola Topic",
       "player_id": "5159925",
-      "pos": "G",
-      "team": "OKC"
-    },
-    {
-      "name": "Otega Oweh",
-      "player_id": "5106270",
       "pos": "G",
       "team": "OKC"
     },
