@@ -21,6 +21,10 @@ final class ScheduleStore: ObservableObject {
     private var lastGameSignature: String = ""
     private var isComputing = false
 
+    func invalidatePredictionSettings() {
+        lastGameSignature = ""
+    }
+
     func computeIfNeeded(games: [ScheduleGame]) {
         guard !isComputing else { return }
         let today = isoToday()

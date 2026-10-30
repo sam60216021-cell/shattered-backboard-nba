@@ -1042,6 +1042,15 @@ final class LocalDataService: ObservableObject {
         NotificationCenter.default.post(name: .didRefreshPlayerLogs, object: nil)
     }
 
+    /// Invalidates projection consumers after a user changes model-category weights.
+    /// No server fetch or historical-data mutation is needed.
+    func predictionWeightsDidChange() {
+        MatchupDefenseEvaluator.clearCache()
+        ScheduleStore.shared.invalidatePredictionSettings()
+        logsRevision &+= 1
+        clearProjectionCache()
+    }
+
     private func startPredictionWarmupIfNeeded(reason: String) {
         guard !(snapshot?.games.isEmpty ?? true) else {
             syncLog("[warmup] skipped — no games on current snapshot (\(reason))")

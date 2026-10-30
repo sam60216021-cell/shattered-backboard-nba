@@ -17,6 +17,64 @@
 import Foundation
 import SwiftData
 
+// MARK: - User prediction category weights
+
+enum PredictionStatWeights {
+    static let supportedStats = ["PTS", "REB", "AST", "PR", "PA", "RA", "PRA", "FPTS", "3PM", "FTM", "STL", "BLK"]
+    static let minimum = 0.85
+    static let maximum = 1.15
+
+    static func weight(for stat: String) -> Double {
+        let key = defaultsKey(for: stat)
+        guard UserDefaults.standard.object(forKey: key) != nil else { return 1.0 }
+        return min(maximum, max(minimum, UserDefaults.standard.double(forKey: key)))
+    }
+
+    static func set(_ weight: Double, for stat: String) {
+        guard supportedStats.contains(stat) else { return }
+        UserDefaults.standard.set(min(maximum, max(minimum, weight)), forKey: defaultsKey(for: stat))
+    }
+
+    static func reset() {
+        for stat in supportedStats {
+            UserDefaults.standard.removeObject(forKey: defaultsKey(for: stat))
+        }
+    }
+
+    static func applyPreset(_ preset: PredictionWeightPreset) {
+        reset()
+        for (stat, weight) in preset.weights {
+            set(weight, for: stat)
+        }
+    }
+
+    static func defaultsKey(for stat: String) -> String {
+        "nba_prediction_category_weight_\(stat.lowercased())_v1"
+    }
+}
+
+enum PredictionWeightPreset: String, CaseIterable, Identifiable {
+    case balanced = "Balanced"
+    case scoring = "Scoring Focus"
+    case playmaking = "Playmaking Focus"
+    case defense = "Defense Focus"
+
+    var id: String { rawValue }
+
+    var weights: [String: Double] {
+        switch self {
+        case .balanced:
+            return [:]
+        case .scoring:
+            return ["PTS": 1.08, "3PM": 1.06, "FTM": 1.05, "PA": 1.03, "PR": 1.03, "PRA": 1.03]
+        case .playmaking:
+            return ["AST": 1.10, "PA": 1.06, "RA": 1.05, "PRA": 1.04]
+        case .defense:
+            return ["STL": 1.10, "BLK": 1.10, "REB": 1.05, "FPTS": 1.04]
+        }
+    }
+}
+
 // MARK: - PlayerProjection
 
 /// Fully-computed on-device projections for one player in one upcoming game.
@@ -384,19 +442,20 @@ final class PredictionEngine {
         let blkCalibration = calibrationProfile(for: recent, keyPath: \.blk)
         let ftmCalibration = calibrationProfile(for: recent, keyPath: \.ftm)
 
-        let pts     = roundHalf(projectStat(recent, keyPath: \.pts,     context: context) * declineSignal.projectionMultiplier)
-        let reb     = roundHalf(projectStat(recent, keyPath: \.reb,     context: context) * declineSignal.projectionMultiplier)
-        let ast     = roundHalf(projectStat(recent, keyPath: \.ast,     context: context) * declineSignal.projectionMultiplier)
-        let prLine  = pts + reb
-        let paLine  = pts + ast
-        let raLine  = reb + ast
-        let praLine = pts + reb + ast
-        let ftm     = roundHalf(projectStat(recent, keyPath: \.ftm,     context: context) * declineSignal.projectionMultiplier)
-        let threepm = roundHalf(projectStat(recent, keyPath: \.threepm, context: context) * declineSignal.projectionMultiplier)
-        let stl     = roundHalf(projectStat(recent, keyPath: \.stl,     context: context) * declineSignal.projectionMultiplier)
-        let blk     = roundHalf(projectStat(recent, keyPath: \.blk,     context: context) * declineSignal.projectionMultiplier)
+        let pts     = roundHalf(projectStat(recent, keyPath: \.pts, context: context) * declineSignal.projectionMultiplier * PredictionStatWeights.weight(for: "PTS"))
+        let reb     = roundHalf(projectStat(recent, keyPath: \.reb, context: context) * declineSignal.projectionMultiplier * PredictionStatWeights.weight(for: "REB"))
+        let ast     = roundHalf(projectStat(recent, keyPath: \.ast, context: context) * declineSignal.projectionMultiplier * PredictionStatWeights.weight(for: "AST"))
+        let prLine  = roundHalf((pts + reb) * PredictionStatWeights.weight(for: "PR"))
+        let paLine  = roundHalf((pts + ast) * PredictionStatWeights.weight(for: "PA"))
+        let raLine  = roundHalf((reb + ast) * PredictionStatWeights.weight(for: "RA"))
+        let praLine = roundHalf((pts + reb + ast) * PredictionStatWeights.weight(for: "PRA"))
+        let ftm     = roundHalf(projectStat(recent, keyPath: \.ftm, context: context) * declineSignal.projectionMultiplier * PredictionStatWeights.weight(for: "FTM"))
+        let threepm = roundHalf(projectStat(recent, keyPath: \.threepm, context: context) * declineSignal.projectionMultiplier * PredictionStatWeights.weight(for: "3PM"))
+        let stl     = roundHalf(projectStat(recent, keyPath: \.stl, context: context) * declineSignal.projectionMultiplier * PredictionStatWeights.weight(for: "STL"))
+        let blk     = roundHalf(projectStat(recent, keyPath: \.blk, context: context) * declineSignal.projectionMultiplier * PredictionStatWeights.weight(for: "BLK"))
         let tov     = projectStat(recent, keyPath: \.tov,     context: context)
-        let fptsLine = pts + (reb * 1.2) + (ast * 1.5) + (stl * 3.0) + (blk * 3.0) - tov
+        let fptsLine = (pts + (reb * 1.2) + (ast * 1.5) + (stl * 3.0) + (blk * 3.0) - tov)
+            * PredictionStatWeights.weight(for: "FPTS")
         let ddRate  = hitRateDD(recent)
         let tdRate  = hitRateTD(recent)
 

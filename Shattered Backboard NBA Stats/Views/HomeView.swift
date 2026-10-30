@@ -49,6 +49,9 @@ struct HomeView: View {
         .onReceive(dataService.$standingsMap) { _ in
             scheduleStore.computeIfNeeded(games: dataService.snapshot?.games ?? [])
         }
+        .onChange(of: dataService.logsRevision) { _, _ in
+            scheduleStore.computeIfNeeded(games: dataService.snapshot?.games ?? [])
+        }
         .onReceive(autoRefreshTimer) { _ in
             guard !dataService.isFetching, !isClearing else { return }
             Task { await refresh(includePlayerLogs: false) }

@@ -124,6 +124,19 @@ struct SettingsView: View {
                         Text("Watchlist Alerts")
                     }
 
+                    Section {
+                        NavigationLink {
+                            PredictionWeightSettingsView()
+                        } label: {
+                            Label("Prediction Weights", systemImage: "slider.horizontal.3")
+                        }
+                        Text("Adjust how strongly each stat category influences projected numbers. Historical stats are never changed.")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    } header: {
+                        Text("Prediction Model")
+                    }
+
                     // ── Model health (lightweight backtest) ───────────────────
                     Section {
                         NavigationLink {
@@ -211,6 +224,93 @@ struct SettingsView: View {
         Text("Version \(appVersion)")
             .foregroundColor(.secondary)
         #endif
+    }
+}
+
+private struct PredictionWeightSettingsView: View {
+    @State private var selectedPreset: PredictionWeightPreset = .balanced
+    @State private var revision = 0
+
+    private let labels: [String: String] = [
+        "PTS": "Points", "REB": "Rebounds", "AST": "Assists",
+        "PR": "Points + Rebounds", "PA": "Points + Assists",
+        "RA": "Rebounds + Assists", "PRA": "Points + Rebounds + Assists",
+        "FPTS": "Fantasy Points", "3PM": "Three-Pointers", "FTM": "Free Throws",
+        "STL": "Steals", "BLK": "Blocks"
+    ]
+
+    var body: some View {
+        Form {
+            Section {
+                Picker("Preset", selection: $selectedPreset) {
+                    ForEach(PredictionWeightPreset.allCases) { preset in
+                        Text(preset.rawValue).tag(preset)
+                    }
+                }
+                .onChange(of: selectedPreset) { _, preset in
+                    PredictionStatWeights.applyPreset(preset)
+                    revision &+= 1
+                    LocalDataService.shared.predictionWeightsDidChange()
+                }
+
+                Button("Reset All to Balanced") {
+                    selectedPreset = .balanced
+                    PredictionStatWeights.reset()
+                    revision &+= 1
+                    LocalDataService.shared.predictionWeightsDidChange()
+                }
+            } footer: {
+                Text("Balanced is the calibrated default. Custom adjustments are limited to ±15% to protect model stability.")
+            }
+
+            Section("Stat Categories") {
+                ForEach(PredictionStatWeights.supportedStats, id: \.self) { stat in
+                    PredictionStatWeightRow(
+                        stat: stat,
+                        title: labels[stat] ?? stat,
+                        revision: revision
+                    )
+                }
+            }
+        }
+        .navigationTitle("Prediction Weights")
+        .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
+private struct PredictionStatWeightRow: View {
+    let stat: String
+    let title: String
+    let revision: Int
+    @State private var weight: Double
+
+    init(stat: String, title: String, revision: Int) {
+        self.stat = stat
+        self.title = title
+        self.revision = revision
+        _weight = State(initialValue: PredictionStatWeights.weight(for: stat))
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 7) {
+            HStack {
+                Text(title)
+                Spacer()
+                Text("\(Int((weight * 100).rounded()))%")
+                    .monospacedDigit()
+                    .foregroundColor(weight == 1 ? .secondary : .skyBright)
+            }
+            Slider(value: $weight, in: PredictionStatWeights.minimum...PredictionStatWeights.maximum, step: 0.01) { editing in
+                if !editing {
+                    PredictionStatWeights.set(weight, for: stat)
+                    LocalDataService.shared.predictionWeightsDidChange()
+                }
+            }
+            .tint(.skyBright)
+        }
+        .onChange(of: revision) { _, _ in
+            weight = PredictionStatWeights.weight(for: stat)
+        }
     }
 }
 
