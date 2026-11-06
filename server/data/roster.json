@@ -1,5 +1,5 @@
 {
-  "as_of": "2026-10-30T04:57:00.853387+00:00",
+  "as_of": "2026-11-06T20:39:47.830476+00:00",
   "players": [
     {
       "name": "Aaron Wiggins",
@@ -230,12 +230,6 @@
       "team": "BOS"
     },
     {
-      "name": "Chris Cenac Jr.",
-      "player_id": "5142621",
-      "pos": "F",
-      "team": "BOS"
-    },
-    {
       "name": "Derrick White",
       "player_id": "1628401",
       "pos": "G",
@@ -377,6 +371,12 @@
       "name": "Liam McNeeley",
       "player_id": "1642862",
       "pos": "G",
+      "team": "CHA"
+    },
+    {
+      "name": "Michael Ajayi",
+      "player_id": "5176517",
+      "pos": "F",
       "team": "CHA"
     },
     {
@@ -578,15 +578,15 @@
       "team": "CLE"
     },
     {
-      "name": "Peyton Watson",
-      "player_id": "1631212",
-      "pos": "G",
+      "name": "Norchad Omier",
+      "player_id": "4702134",
+      "pos": "C",
       "team": "CLE"
     },
     {
-      "name": "Riley Minix",
-      "player_id": "1642434",
-      "pos": "F",
+      "name": "Peyton Watson",
+      "player_id": "1631212",
+      "pos": "G",
       "team": "CLE"
     },
     {
@@ -1054,12 +1054,6 @@
     {
       "name": "Bogdan Bogdanovic",
       "player_id": "3037789",
-      "pos": "G",
-      "team": "HOU"
-    },
-    {
-      "name": "Bruce Thornton",
-      "player_id": "5105837",
       "pos": "G",
       "team": "HOU"
     },
@@ -1820,12 +1814,6 @@
       "team": "MIN"
     },
     {
-      "name": "Enrique Freeman",
-      "player_id": "4592699",
-      "pos": "F",
-      "team": "MIN"
-    },
-    {
       "name": "Isaiah Evans",
       "player_id": "5061585",
       "pos": "F",
@@ -1972,7 +1960,7 @@
     {
       "name": "Saddiq Bey",
       "player_id": "1630180",
-      "pos": "G",
+      "pos": "F",
       "team": "NOP"
     },
     {
@@ -2141,6 +2129,12 @@
       "name": "Chet Holmgren",
       "player_id": "1631096",
       "pos": "C",
+      "team": "OKC"
+    },
+    {
+      "name": "Dalen Terry",
+      "player_id": "4433159",
+      "pos": "G",
       "team": "OKC"
     },
     {
@@ -2876,6 +2870,12 @@
       "team": "TOR"
     },
     {
+      "name": "Kevin McCullar Jr.",
+      "player_id": "4411057",
+      "pos": "G",
+      "team": "TOR"
+    },
+    {
       "name": "Kyle Anderson",
       "player_id": "203937",
       "pos": "F",
@@ -2915,12 +2915,6 @@
       "name": "Ace Bailey",
       "player_id": "1642846",
       "pos": "G",
-      "team": "UTA"
-    },
-    {
-      "name": "Blake Hinson",
-      "player_id": "1642396",
-      "pos": "F",
       "team": "UTA"
     },
     {
@@ -2980,6 +2974,12 @@
     {
       "name": "Keyonte George",
       "player_id": "1641718",
+      "pos": "G",
+      "team": "UTA"
+    },
+    {
+      "name": "Kobe Bufkin",
+      "player_id": "4683736",
       "pos": "G",
       "team": "UTA"
     },
