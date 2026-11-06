@@ -246,6 +246,9 @@ final class TopPicksStore: ObservableObject {
         var picksByPlayer: [String: (player: Player, picks: [TopPickEntry])] = [:]
 
         for game in slateGames {
+            // This store is MainActor-isolated because SwiftUI observes it. Yield
+            // between game batches so navigation and scrolling stay responsive.
+            await Task.yield()
             let gamePlayers = allPlayers.filter {
                 let t = ($0.team ?? "").uppercased()
                 return t == game.awayTeam.uppercased() || t == game.homeTeam.uppercased()
@@ -267,6 +270,7 @@ final class TopPicksStore: ObservableObject {
             )
 
             for player in gamePlayers {
+                await Task.yield()
                 guard !isUnavailable(player: player, in: game) else { continue }
 
                 let logs = dataService.localLogs(for: player)
@@ -525,10 +529,6 @@ struct TopPicksView: View {
     }
 
     var body: some View {
-        let snapshotID = dataService.snapshotID
-        let playerCount = dataService.snapshot?.players.count ?? 0
-        let gameCount = dataService.snapshot?.games.count ?? 0
-
         NavigationStack {
             ZStack {
                 NightSkyBackground()
@@ -542,37 +542,43 @@ struct TopPicksView: View {
             .toolbar { AnalyticsCenterToolbarItem() }
         }
         .task {
-            store.computeIfNeeded(snapshotID: snapshotID, playerCount: playerCount, gameCount: gameCount, logsRevision: dataService.logsRevision)
+            requestComputeIfActive()
         }
         .onChange(of: dataService.snapshotID) { _, _ in
-            store.computeIfNeeded(
-                snapshotID: dataService.snapshotID,
-                playerCount: dataService.snapshot?.players.count ?? 0,
-                gameCount: dataService.snapshot?.games.count ?? 0,
-                logsRevision: dataService.logsRevision
-            )
+            requestComputeIfActive()
         }
         .onChange(of: dataService.logsRevision) { _, _ in
-            store.computeIfNeeded(
-                snapshotID: dataService.snapshotID,
-                playerCount: dataService.snapshot?.players.count ?? 0,
-                gameCount: dataService.snapshot?.games.count ?? 0,
-                logsRevision: dataService.logsRevision
-            )
+            requestComputeIfActive()
         }
         .onChange(of: dataService.isLoadingAllLogs) { _, isLoading in
             if !isLoading {
-                store.computeIfNeeded(
-                    snapshotID: dataService.snapshotID,
-                    playerCount: dataService.snapshot?.players.count ?? 0,
-                    gameCount: dataService.snapshot?.games.count ?? 0,
-                    logsRevision: dataService.logsRevision
-                )
+                requestComputeIfActive()
+            }
+        }
+        .onChange(of: dataService.isFetching) { _, isFetching in
+            if !isFetching {
+                requestComputeIfActive()
+            }
+        }
+        .onChange(of: router.selectedTab) { _, selectedTab in
+            if selectedTab == 3 {
+                requestComputeIfActive()
             }
         }
         .sheet(isPresented: $showConsistencyBuilder) {
             ConsistencyParlaySheet()
         }
+    }
+
+    private func requestComputeIfActive() {
+        guard router.selectedTab == 3 else { return }
+        guard !dataService.isFetching, !dataService.isLoadingAllLogs else { return }
+        store.computeIfNeeded(
+            snapshotID: dataService.snapshotID,
+            playerCount: dataService.snapshot?.players.count ?? 0,
+            gameCount: dataService.snapshot?.games.count ?? 0,
+            logsRevision: dataService.logsRevision
+        )
     }
 
     // MARK: - Content

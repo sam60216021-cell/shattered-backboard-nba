@@ -81,9 +81,9 @@ struct ContentView: View {
             }
         }
         .task {
-            // On launch: sync the schedule and fetch logs for today's players only.
-            // Full historical backfill is available manually in Settings.
-            _ = try? await LocalDataService.shared.fetchAll(fetchLogs: true)
+            // Keep launch lightweight. Saved player logs remain available immediately;
+            // fresh player logs are loaded on demand from the prediction screens.
+            _ = try? await LocalDataService.shared.fetchAll(fetchLogs: false)
             AppRouter.shared.pruneCompletedPicks()
         }
     }

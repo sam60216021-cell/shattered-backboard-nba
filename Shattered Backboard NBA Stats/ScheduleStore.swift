@@ -55,6 +55,9 @@ final class ScheduleStore: ObservableObject {
         var newSims: [String: GameSimulationResult] = [:]
 
         for game in games {
+            // Prediction work is MainActor-isolated; yield between games so the
+            // schedule remains interactive while simulations are prepared.
+            await Task.yield()
             // Build matchup-specific projections so player means include opponent context.
             let gameProjs = PredictionEngine.shared.projectGame(
                 game: game,
