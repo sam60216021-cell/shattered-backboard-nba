@@ -71,7 +71,10 @@ struct ContentView: View {
         // Retry schedule fetch whenever the app returns to the foreground
         // and no games are loaded (e.g. after granting local network permission).
         .onChange(of: scenePhase) { _, phase in
-            guard phase == .active else { return }
+            guard phase == .active else {
+                AppDatabase.shared.savePendingChanges()
+                return
+            }
             guard !LocalDataService.shared.isFetching else { return }
             Task {
                 // Foreground transitions can happen repeatedly during normal use.

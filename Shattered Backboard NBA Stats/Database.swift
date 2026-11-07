@@ -439,57 +439,66 @@ final class AppDatabase {
         // Build an explicit store URL so we can guarantee the parent
         // directory exists before SwiftData tries to open/recover the store.
         // Missing parent directory is the root cause of the CoreData recovery error.
-        let storeURL: URL? = {
-            guard let appSupport = FileManager.default.urls(
-                for: .applicationSupportDirectory, in: .userDomainMask
-            ).first else { return nil }
-            let dir = appSupport.appendingPathComponent(Self.storeName, isDirectory: true)
-            try? FileManager.default.createDirectory(
-                at: dir, withIntermediateDirectories: true
-            )
-            return dir.appendingPathComponent("\(Self.storeName).store")
-        }()
-
-        if let url = storeURL {
-            container = Self.makeContainer(schema: schema, storeURL: url)
-        } else {
-            // Can't resolve Application Support — use in-memory.
-            let memConfig = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
-            container = try! ModelContainer(for: schema, configurations: [memConfig])
-        }
+        container = Self.makeContainer(schema: schema)
+        container.mainContext.autosaveEnabled = true
     }
 
-    /// Attempts to open the persistent store at `storeURL`.
-    /// On failure, deletes the corrupted store files and tries once more.
-    /// Final fallback is an in-memory store so the app never crashes.
-    private static func makeContainer(schema: Schema, storeURL: URL) -> ModelContainer {
-        let config = ModelConfiguration(
+    /// Opens a permanent store. A failed primary store is preserved for recovery;
+    /// the app switches to a second on-disk store instead of silently using memory.
+    private static func makeContainer(schema: Schema) -> ModelContainer {
+        let fileManager = FileManager.default
+        let baseDirectory = fileManager.urls(
+            for: .applicationSupportDirectory,
+            in: .userDomainMask
+        ).first ?? fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let directory = baseDirectory.appendingPathComponent(Self.storeName, isDirectory: true)
+
+        do {
+            try fileManager.createDirectory(
+                at: directory,
+                withIntermediateDirectories: true
+            )
+        } catch {
+            fatalError("Unable to create persistent database directory: \(error)")
+        }
+
+        let primaryURL = directory.appendingPathComponent("\(Self.storeName).store")
+        let primaryConfig = ModelConfiguration(
             Self.storeName,
             schema: schema,
-            url: storeURL,
+            url: primaryURL,
             allowsSave: true
         )
         do {
-            return try ModelContainer(for: schema, configurations: [config])
+            return try ModelContainer(for: schema, configurations: [primaryConfig])
         } catch {
-            print("[AppDatabase] Initial open failed (\(error)) — deleting store and retrying")
-            deleteStoreFiles(at: storeURL)
-            do {
-                return try ModelContainer(for: schema, configurations: [config])
-            } catch {
-                print("[AppDatabase] Retry failed (\(error)) — falling back to in-memory store")
-                let memConfig = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
-                return try! ModelContainer(for: schema, configurations: [memConfig])
-            }
+            // Never delete the primary database automatically. It may contain the
+            // user's only downloaded history and can often be recovered later.
+            print("[AppDatabase] Primary store unavailable: \(error)")
+        }
+
+        let recoveryURL = directory.appendingPathComponent("\(Self.storeName)-Recovery.store")
+        let recoveryConfig = ModelConfiguration(
+            "\(Self.storeName)-Recovery",
+            schema: schema,
+            url: recoveryURL,
+            allowsSave: true
+        )
+        do {
+            print("[AppDatabase] Using persistent recovery store at \(recoveryURL.path)")
+            return try ModelContainer(for: schema, configurations: [recoveryConfig])
+        } catch {
+            fatalError("Unable to open a persistent database: \(error)")
         }
     }
 
-    /// Removes the SQLite store file and its WAL/SHM sidecar files.
-    private static func deleteStoreFiles(at url: URL) {
-        let fm = FileManager.default
-        for suffix in ["", "-wal", "-shm"] {
-            let target = URL(fileURLWithPath: url.path + suffix)
-            try? fm.removeItem(at: target)
+    @MainActor
+    func savePendingChanges() {
+        guard mainContext.hasChanges else { return }
+        do {
+            try mainContext.save()
+        } catch {
+            print("[AppDatabase] Final save failed: \(error)")
         }
     }
 }
