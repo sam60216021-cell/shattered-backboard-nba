@@ -46,10 +46,10 @@ struct SettingsView: View {
 
                     // ── Data ──────────────────────────────────────────────────
                     Section {
-                        if localData.isLoadingAllLogs {
+                        if localData.isFetching || localData.isLoadingAllLogs {
                             HStack(spacing: 10) {
                                 ProgressView()
-                                Text("Loading player stats…")
+                                Text(localData.isLoadingAllLogs ? "Backfilling player history…" : "Refreshing saved data…")
                                     .font(.subheadline)
                                     .foregroundColor(.secondary)
                             }
@@ -57,14 +57,9 @@ struct SettingsView: View {
                             Button("Load Recent Stats") {
                                 Task { await LocalDataService.shared.fetchLogsForTodaysPlayers() }
                             }
-                            Button("Backfill All Player Stats") {
-                                Task { await LocalDataService.shared.backfillAllPlayerLogs(forceRefresh: true) }
-                            }
-                            Button("Backfill Current Season") {
+                            Button("Backfill All Missing Data") {
                                 Task {
-                                    await LocalDataService.shared.backfillHistoricalPlayerLogs(
-                                        from: SportConfig.currentSeasonStartDate
-                                    )
+                                    await LocalDataService.shared.backfillAllMissingData()
                                 }
                             }
                         }

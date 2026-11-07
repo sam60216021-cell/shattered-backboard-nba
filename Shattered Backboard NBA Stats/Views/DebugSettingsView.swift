@@ -40,8 +40,8 @@ struct DebugSettingsView: View {
                             Button("Load Recent Stats") {
                                 Task { await LocalDataService.shared.fetchLogsForTodaysPlayers() }
                             }
-                            Button("Backfill ALL Player Stats") {
-                                Task { await LocalDataService.shared.backfillAllPlayerLogs(forceRefresh: true) }
+                            Button("Backfill ALL Missing Data") {
+                                Task { await LocalDataService.shared.backfillAllMissingData() }
                             }
                             Button("Refresh + Load Stats") {
                                 Task { try? await LocalDataService.shared.fetchAll(fetchLogs: true) }

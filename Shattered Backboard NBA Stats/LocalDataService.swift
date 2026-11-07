@@ -893,6 +893,21 @@ final class LocalDataService: ObservableObject {
         syncLog("[backfillAllPlayerLogs] done")
     }
 
+    /// Repairs every locally cacheable data set, then fills the complete current-season
+    /// player history. All writes are merge/upserts, so this is safe to resume or rerun.
+    func backfillAllMissingData() async {
+        guard !isFetching, !isLoadingAllLogs else {
+            syncLog("[backfillAllMissingData] skipped — another data job is already running")
+            return
+        }
+
+        syncLog("[backfillAllMissingData] refreshing schedule, rosters, lineups, and analytics")
+        _ = try? await fetchAll(fetchLogs: false)
+        await backfillHistoricalPlayerLogs(from: SportConfig.currentSeasonStartDate)
+        AppDatabase.shared.savePendingChanges()
+        syncLog("[backfillAllMissingData] complete — all downloaded rows saved locally")
+    }
+
     /// Backfills historical logs for the full known roster from a specific start date through today.
     /// This is intended for one-off recovery jobs such as loading August 3rd onward.
     func backfillHistoricalPlayerLogs(from startDate: String,
@@ -944,7 +959,9 @@ final class LocalDataService: ObservableObject {
                                                  season: Int,
                                                  startDate: String) async {
         guard !playerIDs.isEmpty else { return }
-        let batchSize = 100
+        // Smaller checkpoints keep request URLs reasonable and commit progress more
+        // frequently, so an interruption only repeats a small, idempotent batch.
+        let batchSize = 50
         let batches = stride(from: 0, to: playerIDs.count, by: batchSize).map {
             Array(playerIDs[$0 ..< min($0 + batchSize, playerIDs.count)])
         }
