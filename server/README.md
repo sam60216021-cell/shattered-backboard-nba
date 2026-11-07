@@ -10,7 +10,10 @@ This directory follows the same deployment model as GridPicks:
    lineups from RotoWire.
 3. The updater validates the responses and atomically saves them in
    `server/data`. Incomplete rosters and mismatched lineup slates are rejected.
-4. The launcher commits the server updater and generated feeds, pushes `main`
+4. The same run exports the complete checked-in player-log archive, roster, and
+   schedule into the iOS app's `StarterLogs.json`. Every subsequent app build
+   therefore contains a permanent offline baseline and only needs incremental syncs.
+5. The launcher commits the server updater, generated feeds, and app archive, pushes `main`
    to GitHub, and Render deploys them automatically. Render does not scrape
    third-party sites during app requests.
 

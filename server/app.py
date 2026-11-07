@@ -135,6 +135,7 @@ def player_logs_bulk(
     player_ids: str = Query(min_length=1, max_length=4_000),
     season: Optional[int] = Query(default=None, ge=1947, le=2200),
     days: int = Query(default=90, ge=1, le=730),
+    start_date: Optional[str] = Query(default=None, pattern=r"^\d{4}-\d{2}-\d{2}$"),
 ):
     payload = load_json("player_logs.json", '{"logs_by_player": {}}')
     source = payload.get("logs_by_player") or {}
@@ -144,6 +145,8 @@ def player_logs_bulk(
         rows = list(source.get(player_id, []))
         if season is not None:
             rows = [row for row in rows if int(row.get("season") or season) == season]
+        if start_date:
+            rows = [row for row in rows if str(row.get("game_date") or "") >= start_date]
         rows.sort(key=lambda row: str(row.get("game_date") or ""), reverse=True)
         result[player_id] = rows[:days]
     return {"season": season or payload.get("season"), "logs_by_player": result}

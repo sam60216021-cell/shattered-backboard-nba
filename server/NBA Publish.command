@@ -7,7 +7,7 @@ REPO_DIR="${SCRIPT_DIR:h}"
 cd "$REPO_DIR"
 python3 "$SCRIPT_DIR/update_server.py"
 
-git add server
+git add server "Shattered Backboard NBA Stats/StarterLogs.json"
 
 if git diff --cached --quiet; then
     echo ""
@@ -17,7 +17,7 @@ else
     git commit -m "Update NBA server feeds ($STAMP)"
     git push origin main
     echo ""
-    echo "Updated NBA feeds were saved locally and pushed to GitHub."
+    echo "Updated NBA feeds and the app's offline archive were pushed to GitHub."
     echo "Render will deploy them automatically."
 fi
 

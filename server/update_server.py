@@ -19,6 +19,8 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from urllib.request import Request, urlopen
 
+from export_app_bundle import export_bundle
+
 
 ROOT = Path(__file__).resolve().parent
 DATA = ROOT / "data"
@@ -517,12 +519,15 @@ def main() -> None:
     write_json(args.output / "player_advanced.json", player_advanced)
     write_json(args.output / "standings.json", standings)
     refresh_manifest(args.output, generated_at)
+    bundle_path = ROOT.parent / "Shattered Backboard NBA Stats" / "StarterLogs.json"
+    bundle_logs, bundle_players = export_bundle(args.output, bundle_path)
     print(f"Roster: {len(roster['players'])} players")
     print(f"Schedule: {len(schedule['games'])} games across the next 5 days")
     print(f"RotoWire: {len(lineups['rows'])} games with starting lineups")
     print(f"Game logs: {player_logs['rows_imported']} rows from {player_logs['games_imported']} completed games")
     print(f"Current-season stats: {len(stats['players'])} players")
     print(f"Standings: {len(standings['standings'])} teams")
+    print(f"App bundle: {bundle_logs} logs for {bundle_players} players")
 
 
 if __name__ == "__main__":
