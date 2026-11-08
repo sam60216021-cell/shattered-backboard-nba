@@ -1,91 +1,7 @@
 {
-  "date": "2026-11-07",
-  "game_count": 38,
+  "date": "2026-11-08",
+  "game_count": 35,
   "games": [
-    {
-      "away": "DEN",
-      "away_score": 0,
-      "date": "2026-11-07",
-      "game_id": "401909938",
-      "home": "IND",
-      "home_score": 0,
-      "period": 0,
-      "status": "Scheduled",
-      "status_code": 1,
-      "tip": "2026-11-07T22:00Z"
-    },
-    {
-      "away": "BKN",
-      "away_score": 0,
-      "date": "2026-11-07",
-      "game_id": "401909939",
-      "home": "ATL",
-      "home_score": 0,
-      "period": 0,
-      "status": "Scheduled",
-      "status_code": 1,
-      "tip": "2026-11-08T00:30Z"
-    },
-    {
-      "away": "NYK",
-      "away_score": 0,
-      "date": "2026-11-07",
-      "game_id": "401909940",
-      "home": "CLE",
-      "home_score": 0,
-      "period": 0,
-      "status": "Scheduled",
-      "status_code": 1,
-      "tip": "2026-11-08T01:00Z"
-    },
-    {
-      "away": "WAS",
-      "away_score": 0,
-      "date": "2026-11-07",
-      "game_id": "401909941",
-      "home": "OKC",
-      "home_score": 0,
-      "period": 0,
-      "status": "Scheduled",
-      "status_code": 1,
-      "tip": "2026-11-08T01:00Z"
-    },
-    {
-      "away": "ORL",
-      "away_score": 0,
-      "date": "2026-11-07",
-      "game_id": "401909942",
-      "home": "GSW",
-      "home_score": 0,
-      "period": 0,
-      "status": "Scheduled",
-      "status_code": 1,
-      "tip": "2026-11-08T01:30Z"
-    },
-    {
-      "away": "HOU",
-      "away_score": 0,
-      "date": "2026-11-07",
-      "game_id": "401909943",
-      "home": "PHX",
-      "home_score": 0,
-      "period": 0,
-      "status": "Scheduled",
-      "status_code": 1,
-      "tip": "2026-11-08T02:00Z"
-    },
-    {
-      "away": "SAS",
-      "away_score": 0,
-      "date": "2026-11-07",
-      "game_id": "401909944",
-      "home": "POR",
-      "home_score": 0,
-      "period": 0,
-      "status": "Scheduled",
-      "status_code": 1,
-      "tip": "2026-11-08T03:00Z"
-    },
     {
       "away": "PHI",
       "away_score": 0,
@@ -457,8 +373,56 @@
       "status": "Scheduled",
       "status_code": 1,
       "tip": "2026-11-12T03:00Z"
+    },
+    {
+      "away": "TOR",
+      "away_score": 0,
+      "date": "2026-11-12",
+      "game_id": "401909976",
+      "home": "PHI",
+      "home_score": 0,
+      "period": 0,
+      "status": "Scheduled",
+      "status_code": 1,
+      "tip": "2026-11-13T00:00Z"
+    },
+    {
+      "away": "DET",
+      "away_score": 0,
+      "date": "2026-11-12",
+      "game_id": "401909977",
+      "home": "WAS",
+      "home_score": 0,
+      "period": 0,
+      "status": "Scheduled",
+      "status_code": 1,
+      "tip": "2026-11-13T00:00Z"
+    },
+    {
+      "away": "DAL",
+      "away_score": 0,
+      "date": "2026-11-12",
+      "game_id": "401909978",
+      "home": "MIN",
+      "home_score": 0,
+      "period": 0,
+      "status": "Scheduled",
+      "status_code": 1,
+      "tip": "2026-11-13T01:00Z"
+    },
+    {
+      "away": "CHA",
+      "away_score": 0,
+      "date": "2026-11-12",
+      "game_id": "401909979",
+      "home": "PHX",
+      "home_score": 0,
+      "period": 0,
+      "status": "Scheduled",
+      "status_code": 1,
+      "tip": "2026-11-13T02:00Z"
     }
   ],
-  "last_updated": "2026-11-07T17:06:10.714523+00:00",
+  "last_updated": "2026-11-08T14:36:29.212821+00:00",
   "source": "ESPN scoreboard"
 }

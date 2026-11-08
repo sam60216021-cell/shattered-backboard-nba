@@ -1,5 +1,5 @@
 {
-  "as_of": "2026-11-07T17:06:10.714523+00:00",
+  "as_of": "2026-11-08T14:36:29.212821+00:00",
   "players": [
     {
       "name": "Aaron Wiggins",
@@ -590,6 +590,12 @@
       "team": "CLE"
     },
     {
+      "name": "Riley Minix",
+      "player_id": "5177362",
+      "pos": "F",
+      "team": "CLE"
+    },
+    {
       "name": "Sam Merrill",
       "player_id": "1630241",
       "pos": "G",
@@ -599,12 +605,6 @@
       "name": "Thomas Bryant",
       "player_id": "1628418",
       "pos": "C",
-      "team": "CLE"
-    },
-    {
-      "name": "Tristan Enaruna",
-      "player_id": "1642400",
-      "pos": "F",
       "team": "CLE"
     },
     {
@@ -1054,6 +1054,12 @@
     {
       "name": "Bogdan Bogdanovic",
       "player_id": "3037789",
+      "pos": "G",
+      "team": "HOU"
+    },
+    {
+      "name": "Bruce Thornton",
+      "player_id": "5105837",
       "pos": "G",
       "team": "HOU"
     },
@@ -1547,6 +1553,12 @@
       "name": "Quinten Post",
       "player_id": "1642366",
       "pos": "C",
+      "team": "MEM"
+    },
+    {
+      "name": "Richie Saunders",
+      "player_id": "5105462",
+      "pos": "G",
       "team": "MEM"
     },
     {
