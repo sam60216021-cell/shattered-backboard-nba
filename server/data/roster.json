@@ -1,5 +1,5 @@
 {
-  "as_of": "2026-11-08T14:36:29.212821+00:00",
+  "as_of": "2026-11-09T06:43:11.876340+00:00",
   "players": [
     {
       "name": "Aaron Wiggins",
@@ -2144,12 +2144,6 @@
       "team": "OKC"
     },
     {
-      "name": "Dalen Terry",
-      "player_id": "4433159",
-      "pos": "G",
-      "team": "OKC"
-    },
-    {
       "name": "Isaiah Hartenstein",
       "player_id": "1628392",
       "pos": "C",
@@ -2194,6 +2188,12 @@
     {
       "name": "Nikola Topic",
       "player_id": "5159925",
+      "pos": "G",
+      "team": "OKC"
+    },
+    {
+      "name": "Nique Clifford",
+      "player_id": "1642363",
       "pos": "G",
       "team": "OKC"
     },
@@ -2693,12 +2693,6 @@
       "name": "Maxime Raynaud",
       "player_id": "1642875",
       "pos": "C",
-      "team": "SAC"
-    },
-    {
-      "name": "Nique Clifford",
-      "player_id": "1642363",
-      "pos": "G",
       "team": "SAC"
     },
     {
