@@ -15,18 +15,38 @@ This directory follows the same deployment model as GridPicks:
    therefore contains a permanent offline baseline and only needs incremental syncs.
 5. The launcher commits the server updater, generated feeds, and app archive, pushes `main`
    to GitHub, and Render deploys them automatically. Render does not scrape
-   third-party sites during app requests.
+   third-party sites during feed requests. AI chat separately performs bounded
+   research only when requested and configured.
 
 `build_feeds.py` remains available for importing historical game logs and
 advanced feeds from an older local dataset, but routine publishing no longer
 depends on the deleted `~/Documents/sports/nba-server` directory.
 
-Create the Render service from `server/render.yaml` with `server` as the root
-directory. After deployment, set `SportConfig.baseURL` in the iOS app to the
-Render HTTPS URL.
+Use `server/render.yaml` as the Blueprint path. It explicitly sets `rootDir:
+server`, declares both provider secrets and the private chat access token, and
+mounts a 1 GB persistent disk for budget accounting. It selects the paid Starter
+plan; applying it changes hosting costs. No credentials belong in this repo.
+
+For the existing service, add `OPENAI_API_KEY`, `NBA_CHAT_TOKEN`, and
+`BRAVE_SEARCH_API_KEY` manually in Render's Environment settings. Render does
+not prompt for newly added `sync: false` secrets when updating an existing
+Blueprint. Choose a long random value for `NBA_CHAT_TOKEN` and enter that same
+value in the app's Chat Settings; it is separate from the OpenAI key.
+
+If the service was created manually, updating YAML alone does not apply its
+settings. Set Root Directory to `server`, select Starter, attach a 1 GB disk
+at `/var/data`, and set `NBA_CHAT_LEDGER=/var/data/chat-ledger.sqlite` and
+`NBA_CHAT_DAILY_USD=2`. Use the build and start commands in the Blueprint.
+Deploy the commit containing `app.py`, `chat_api.py`, and the chat tests together.
+The build now runs the offline regression suite, including route registration.
+
+After deployment, run `python3 server/check_chat_deployment.py` from the repo,
+then use Chat Settings → Check server and model access. See [CHAT_SETUP.md](CHAT_SETUP.md)
+for secret setup and an inexpensive end-to-end check. The existing Render URL
+can stay unchanged when updating the same service.
 
 For manual Web Service setup, use this start command:
 
 ```text
-uvicorn app:app --host 0.0.0.0 --port 10000
+uvicorn app:app --host 0.0.0.0 --port $PORT --workers 1 --no-access-log
 ```

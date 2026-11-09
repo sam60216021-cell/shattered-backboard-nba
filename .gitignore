@@ -2,3 +2,10 @@
 build_sim/
 *.xcuserstate
 xcuserdata/
+__pycache__/
+server/.env
+server/.env.*
+server/*.sqlite
+server/*.sqlite-*
+server/*.db
+server/*.db-*
