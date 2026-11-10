@@ -69,7 +69,16 @@ multi-user authentication; use proper user accounts before distributing access.
   needed. Omitted players remain in the directory for targeted retrieval.
 - Each database tool returns at most four players and ten logs per player.
 - Raw missing values stay null. The existing engine's predictions remain intact.
-- 2,500 output tokens/call; 8,000 aggregate, including reasoning.
+- Luna: `max_output_tokens=50000` on every admitted Responses API call, including
+  reasoning. No smaller aggregate output cap overrides Luna. Other model limits
+  remain 2,500/call and 8,000 aggregate. The 16,000 limit is input-only.
+- Cost admission reserves the full output allowance; it refuses a call if the
+  remaining budget cannot cover it, rather than silently reducing output tokens.
+  Six-call and input limits still apply. A 90-second provider timeout and the
+  client's 600-second timeout can stop long analyses. There are no automatic retries.
+- Sanitized response logs report status, interruption reason, input/output/reasoning
+  usage and estimated cost. Unknown consumption after a timeout is logged as unknown
+  with a cost reservation, never as measured usage. Incomplete predictions are withheld.
 - All web results go through the next input-token check. No opaque hosted-search
   expansion occurs inside OpenAI requests. Research uses five dated search
   excerpts (including extra snippets), not full-page verification. Unresolved
@@ -128,3 +137,36 @@ usage against provider billing before increasing limits. Compare 3-leg and
 swaps. Require cited evidence and explicit abstention when support is lacking.
 Typical researched requests are expected to cost cents, but this has not been
 measured against the live service yet.
+
+## November 10 analysis diagnostics
+
+The 50,000 output allowance was local and uncommitted at investigation time;
+the last published commit 4518223 still had 2,500/call and 8,000 aggregate.
+Do not infer a live deployment's output allowance from the app UI or billing totals.
+
+A mocked broad analysis reproduced three completed tool responses, 36,000 input
+tokens and only 300 output tokens, followed by a blocked fourth call at the
+40,000 aggregate input gate. This reproduces the symptom, not proof of the
+production incident. The backend now requests a conclusion with tools disabled
+when another similarly sized round would exceed that ceiling; it recounts the
+changed request before admission. All existing spending/token gates still apply.
+This may yield fewer supported legs when verification is incomplete.
+
+Each analysis returns a trace_id, stop_reason, and numeric/allowlisted diagnostics.
+Logs correlate start, admission, generation_start, provider_response, usage,
+tool_result, finalization, and finish. They omit prompts, queries, player records,
+credentials and raw errors. A generation_start without a matching response/finish
+requires Render events/logs to distinguish process termination from a hanging
+request. Aggregate OpenAI billing cannot establish the cause of one failure.
+
+Completed tool responses continue with function_call_output and reasoning items.
+A completed response without text/tools is now explicitly empty_response, not
+success. Input limits, spending blocks, preflight errors, timeouts, and OpenAI
+incomplete reasons are distinct. Only actual max_output_tokens reasons are
+reported as provider output/context exhaustion, with reported consumption.
+
+For a failing live request, retain the diagnostic reference and matching nba.chat
+log events plus the Render deploy/restart events and HTTP status. Do not share
+keys, tokens, or private conversations. No expensive live test is needed for
+local validation. Sportsbook lines must be verified before actionable picks;
+otherwise the assistant must clearly abstain or offer conditional analysis.

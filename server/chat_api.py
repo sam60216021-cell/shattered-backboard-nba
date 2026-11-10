@@ -12,6 +12,8 @@ import time
 import logging
 import math
 import tempfile
+import uuid
+import re
 from urllib.error import HTTPError, URLError
 from contextlib import contextmanager
 from urllib.request import Request, urlopen
@@ -23,6 +25,8 @@ router = APIRouter()
 log = logging.getLogger("nba.chat")
 # Free Render storage: intentionally ephemeral, independent of legacy /var/data.
 LEDGER_PATH = os.path.join(tempfile.gettempdir(), "nba-chat-budget-v2.sqlite")
+LUNA_MAX_OUTPUT_TOKENS = 50_000
+
 BUDGET_NOTICE = ("Cost estimates are not a guaranteed billing cap. Local daily accounting "
                  "and duplicate protection reset when the service restarts or spins down. "
                  "No automatic retries; monitor provider billing manually.")
@@ -31,6 +35,20 @@ BUDGET_NOTICE = ("Cost estimates are not a guaranteed billing cap. Local daily a
 def unavailable(code, message):
     log.warning("stage=readiness status=503 code=%s", code)
     return HTTPException(503, {"code": code, "message": message})
+
+
+def safe_number(value):
+    return value if isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(value) and value >= 0 else None
+
+
+def response_diagnostic(status, reason, usage=None, estimated_cost=None, cost_basis="usage"):
+    """Only controlled labels and numeric usage; never model text or raw errors."""
+    usage = usage if isinstance(usage, dict) else {}
+    details = usage.get("output_tokens_details") or {}
+    log.warning("stage=response status=%s reason=%s input_tokens=%s output_tokens=%s reasoning_tokens=%s estimated_cost=%s cost_basis=%s",
+                status, reason, safe_number(usage.get("input_tokens")), safe_number(usage.get("output_tokens")),
+                safe_number(details.get("reasoning_tokens")) if isinstance(details, dict) else None,
+                safe_number(estimated_cost), cost_basis)
 
 
 def cost_settings():
@@ -73,9 +91,10 @@ def provider_json(request, provider, path, timeout=90):
             pass
         log.warning("provider=%s endpoint=%s status=%d code=%s", provider, path, error.code, code)
         raise ProviderFailure(provider, path, error.code, code) from None
-    except (URLError, TimeoutError):
-        log.warning("provider=%s endpoint=%s status=network_failure", provider, path)
-        raise ProviderFailure(provider, path, 0, "network_failure") from None
+    except (URLError, TimeoutError) as error:
+        code = "timeout" if isinstance(error, TimeoutError) or isinstance(getattr(error, "reason", None), TimeoutError) else "network_failure"
+        log.warning("provider=%s endpoint=%s status=%s", provider, path, code)
+        raise ProviderFailure(provider, path, 0, code) from None
 # USD / million tokens, Standard tier, 2026-11-09. Conservative write rate
 # reserves cover unexpected writes even though explicit-only caching is used.
 PRICES = {"gpt-6-luna": (0.10, 0.50), "gpt-6.1-sol": (2.0, 10.0)}
@@ -89,7 +108,10 @@ recent averages, minutes, sample sizes, variability and matchup evidence. Seek
 contradictory evidence; reject weak algorithm picks. Never invent probabilities,
 odds, data, injuries or sources. A missing stat is null, not zero. Insufficient
 data is a reason to abstain. Suggested target lines are NOT verified sportsbook
-lines. For each leg give player, matchup, direction, line, evidence and risk.
+lines. Before presenting actionable picks, verify current sportsbook lines and
+odds from dated, attributable evidence. If unavailable, clearly say lines are
+unverified and provide only conditional analysis, not actionable picks.
+For each leg give player, matchup, direction, line, evidence and risk.
 Explain correlated legs; never present multiplied marginal probabilities as a
 calibrated parlay probability. Use get_players to inspect omitted candidates or
 raw history. Search current injuries/lineups when requested or necessary and
@@ -202,6 +224,15 @@ def usage_cost(usage, model):
             long_write*rate*2.5 + usage["output_tokens"]*output_rate)/1_000_000
 
 def run_analysis(a):
+    started = time.monotonic()
+    trace_id = uuid.uuid4().hex
+    diagnostics = []
+    def event(stage, **fields):
+        row = {"trace_id": trace_id, "stage": stage, "elapsed_ms": int((time.monotonic()-started)*1000), **fields}
+        diagnostics.append(row)
+        log.warning("analysis=%s", compact(row))
+    event("start", model=a.model, output_allowance=LUNA_MAX_OUTPUT_TOKENS if a.model == "gpt-6-luna" else 2500,
+          budget=a.budget, max_input=a.max_input, aggregate_input_limit=40000, max_searches=a.max_searches)
     settings = cost_settings()
     players = a.context.get("players", [])
     if len(players) > 160 or len(compact(a.context).encode()) > 600_000:
@@ -233,7 +264,8 @@ def run_analysis(a):
     records = []
     evidence = {}
     notes = []
-    text = "Analysis stopped before completion. No unsupported picks were generated."
+    text = ""
+    stop_reason = "iteration_limit"
     # Six model calls maximum. Each call's full output is charged/reserved.
     for step in range(6):
         tools = TOOLS[:1] + (TOOLS[1:] if a.web and searches < a.max_searches else [])
@@ -243,64 +275,128 @@ def run_analysis(a):
         body = {"model": a.model, "store": False, "service_tier": "default",
                 "prompt_cache_options": {"mode": "explicit"},
                 "instructions": INSTRUCTIONS, "input": conversation,
-                "max_output_tokens": min(2500, 8000-output_total),
+                "max_output_tokens": LUNA_MAX_OUTPUT_TOKENS if a.model == "gpt-6-luna" else min(2500, 8000-output_total),
                 "parallel_tool_calls": False, "tools": tools,
                 "include": ["reasoning.encrypted_content"]}
         count_body = {k: body[k] for k in ("model", "instructions", "input", "tools")}
+        def count_input():
+            value = post_openai("responses/input_tokens", count_body)["input_tokens"]
+            if not isinstance(value, int) or isinstance(value, bool) or value < 0:
+                raise ValueError("Invalid token count")
+            return value
         try:
-            count = post_openai("responses/input_tokens", count_body)["input_tokens"]
-        except ProviderFailure as error:
-            notes.append(str(error) + ". Token preflight failed; no generation was started for this step.")
+            count = count_input()
+            # Reduce initial detail only; preserve coverage and the player directory.
+            while step == 0 and count > a.max_input and overview["candidates"]:
+                overview["candidates"] = overview["candidates"][:-4]
+                overview["omittedCandidates"] = len(players) - len(overview["candidates"])
+                conversation[0]["content"] = "APP EVIDENCE: " + compact(overview)
+                count = count_input()
+            # Leave room for a conclusion rather than inviting another tool round
+            # that the unchanged aggregate input ceiling probably cannot admit.
+            if tools and input_total + 2 * count > 40000:
+                body["tools"] = []
+                count_body["tools"] = []
+                conversation.append({"role": "user", "content": "Input budget is nearly exhausted. Conclude now from available evidence; explicitly state missing checks and unverified sportsbook lines. Do not invent picks."})
+                count = count_input()
+                event("finalization", step=step + 1, reason="aggregate_input_headroom")
+        except Exception as error:
+            stop_reason = "preflight_timeout" if isinstance(error, TimeoutError) or (isinstance(error, ProviderFailure) and error.code == "timeout") else "preflight_error"
+            notes.append("Token preflight failed; no generation was started for this step. No automatic retry.")
+            event("preflight", step=step + 1, reason=stop_reason)
             break
-        # Keep the directory and coverage intact. Reduce only initial detail;
-        # every omitted candidate remains available through get_players.
-        while step == 0 and count > a.max_input and overview["candidates"]:
-            overview["candidates"] = overview["candidates"][:-4]
-            overview["omittedCandidates"] = len(players) - len(overview["candidates"])
-            conversation[0]["content"] = "APP EVIDENCE: " + compact(overview)
-            count = post_openai("responses/input_tokens", count_body)["input_tokens"]
+        event("admission", step=step + 1, input_tokens=count, input_consumed=input_total,
+              output_allowance=body["max_output_tokens"], budget=a.budget, estimated_spent=spent)
         if count > a.max_input or input_total + count > 40000 or body["max_output_tokens"] < 256:
-            notes.append("Token limit reached. Narrow the player pool or start a new chat; missing results were not fabricated.")
+            stop_reason = "input_per_call_limit" if count > a.max_input else "aggregate_input_limit" if input_total + count > 40000 else "aggregate_output_limit"
+            notes.append(f"Internal {stop_reason}: next input {count:,}, consumed input {input_total:,}. This is not an OpenAI output-limit response.")
             break
         # No hosted tools: all new inputs are admitted through this gate. Reserve
         # at the higher 12-hour write rate, plus 10% pricing/counting margin.
         reservation = (count*rate*2.5 + body["max_output_tokens"]*output_rate)/1_000_000*1.1
         if spent + reservation > a.budget:
-            notes.append("Budget cannot cover the next model call. Analysis is incomplete.")
+            stop_reason = "spending_limit"
+            event("budget_block", step=step + 1, estimated_spent=spent, reservation=reservation, budget=a.budget)
+            response_diagnostic("not_started", "budget", estimated_cost=reservation, cost_basis="reservation")
+            notes.append(f"Budget cannot cover the next model call with its {body['max_output_tokens']:,}-token output allowance. Analysis is incomplete; no automatic retry.")
             break
+        event("generation_start", step=step + 1, output_allowance=body["max_output_tokens"], reservation=reservation)
         try:
             result = post_openai("responses", body)
         except ProviderFailure as error:
             spent += reservation
+            stop_reason = "timeout" if error.code == "timeout" else "provider_error"
+            response_diagnostic("interrupted", stop_reason, estimated_cost=reservation, cost_basis="reservation")
             notes.append(str(error) + ". Stopped without retry; cost reservation retained.")
             break
-        except Exception:
+        except Exception as error:
             spent += reservation
-            notes.append("Provider request failed or timed out; its reserved cost remains counted. No automatic retry.")
+            reason = "timeout" if isinstance(error, TimeoutError) else "response_error"
+            stop_reason = reason
+            response_diagnostic("interrupted", reason, estimated_cost=reservation, cost_basis="reservation")
+            notes.append("Provider request " + ("timed out" if reason == "timeout" else "failed") + "; its reserved cost remains counted. No automatic retry.")
             break
         usage = result.get("usage")
-        if not usage or result.get("model", "").split("-202")[0] != a.model or result.get("service_tier", "default") != "default":
+        status = result.get("status")
+        status = status if status in {"completed", "incomplete", "failed", "cancelled", "queued", "in_progress"} else "unknown"
+        raw_reason = (result.get("incomplete_details") or {}).get("reason")
+        reason = raw_reason if raw_reason in {"max_output_tokens", "content_filter"} else ("none" if status == "completed" else "provider_error")
+        output = result.get("output", [])
+        functions = [item for item in output if item.get("type") == "function_call"]
+        response_id = result.get("id", "")
+        safe_id = response_id if isinstance(response_id, str) and re.fullmatch(r"resp_[A-Za-z0-9_-]{1,150}", response_id) else None
+        safe_usage = usage if isinstance(usage, dict) else {}
+        safe_details = safe_usage.get("output_tokens_details") or {}
+        reasoning_tokens = safe_number(safe_details.get("reasoning_tokens")) if isinstance(safe_details, dict) else None
+        returned_model = result.get("model", "")
+        safe_model = returned_model if isinstance(returned_model, str) and re.fullmatch(r"gpt-[A-Za-z0-9.\-]{1,60}", returned_model) else "unknown"
+        event("provider_response", step=step + 1, response_id=safe_id, status=status, incomplete_reason=reason,
+              response_model=safe_model, input_tokens=safe_number(safe_usage.get("input_tokens")),
+              output_tokens=safe_number(safe_usage.get("output_tokens")), reasoning_tokens=reasoning_tokens,
+              model_matches=result.get("model", "").split("-202")[0] == a.model,
+              tool_count=len(functions), tool_types=[item.get("name") if item.get("name") in {"get_players", "research"} else "unsupported" for item in functions],
+              output_types=[item.get("type") if item.get("type") in {"message", "reasoning", "function_call"} else "other" for item in output])
+        if not safe_usage or safe_number(safe_usage.get("input_tokens")) is None or safe_number(safe_usage.get("output_tokens")) is None or result.get("model", "").split("-202")[0] != a.model or result.get("service_tier", "default") != "default":
             spent += reservation
-            notes.append("Usage or model could not be reconciled; stopped with the reservation retained.")
+            stop_reason = "usage_or_model_mismatch" if status == "completed" else "openai_" + (reason if reason != "provider_error" else status)
+            response_diagnostic(status, "usage_or_model_mismatch", usage, reservation, "reservation")
+            notes.append(f"OpenAI status: {status}; stop reason: {stop_reason}. Usage or model could not be reconciled; reservation retained, no automatic retry.")
             break
         cost = usage_cost(usage, a.model)
         spent += cost
         input_total += usage["input_tokens"]
         output_total += usage["output_tokens"]
-        records.append({"id": result.get("id"), "usage": usage, "estimated_cost": cost})
+        response_diagnostic(status, reason, usage, cost)
+        event("usage", step=step + 1, input_tokens=usage["input_tokens"], output_tokens=usage["output_tokens"],
+              reasoning_tokens=reasoning_tokens,
+              estimated_cost=cost, estimated_spent=spent)
+        records.append({"id": result.get("id"), "usage": usage, "estimated_cost": cost,
+                        "status": status, "stop_reason": reason})
         output = result.get("output", [])
         if result.get("status") != "completed":
-            notes.append("The model response was incomplete. No automatic retry.")
+            stop_reason = "openai_" + (reason if reason != "provider_error" else status)
+            if reason == "max_output_tokens":
+                text = (f"OpenAI stopped at an output/context token limit (configured output allowance: {body['max_output_tokens']:,}, "
+                        f"including reasoning; reported consumption: {usage['output_tokens']:,} output tokens). The analysis is incomplete; partial predictions were withheld. No automatic retry.")
+            elif reason == "content_filter":
+                text = "OpenAI stopped the response because of its content filter. Partial predictions were withheld. No automatic retry."
+            else:
+                text = "OpenAI did not complete the response. Partial predictions were withheld. No automatic retry."
+            notes.append(text)
             break
         functions = [item for item in output if item.get("type") == "function_call"]
         if not functions:
             text = "\n\n".join(part.get("text", part.get("refusal", "")) for item in output
-                                for part in item.get("content", [])).strip() or text
+                                for part in item.get("content", []) if item.get("type") == "message").strip()
+            stop_reason = "completed" if text else "empty_response"
+            if not text:
+                notes.append("OpenAI returned completed status without a final message or executable tool call. No automatic retry.")
             break
         conversation.extend(output)
         for item in functions:
             calls += 1
-            answer = {"error": "Tool limit reached"}
+            tool_started = time.monotonic()
+            answer = {"error": "Tool limit reached or tool unavailable"}
             if calls <= 6:
                 try:
                     args = json.loads(item["arguments"])
@@ -328,13 +424,26 @@ def run_analysis(a):
                     notes.append(str(error))
                 except Exception:
                     answer = {"error": "Tool failed; data is unavailable. Do not infer the missing result."}
+            tool_status = "error" if "error" in answer else "completed"
+            event("tool_result", step=step + 1, tool=item.get("name") if item.get("name") in {"get_players", "research"} else "unsupported",
+                  status=tool_status, duration_ms=int((time.monotonic()-tool_started)*1000),
+                  returned_players=len(answer.get("players", [])), returned_sources=len(answer.get("sources", [])))
+            if tool_status == "error":
+                notes.append("A tool check was unavailable; the analysis must disclose missing verification.")
             conversation.append({"type": "function_call_output", "call_id": item["call_id"], "output": compact(answer)})
+    if not text:
+        text = f"Analysis stopped: {stop_reason}. No final predictions were produced. No automatic retry."
+    if stop_reason != "completed":
+        notes.append("Diagnostic reference: " + trace_id)
+    event("finish", stop_reason=stop_reason, input_tokens=input_total, output_tokens=output_total,
+          tool_calls=calls, searches=searches, estimated_spent=spent, budget=a.budget)
     sources = {s["url"]: s for e in evidence.values() for s in e.get("sources", [])}
     return {"text": text, "notes": notes, "model": a.model, "input_tokens": input_total,
             "output_tokens": output_total, "searches": searches, "tool_calls": calls,
             "estimated_cost": round(spent, 6), "budget": a.budget, "records": records,
             "sources": list(sources.values()),
-            "pricing_date": "2026-11-09", "incomplete": bool(notes),
+            "pricing_date": "2026-11-09", "incomplete": stop_reason != "completed" or bool(notes),
+            "stop_reason": stop_reason, "trace_id": trace_id, "diagnostics": diagnostics,
             "storage_mode": "ephemeral", "budget_notice": BUDGET_NOTICE}
 
 @router.post("/nba/chat")

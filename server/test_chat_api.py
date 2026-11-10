@@ -69,6 +69,118 @@ class ChatTests(unittest.TestCase):
             self.assertEqual(error.exception.status_code, 409)
             self.assertEqual(run.call_count, 1)
 
+    def test_luna_output_allowance_survives_large_tool_response(self):
+        call = {"type": "function_call", "name": "get_players", "call_id": "large", "arguments": '{"ids":[]}'}
+        first = response([call], usage={"input_tokens": 1000, "output_tokens": 20000,
+                                       "output_tokens_details": {"reasoning_tokens": 19000}})
+        with patch.object(chat, "post_openai", side_effect=[{"input_tokens": 1000}, first,
+                {"input_tokens": 1200}, response()]) as api, self.assertLogs("nba.chat") as logs:
+            result = chat.run_analysis(request())
+        generations = [c.args[1] for c in api.call_args_list if c.args[0] == "responses"]
+        self.assertEqual([b["max_output_tokens"] for b in generations], [50000, 50000])
+        self.assertEqual(result["output_tokens"], 20100)
+        self.assertIn("reasoning_tokens=19000", str(logs.output))
+        self.assertIn("status=completed", str(logs.output))
+        self.assertIn("estimated_cost=", str(logs.output))
+
+    def test_output_limit_withholds_predictions_without_retry(self):
+        partial = response(status="incomplete", incomplete_details={"reason": "max_output_tokens"},
+                           usage={"input_tokens": 1000, "output_tokens": 50000,
+                                  "output_tokens_details": {"reasoning_tokens": 49000}})
+        partial["output"] = [{"type": "message", "content": [{"text": "UNSUPPORTED PICK"}]}]
+        with patch.object(chat, "post_openai", side_effect=[{"input_tokens": 1000}, partial]) as api, self.assertLogs("nba.chat") as logs:
+            result = chat.run_analysis(request())
+        self.assertEqual(api.call_count, 2)
+        self.assertTrue(result["incomplete"])
+        self.assertIn("50,000", result["text"])
+        self.assertNotIn("UNSUPPORTED PICK", str(result) + str(logs.output))
+        self.assertIn("reason=max_output_tokens", str(logs.output))
+        self.assertEqual(result["output_tokens"], 50000)
+
+    def test_luna_full_allowance_still_requires_budget(self):
+        with patch.object(chat, "post_openai", return_value={"input_tokens": 1000}) as api:
+            result = chat.run_analysis(request(budget=.01))
+        self.assertEqual(api.call_count, 1)
+        self.assertIn("50,000", result["notes"][0])
+        self.assertEqual(result["estimated_cost"], 0)
+
+    def test_other_model_output_limit_is_unchanged(self):
+        with patch.object(chat, "post_openai", side_effect=[{"input_tokens": 1000}, response(model="gpt-6.1-sol")]) as api:
+            chat.run_analysis(request(model="gpt-6.1-sol"))
+        self.assertEqual(api.call_args.args[1]["max_output_tokens"], 2500)
+
+    def test_timeout_diagnostics_do_not_claim_measured_usage(self):
+        with patch.object(chat, "post_openai", side_effect=[{"input_tokens": 1000}, TimeoutError("private-secret")]) as api, self.assertLogs("nba.chat") as logs:
+            chat.run_analysis(request())
+        self.assertEqual(api.call_count, 2)
+        output = str(logs.output)
+        self.assertIn("reason=timeout", output)
+        self.assertIn("input_tokens=None", output)
+        self.assertIn("cost_basis=reservation", output)
+        self.assertNotIn("private-secret", output)
+
+    def test_simple_question_extracts_completed_message(self):
+        with patch.object(chat, "post_openai", side_effect=[{"input_tokens": 1000}, response(id="resp_safe123")]):
+            result = chat.run_analysis(request(messages=[{"role": "user", "content": "What can you analyze?"}]))
+        self.assertEqual(result["stop_reason"], "completed")
+        self.assertFalse(result["incomplete"])
+        self.assertEqual(result["diagnostics"][3]["response_id"], "resp_safe123")
+
+    def test_broad_parlay_concludes_before_aggregate_input_exhaustion(self):
+        import copy
+        call = {"type": "function_call", "name": "get_players", "call_id": "db", "arguments": '{"ids":["p"]}'}
+        research = {"type": "function_call", "name": "research", "call_id": "web", "arguments": '{"query":"current injuries and sportsbook lines"}'}
+        usage = {"input_tokens": 12000, "output_tokens": 100}
+        final = response(usage=usage, output=[{"type": "message", "content": [{"type": "output_text", "text": "Sportsbook lines could not be verified; no actionable parlay is available."}]}])
+        results = iter([{"input_tokens": 12000}, response([call], usage=usage),
+                        {"input_tokens": 12000}, response([research], usage=usage),
+                        {"input_tokens": 12000}, {"input_tokens": 12000}, final])
+        sent = []
+        def provider(path, body):
+            sent.append((path, copy.deepcopy(body)))
+            return next(results)
+        with patch.dict(os.environ, {"BRAVE_SEARCH_API_KEY": "fixture"}), patch.object(chat, "search", return_value={"sources": []}) as search, patch.object(chat, "post_openai", side_effect=provider):
+            result = chat.run_analysis(request(context={"players": [{"id": "p", "logs": [{"PTS": 21}]}]}))
+        self.assertEqual(result["stop_reason"], "completed")
+        self.assertEqual(result["input_tokens"], 36000)
+        self.assertEqual(result["tool_calls"], 2)
+        search.assert_called_once()
+        generations = [body for path, body in sent if path == "responses"]
+        self.assertEqual(generations[-1]["tools"], [])
+        self.assertEqual([b["max_output_tokens"] for b in generations], [50000]*3)
+        outputs = [i for i in generations[-1]["input"] if i.get("type") == "function_call_output"]
+        self.assertEqual([i["call_id"] for i in outputs], ["db", "web"])
+        self.assertIn('"PTS":21', outputs[0]["output"])
+        self.assertIn("could not be verified", result["text"])
+
+    def test_empty_completed_response_is_not_success(self):
+        empty = response(); empty["output"] = [{"type": "reasoning"}]
+        with patch.object(chat, "post_openai", side_effect=[{"input_tokens": 1000}, empty]) as api:
+            result = chat.run_analysis(request())
+        self.assertEqual(result["stop_reason"], "empty_response")
+        self.assertTrue(result["incomplete"])
+        self.assertEqual(api.call_count, 2)
+
+    def test_input_budget_is_not_labeled_output_exhaustion(self):
+        with patch.object(chat, "post_openai", return_value={"input_tokens": 17000}):
+            result = chat.run_analysis(request())
+        self.assertEqual(result["stop_reason"], "input_per_call_limit")
+        self.assertIn("input_per_call_limit", result["text"])
+
+    def test_failed_and_cancelled_responses_preserve_status(self):
+        for status in ("failed", "cancelled"):
+            with self.subTest(status=status), patch.object(chat, "post_openai", side_effect=[{"input_tokens": 1000}, response(status=status)]):
+                result = chat.run_analysis(request())
+                self.assertEqual(result["stop_reason"], "openai_" + status)
+                self.assertTrue(result["incomplete"])
+
+    def test_shrinking_preflight_failure_returns_diagnostics(self):
+        with patch.object(chat, "post_openai", side_effect=[{"input_tokens": 15000}, TimeoutError()]) as api:
+            result = chat.run_analysis(request(context={"players": [{"id": "p"}]}))
+        self.assertEqual(result["stop_reason"], "preflight_timeout")
+        self.assertEqual(result["estimated_cost"], 0)
+        self.assertEqual(api.call_count, 2)
+
     def test_upstream_error_does_not_leak_keys_or_messages(self):
         import io
         from urllib.error import HTTPError
