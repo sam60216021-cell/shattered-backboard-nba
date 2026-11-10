@@ -8,7 +8,7 @@ import chat_api as chat
 
 
 def request(**changes):
-    values = dict(analysis_id="offline-analysis-001", context={"players": []},
+    values = dict(analysis_id="offline-analysis-001", context={"players": []}, web=False,
                   messages=[{"role": "user", "content": "Build three legs"}])
     values.update(changes)
     return chat.Analysis(**values)
@@ -36,7 +36,7 @@ class ChatTests(unittest.TestCase):
                 self.assertEqual(chat.analyze(request(), "fixture-token")["estimated_cost"], .001)
 
     def test_invalid_settings_fail_before_provider_calls(self):
-        for name in ("NBA_CHAT_DAILY_USD", "NBA_SEARCH_COST_USD"):
+        for name in ("NBA_CHAT_DAILY_USD", "NBA_NATIVE_SEARCH_COST_USD"):
             for value in ("nan", "inf", "-1", "0", "bad", ""):
                 with self.subTest(name=name, value=value), patch.dict(os.environ, {
                     name: value, "NBA_CHAT_TOKEN": "fixture-token", "OPENAI_API_KEY": "fixture"}), patch.object(chat, "post_openai") as api:
@@ -126,32 +126,6 @@ class ChatTests(unittest.TestCase):
         self.assertFalse(result["incomplete"])
         self.assertEqual(result["diagnostics"][3]["response_id"], "resp_safe123")
 
-    def test_broad_parlay_concludes_before_aggregate_input_exhaustion(self):
-        import copy
-        call = {"type": "function_call", "name": "get_players", "call_id": "db", "arguments": '{"ids":["p"]}'}
-        research = {"type": "function_call", "name": "research", "call_id": "web", "arguments": '{"query":"current injuries and sportsbook lines"}'}
-        usage = {"input_tokens": 12000, "output_tokens": 100}
-        final = response(usage=usage, output=[{"type": "message", "content": [{"type": "output_text", "text": "Sportsbook lines could not be verified; no actionable parlay is available."}]}])
-        results = iter([{"input_tokens": 12000}, response([call], usage=usage),
-                        {"input_tokens": 12000}, response([research], usage=usage),
-                        {"input_tokens": 12000}, {"input_tokens": 12000}, final])
-        sent = []
-        def provider(path, body):
-            sent.append((path, copy.deepcopy(body)))
-            return next(results)
-        with patch.dict(os.environ, {"BRAVE_SEARCH_API_KEY": "fixture", "NBA_CHAT_MAX_INPUT_TOTAL": "40000"}), patch.object(chat, "search", return_value={"sources": []}) as search, patch.object(chat, "post_openai", side_effect=provider):
-            result = chat.run_analysis(request(context={"players": [{"id": "p", "logs": [{"PTS": 21}]}]}))
-        self.assertEqual(result["stop_reason"], "completed")
-        self.assertEqual(result["input_tokens"], 36000)
-        self.assertEqual(result["tool_calls"], 2)
-        search.assert_called_once()
-        generations = [body for path, body in sent if path == "responses"]
-        self.assertEqual(generations[-1]["tools"], [])
-        self.assertEqual([b["max_output_tokens"] for b in generations], [50000]*3)
-        outputs = [i for i in generations[-1]["input"] if i.get("type") == "function_call_output"]
-        self.assertEqual([i["call_id"] for i in outputs], ["db", "web"])
-        self.assertIn('"PTS":21', outputs[0]["output"])
-        self.assertIn("could not be verified", result["text"])
 
     def test_empty_completed_response_is_not_success(self):
         empty = response(); empty["output"] = [{"type": "reasoning"}]
@@ -199,23 +173,7 @@ class ChatTests(unittest.TestCase):
         self.assertEqual(json.loads(outputs[1]["output"])["players"], [])
         self.assertEqual(json.loads(outputs[1]["output"])["alreadyProvidedIDs"], ["p"])
 
-    def test_missing_research_key_is_explicit_without_spending(self):
-        call = {"type": "function_call", "name": "research", "call_id": "web", "arguments": '{"query":"NBA injuries"}'}
-        with patch.dict(os.environ, {"BRAVE_SEARCH_API_KEY": ""}), patch.object(chat, "search") as search, patch.object(chat, "post_openai", side_effect=[{"input_tokens": 1000}, response([call]), {"input_tokens": 1200}, response()]):
-            result = chat.run_analysis(request())
-        search.assert_not_called()
-        self.assertEqual(result["searches"], 0)
-        self.assertIn("missing_brave_key", str(result["diagnostics"]))
 
-    def test_research_failure_and_empty_results_not_verified(self):
-        call = {"type": "function_call", "name": "research", "call_id": "web", "arguments": '{"query":"NBA injuries"}'}
-        for outcome in ({"sources": []}, chat.ProviderFailure("Brave", "/res/v1/web/search", 401)):
-            with self.subTest(outcome=type(outcome).__name__), patch.dict(os.environ, {"BRAVE_SEARCH_API_KEY": "fixture"}), patch.object(chat, "search", side_effect=[outcome]), patch.object(chat, "post_openai", side_effect=[{"input_tokens": 1000}, response([call]), {"input_tokens": 1200}, response()]):
-                result = chat.run_analysis(request())
-                self.assertEqual(result["searches"], 1)
-                self.assertEqual(result["successful_searches"], 0)
-                self.assertIn("remain unverified", result["text"])
-                self.assertGreaterEqual(result["estimated_cost"], .005)
 
     def test_budget_above_quarter_dollar_rejected(self):
         from pydantic import ValidationError
@@ -244,30 +202,130 @@ class ChatTests(unittest.TestCase):
         self.assertEqual(result["input_tokens"], 96000)
         self.assertEqual(sum(c.args[0] == "responses" for c in api.call_args_list), 4)
 
-    def test_quarter_dollar_budget_blocks_next_call_near_ceiling(self):
-        fixtures = []
-        for i in range(6):
-            call = {"type": "function_call", "name": "research", "call_id": str(i), "arguments": '{"query":"injury report ' + str(i) + '"}'}
-            fixtures.extend([{"input_tokens": 1000}, response([call], usage={"input_tokens": 1000, "output_tokens": 50000})])
-        with patch.dict(os.environ, {"NBA_SEARCH_COST_USD": ".05", "BRAVE_SEARCH_API_KEY": "fixture"}), patch.object(chat, "search", return_value={"sources": [{"url": "https://example.com/fixture"}]}), patch.object(chat, "post_openai", side_effect=fixtures):
-            result = chat.run_analysis(request(budget=.25, max_searches=3))
-        self.assertEqual(result["stop_reason"], "spending_limit")
-        self.assertLessEqual(result["estimated_cost"], .25)
-        self.assertGreater(result["estimated_cost"], .20)
-        block = next(d for d in result["diagnostics"] if d["stage"] == "budget_block")
-        self.assertGreater(block["estimated_spent"] + block["reservation"], .25)
 
-    def test_repeated_research_reuses_evidence_without_extra_search(self):
-        call = {"type": "function_call", "name": "research", "call_id": "a", "arguments": '{"query":"current injuries"}'}
-        source = {"url": "https://example.com/fixture", "excerpt": "Fixture evidence"}
-        with patch.dict(os.environ, {"BRAVE_SEARCH_API_KEY": "fixture"}), patch.object(chat, "search", return_value={"sources": [source]}) as search, patch.object(chat, "post_openai", side_effect=[{"input_tokens": 1000}, response([call]), {"input_tokens": 1200}, response([dict(call, call_id="b")]), {"input_tokens": 1300}, response()]) as api:
-            result = chat.run_analysis(request())
-        search.assert_called_once()
+
+    def test_native_search_toggle_and_configuration(self):
+        for enabled in (False, True):
+            with self.subTest(enabled=enabled), patch.object(chat, "post_openai", side_effect=[{"input_tokens": 1000}, response()]) as api:
+                result = chat.run_analysis(request(web=enabled))
+            body = api.call_args.args[1]
+            native = [t for t in body["tools"] if t["type"] == "web_search"]
+            self.assertEqual(bool(native), enabled)
+            self.assertEqual(result["searches"], 0)  # Offering a tool is not execution.
+            self.assertEqual(result["estimated_web_search_cost"], 0)
+            if enabled:
+                self.assertTrue(native[0]["external_web_access"])
+                self.assertEqual(body["max_tool_calls"], 1)
+                self.assertIn("web_search_call.action.sources", body["include"])
+            else:
+                self.assertNotIn("max_tool_calls", body)
+
+    def test_native_search_citations_usage_and_broad_continuation(self):
+        import copy
+        source = {"url": "https://example.com/injury", "title": "Injury report"}
+        web = {"type": "web_search_call", "status": "completed", "action": {"type": "search", "sources": [source]}}
+        db = {"type": "function_call", "name": "get_players", "call_id": "db", "arguments": '{"ids":["p"]}'}
+        final = {"type": "message", "content": [{"type": "output_text", "text": "No verified sportsbook lines; no actionable parlay.", "annotations": [{"type": "url_citation", "end_index": 48, **source}]}]}
+        fixtures = iter([{"input_tokens": 1000}, response([db]), {"input_tokens": 1200}, response([web, dict(db, call_id="db2")]), {"input_tokens": 1400}, response([final])])
+        sent = []
+        def provider(path, body):
+            sent.append((path, copy.deepcopy(body)))
+            return next(fixtures)
+        with patch.object(chat, "post_openai", side_effect=provider):
+            result = chat.run_analysis(request(web=True, max_searches=1, context={"players": [{"id": "p", "logs": [{"PTS": 21}]}]}))
+        self.assertEqual(result["stop_reason"], "completed")
+        self.assertEqual(result["searches"], 1)
         self.assertEqual(result["successful_searches"], 1)
-        self.assertEqual(result["sources"], [source])
-        outputs = [i for i in api.call_args.args[1]["input"] if i.get("type") == "function_call_output"]
-        self.assertNotIn("Fixture evidence", outputs[-1]["output"])
-        self.assertIn("alreadyProvided", outputs[-1]["output"])
+        self.assertEqual(result["native_search_available"], "confirmed_by_execution")
+        self.assertEqual(result["estimated_web_search_cost"], .01)
+        self.assertAlmostEqual(result["estimated_cost"], result["estimated_model_cost"] + .01)
+        self.assertIn("[source](https://example.com/injury)", result["text"])
+        self.assertIn("retrieved_at", result["sources"][0])
+        self.assertIn("not_independent_verification", result["sources"][0]["verification"])
+        last = sent[-1][1]
+        self.assertFalse(any(t["type"] == "web_search" for t in last["tools"]))
+        self.assertTrue(any(i.get("type") == "function_call_output" for i in last["input"]))
+        self.assertTrue(any(i.get("type") == "web_search_call" for i in last["input"]))
+        self.assertEqual(last["max_output_tokens"], 50000)
+
+    def test_search_rejection_stops_without_retry_or_fake_count(self):
+        failure = chat.ProviderFailure("OpenAI", "/v1/responses", 400, "unsupported_tool")
+        with patch.object(chat, "post_openai", side_effect=[{"input_tokens": 1000}, failure]) as api:
+            result = chat.run_analysis(request(web=True))
+        self.assertEqual(api.call_count, 2)
+        self.assertEqual(result["native_search_available"], "rejected")
+        self.assertEqual(result["searches"], 0)
+        self.assertEqual(result["sources"], [])
+        self.assertGreater(result["uncertain_cost_reservation"], 0)
+
+    def test_failed_search_not_counted_completed(self):
+        web = {"type": "web_search_call", "status": "failed", "action": {"type": "search", "sources": [{"url": "https://example.com"}]}}
+        with patch.object(chat, "post_openai", side_effect=[{"input_tokens": 1000}, response([web, {"type": "message", "content": [{"text": "Research failed."}]}])]):
+            result = chat.run_analysis(request(web=True))
+        self.assertEqual(result["searches"], 0)
+        self.assertEqual(result["web_actions"], 1)
+        self.assertEqual(result["sources"], [])
+        self.assertEqual(result["estimated_web_search_cost"], .01)  # Conservative attempted-action accounting.
+        self.assertIn("remain unverified", result["text"])
+
+    def test_native_fee_and_content_reserve_can_block_generation(self):
+        with patch.object(chat, "post_openai", return_value={"input_tokens": 1000}) as api:
+            result = chat.run_analysis(request(web=True, budget=.03))
+        self.assertEqual(result["stop_reason"], "spending_limit")
+        self.assertEqual(api.call_count, 1)
+        self.assertEqual(result["estimated_cost"], 0)
+
+    def test_search_limit_and_headroom_configuration(self):
+        with patch.dict(os.environ, {"NBA_CHAT_MAX_WEB_SEARCHES": "0"}), patch.object(chat, "post_openai", side_effect=[{"input_tokens": 1000}, response()]) as api:
+            result = chat.run_analysis(request(web=True))
+        self.assertFalse(any(t["type"] == "web_search" for t in api.call_args.args[1]["tools"]))
+        self.assertEqual(result["searches"], 0)
+        with patch.object(chat, "post_openai", return_value={"input_tokens": 19000}) as api:
+            result = chat.run_analysis(request(web=True))
+        self.assertEqual(result["stop_reason"], "input_per_call_limit")
+        self.assertEqual(api.call_count, 1)
+
+    def test_search_reported_usage_overrun_stops_without_more_calls(self):
+        web = {"type": "web_search_call", "status": "completed", "action": {"type": "search"}}
+        with patch.object(chat, "post_openai", side_effect=[{"input_tokens": 1000}, response([web], usage={"input_tokens": 25000, "output_tokens": 100})]) as api:
+            result = chat.run_analysis(request(web=True))
+        self.assertEqual(result["stop_reason"], "reported_usage_limit_exceeded")
+        self.assertEqual(api.call_count, 2)
+        self.assertEqual(result["input_tokens"], 25000)
+
+    def test_native_search_budget_cannot_be_underpriced(self):
+        with patch.dict(os.environ, {"NBA_NATIVE_SEARCH_COST_USD": ".005"}), patch.object(chat, "post_openai") as api:
+            with self.assertRaises(HTTPException):
+                chat.run_analysis(request())
+            api.assert_not_called()
+
+    def test_native_timeout_does_not_invent_completed_search(self):
+        with patch.object(chat, "post_openai", side_effect=[{"input_tokens": 1000}, TimeoutError()]) as api:
+            result = chat.run_analysis(request(web=True))
+        self.assertEqual(api.call_count, 2)
+        self.assertEqual(result["searches"], 0)
+        self.assertEqual(result["web_actions"], 0)
+        self.assertEqual(result["native_search_available"], "not_tested")
+        self.assertEqual(result["stop_reason"], "timeout")
+        self.assertAlmostEqual(result["estimated_cost"], result["uncertain_cost_reservation"])
+
+    def test_native_page_open_uses_action_allowance_but_not_search_fee(self):
+        page = {"type": "web_search_call", "status": "completed", "action": {"type": "open_page", "url": "https://example.com"}}
+        message = {"type": "message", "content": [{"text": "No verified odds.", "annotations": [{"type": "url_citation", "url": "https://example.com", "end_index": 17}]}]}
+        with patch.object(chat, "post_openai", side_effect=[{"input_tokens": 1000}, response([page, message])]):
+            result = chat.run_analysis(request(web=True))
+        self.assertEqual(result["web_actions"], 1)
+        self.assertEqual(result["searches"], 0)
+        self.assertEqual(result["estimated_web_search_cost"], 0)
+        self.assertEqual(len(result["sources"]), 1)
+
+    def test_native_config_invalid_values_fail_before_dispatch(self):
+        for name in ("NBA_CHAT_MAX_WEB_SEARCHES", "NBA_CHAT_SEARCH_INPUT_RESERVE"):
+            for value in ("nan", "-1", "100000", ""):
+                with self.subTest(name=name, value=value), patch.dict(os.environ, {name: value}), patch.object(chat, "post_openai") as api:
+                    with self.assertRaises(HTTPException):
+                        chat.run_analysis(request(web=True))
+                    api.assert_not_called()
 
     def test_upstream_error_does_not_leak_keys_or_messages(self):
         import io
@@ -375,26 +433,7 @@ class ChatTests(unittest.TestCase):
                 chat.analyze(request(analysis_id="offline-analysis-002"), "fixture-token")
             self.assertEqual(error.exception.status_code, 429)
 
-    def test_research_is_bounded_and_sources_are_retained(self):
-        call = {"type": "function_call", "name": "research", "call_id": "search-1", "arguments": '{"query":"NBA injuries today"}'}
-        source = {"title": "Injury report", "url": "https://www.nba.com/report", "excerpt": "Pending"}
-        with patch.dict(os.environ, {"BRAVE_SEARCH_API_KEY": "fixture-not-a-key"}), \
-                patch.object(chat, "search", return_value={"sources": [source]}) as search, \
-                patch.object(chat, "post_openai", side_effect=[{"input_tokens": 1000}, response([call]),
-                                                               {"input_tokens": 1200}, response()]):
-            result = chat.run_analysis(request(max_searches=1))
-        self.assertEqual(search.call_count, 1)
-        self.assertEqual(result["searches"], 1)
-        self.assertEqual(result["sources"], [source])
-        self.assertGreaterEqual(result["estimated_cost"], .005)
 
-    def test_disabled_web_never_calls_search(self):
-        call = {"type": "function_call", "name": "research", "call_id": "search-1", "arguments": '{"query":"NBA injuries"}'}
-        with patch.object(chat, "search") as search, patch.object(chat, "post_openai", side_effect=[
-                {"input_tokens": 1000}, response([call]), {"input_tokens": 1200}, response()]):
-            result = chat.run_analysis(request(web=False))
-        search.assert_not_called()
-        self.assertEqual(result["searches"], 0)
 
     def test_initial_detail_shrinks_but_directory_remains(self):
         players = [{"id": str(i), "name": "Player " + str(i)} for i in range(8)]

@@ -27,8 +27,9 @@ server`, declares both provider secrets and the private chat access token, and
 uses the **Free** plan with temporary local budget accounting. No persistent disk
 or paid service is required. No credentials belong in this repo.
 
-For the existing service, add `OPENAI_API_KEY`, `NBA_CHAT_TOKEN`, and
-`BRAVE_SEARCH_API_KEY` manually in Render's Environment settings. Render does
+For the existing service, keep `OPENAI_API_KEY` and `NBA_CHAT_TOKEN` in Render's
+Environment settings. Native web research uses the same OpenAI key; no separate
+search credential is required. Render does
 not prompt for newly added `sync: false` secrets when updating an existing
 Blueprint. Choose a long random value for `NBA_CHAT_TOKEN` and enter that same
 value in the app's Chat Settings; it is separate from the OpenAI key.

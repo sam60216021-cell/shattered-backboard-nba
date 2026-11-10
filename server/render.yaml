@@ -15,12 +15,14 @@ services:
         sync: false
       - key: NBA_CHAT_TOKEN
         sync: false
-      - key: BRAVE_SEARCH_API_KEY
-        sync: false
       - key: NBA_CHAT_DAILY_USD
         value: "2"
-      - key: NBA_SEARCH_COST_USD
-        value: "0.005"
+      - key: NBA_NATIVE_SEARCH_COST_USD
+        value: "0.01"
+      - key: NBA_CHAT_MAX_WEB_SEARCHES
+        value: "2"
+      - key: NBA_CHAT_SEARCH_INPUT_RESERVE
+        value: "6000"
       - key: NBA_CHAT_MAX_INPUT_PER_CALL
         value: "24000"
       - key: NBA_CHAT_MAX_INPUT_TOTAL
