@@ -60,9 +60,15 @@ multi-user authentication; use proper user accounts before distributing access.
 
 ## Limits and accounting
 
-- Default analysis budget: $0.10; configurable in the app.
+- Server default and maximum analysis budget: $0.25. Lower client-selected budgets remain respected.
 - Default model: `gpt-6-luna`; optional `gpt-6.1-sol`; no silent upgrade/fallback.
-- Default model input: 12,000 tokens/request, hard ceiling 16,000; 40,000 aggregate.
+- Luna server input defaults: 24,000 per call and 100,000 cumulative per analysis.
+  `NBA_CHAT_MAX_INPUT_PER_CALL` accepts integers 2,000–64,000;
+  `NBA_CHAT_MAX_INPUT_TOTAL` accepts integers 2,000–1,000,000. Invalid values fail
+  before provider calls. Client `max_input` may be null (server default) or a
+  smaller explicit cap. The server cap always wins. Sol retains a 16,000 per-call
+  ceiling. Luna's maximum configured 64,000 input + 50,000 output is well inside
+  its documented 1,050,000 context window and below long-input pricing thresholds.
 - At most six model calls, six application tools, three web searches (default two).
 - Up to 160 eligible player records reach the private gateway; only up to 24
   summaries initially reach OpenAI. Token preflight reduces initial detail if
@@ -170,3 +176,37 @@ log events plus the Render deploy/restart events and HTTP status. Do not share
 keys, tokens, or private conversations. No expensive live test is needed for
 local validation. Sportsbook lines must be verified before actionable picks;
 otherwise the assistant must clearly abstain or offer conditional analysis.
+
+## Confirmed per-call input failure and research checks
+
+`count > per_call_limit` is the per-Responses-call preflight gate;
+`input_total + count > total_input_limit` is the distinct cumulative gate.
+The reported 17,923 next input exceeded the old 12,000 default/16,000 maximum,
+regardless of the $0.25 budget or 50,000 output allowance. A regression test now
+passes 13,000 + 13,397 + 17,923 input tokens (44,320 cumulative) through continuation.
+
+Rebuild the iOS app to get the new Server default input setting. The separate
+V2 preference prevents an old saved 8,000–16,000 setting silently overriding the
+new server default. Old app builds still send their explicit low limit; those
+limits are deliberately honored. Existing budget preferences are unchanged.
+Manual Render services use the code defaults without adding variables; the YAML
+also declares the defaults for Blueprints. No disk or new service is required.
+
+Research remains a supported Responses function call named research, executed by
+this backend through Brave; it is not OpenAI's hosted web_search tool. Keep
+BRAVE_SEARCH_API_KEY on Render. The web toggle and max_searches arrive from iOS;
+they do not establish credentials or prove a search executed. Logs distinguish
+missing_brave_key, research_provider_error, research_timeout, no_sources,
+research_budget, web_disabled, search_limit and cached_research. Searches counts
+attempted external searches; successful_searches counts responses with sources.
+Neither count proves that evidence is relevant or that current odds are verified.
+Absent evidence produces an explicit disclaimer, never invented lines.
+
+Repeated player retrievals return references to earlier full records; repeated
+identical queries reuse earlier evidence without another external search or
+copying its excerpts again. Stateless model calls still carry the necessary
+conversation history; it cannot simply be discarded without losing evidence.
+All player projections, injury/matchup context and underlying calculations stay
+unchanged. Research reserves its configured charge plus room for a subsequent
+model call before execution. Dollar admission remains estimated, not a guaranteed
+provider invoice cap; ephemeral daily accounting resets as described above.

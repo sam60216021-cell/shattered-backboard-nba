@@ -13,6 +13,7 @@ import logging
 import math
 import tempfile
 import uuid
+from typing import Optional
 import re
 from urllib.error import HTTPError, URLError
 from contextlib import contextmanager
@@ -61,6 +62,20 @@ def cost_settings():
                 raise ValueError()
         except (ValueError, TypeError):
             raise unavailable("invalid_cost_settings", "Invalid " + name + "; no provider request started.") from None
+        values[name] = value
+    return values
+
+
+def input_settings():
+    values = {}
+    for name, default, maximum in (("NBA_CHAT_MAX_INPUT_PER_CALL", "24000", 64000),
+                                    ("NBA_CHAT_MAX_INPUT_TOTAL", "100000", 1000000)):
+        try:
+            value = int(os.environ.get(name, default))
+            if not 2000 <= value <= maximum:
+                raise ValueError()
+        except (ValueError, TypeError):
+            raise unavailable("invalid_input_settings", "Invalid " + name + "; no provider request started.") from None
         values[name] = value
     return values
 
@@ -128,8 +143,8 @@ def compact(value):
 class Analysis(BaseModel):
     analysis_id: str = Field(min_length=16, max_length=80)
     model: str = "gpt-6-luna"
-    budget: float = Field(default=.10, ge=.01, le=.50)
-    max_input: int = Field(default=12000, ge=2000, le=16000)
+    budget: float = Field(default=.25, ge=.01, le=.25)
+    max_input: Optional[int] = Field(default=None, ge=2000, le=64000)
     max_searches: int = Field(default=2, ge=0, le=3)
     web: bool = True
     context: dict
@@ -174,6 +189,7 @@ def chat_status(model: str = Query(default="gpt-6-luna"), x_chat_token: str = He
     if model not in PRICES:
         raise HTTPException(422, "Unsupported chat model.")
     cost_settings()
+    limits = input_settings()
     with ledger() as db:
         db.execute("SELECT 1")
     request = Request("https://api.openai.com/v1/models/" + model,
@@ -185,7 +201,7 @@ def chat_status(model: str = Query(default="gpt-6-luna"), x_chat_token: str = He
     if result.get("id") != model:
         raise HTTPException(502, "OpenAI returned an unexpected model identifier.")
     return {"protocol": 1, "model": model, "model_access": True,
-            "storage_mode": "ephemeral", "budget_notice": BUDGET_NOTICE,
+            "storage_mode": "ephemeral", "budget_notice": BUDGET_NOTICE, "input_limits": limits,
             "research_configured": bool(os.environ.get("BRAVE_SEARCH_API_KEY")),
             "message": "Chat route, model access and temporary accounting verified. No text was generated. " + BUDGET_NOTICE}
 
@@ -231,8 +247,15 @@ def run_analysis(a):
         row = {"trace_id": trace_id, "stage": stage, "elapsed_ms": int((time.monotonic()-started)*1000), **fields}
         diagnostics.append(row)
         log.warning("analysis=%s", compact(row))
+    limits = input_settings()
+    per_call_limit = min(a.max_input or limits["NBA_CHAT_MAX_INPUT_PER_CALL"], limits["NBA_CHAT_MAX_INPUT_PER_CALL"])
+    if a.model != "gpt-6-luna":
+        per_call_limit = min(per_call_limit, 16000)
+    total_input_limit = limits["NBA_CHAT_MAX_INPUT_TOTAL"]
+    research_configured = bool(os.environ.get("BRAVE_SEARCH_API_KEY"))
     event("start", model=a.model, output_allowance=LUNA_MAX_OUTPUT_TOKENS if a.model == "gpt-6-luna" else 2500,
-          budget=a.budget, max_input=a.max_input, aggregate_input_limit=40000, max_searches=a.max_searches)
+          budget=a.budget, max_input=per_call_limit, client_input_limit=a.max_input, aggregate_input_limit=total_input_limit,
+          max_searches=a.max_searches, web_enabled=a.web, research_configured=research_configured)
     settings = cost_settings()
     players = a.context.get("players", [])
     if len(players) > 160 or len(compact(a.context).encode()) > 600_000:
@@ -263,7 +286,11 @@ def run_analysis(a):
     input_total = output_total = searches = calls = 0
     records = []
     evidence = {}
+    retrieved_players = set()
+    successful_searches = 0
     notes = []
+    if a.web and a.max_searches and not research_configured:
+        notes.append("Live research unavailable: BRAVE_SEARCH_API_KEY is missing on Render. Web enabled does not mean verified evidence.")
     text = ""
     stop_reason = "iteration_limit"
     # Six model calls maximum. Each call's full output is charged/reserved.
@@ -287,14 +314,14 @@ def run_analysis(a):
         try:
             count = count_input()
             # Reduce initial detail only; preserve coverage and the player directory.
-            while step == 0 and count > a.max_input and overview["candidates"]:
+            while step == 0 and count > per_call_limit and overview["candidates"]:
                 overview["candidates"] = overview["candidates"][:-4]
                 overview["omittedCandidates"] = len(players) - len(overview["candidates"])
                 conversation[0]["content"] = "APP EVIDENCE: " + compact(overview)
                 count = count_input()
             # Leave room for a conclusion rather than inviting another tool round
             # that the unchanged aggregate input ceiling probably cannot admit.
-            if tools and input_total + 2 * count > 40000:
+            if tools and input_total + 2 * count > total_input_limit:
                 body["tools"] = []
                 count_body["tools"] = []
                 conversation.append({"role": "user", "content": "Input budget is nearly exhausted. Conclude now from available evidence; explicitly state missing checks and unverified sportsbook lines. Do not invent picks."})
@@ -306,10 +333,11 @@ def run_analysis(a):
             event("preflight", step=step + 1, reason=stop_reason)
             break
         event("admission", step=step + 1, input_tokens=count, input_consumed=input_total,
-              output_allowance=body["max_output_tokens"], budget=a.budget, estimated_spent=spent)
-        if count > a.max_input or input_total + count > 40000 or body["max_output_tokens"] < 256:
-            stop_reason = "input_per_call_limit" if count > a.max_input else "aggregate_input_limit" if input_total + count > 40000 else "aggregate_output_limit"
-            notes.append(f"Internal {stop_reason}: next input {count:,}, consumed input {input_total:,}. This is not an OpenAI output-limit response.")
+              output_allowance=body["max_output_tokens"], budget=a.budget, estimated_spent=spent,
+              remaining_budget=max(0, a.budget-spent), remaining_input=max(0, total_input_limit-input_total), per_call_limit=per_call_limit)
+        if count > per_call_limit or input_total + count > total_input_limit or body["max_output_tokens"] < 256:
+            stop_reason = "input_per_call_limit" if count > per_call_limit else "aggregate_input_limit" if input_total + count > total_input_limit else "aggregate_output_limit"
+            notes.append(f"Internal {stop_reason}: next input {count:,}, per-call allowance {per_call_limit:,}, consumed input {input_total:,}, cumulative allowance {total_input_limit:,}. This is not an OpenAI output-limit response.")
             break
         # No hosted tools: all new inputs are admitted through this gate. Reserve
         # at the higher 12-hour write rate, plus 10% pricing/counting margin.
@@ -396,50 +424,77 @@ def run_analysis(a):
         for item in functions:
             calls += 1
             tool_started = time.monotonic()
+            tool_reason = "tool_limit" if calls > 6 else "unsupported_tool"
+            if calls <= 6 and item.get("name") == "research":
+                tool_reason = "web_disabled" if not a.web else "search_limit"
             answer = {"error": "Tool limit reached or tool unavailable"}
             if calls <= 6:
                 try:
                     args = json.loads(item["arguments"])
                     if item["name"] == "get_players":
-                        ids = args.get("ids", [])[:4]
-                        answer = {"players": [catalog[i] for i in ids if i in catalog],
-                                  "missingIDs": [i for i in ids if i not in catalog]}
+                        ids = list(dict.fromkeys(args.get("ids", [])[:4]))
+                        answer = {"players": [catalog[i] for i in ids if i in catalog and i not in retrieved_players],
+                                  "alreadyProvidedIDs": [i for i in ids if i in retrieved_players],
+                                  "missingIDs": [i for i in ids if i not in catalog],
+                                  "note": "Already provided records remain in earlier tool results; reuse them."}
+                        retrieved_players.update(i for i in ids if i in catalog)
+                        tool_reason = "records_returned"
                     elif item["name"] == "research" and a.web and searches < a.max_searches:
-                        query = str(args.get("query", ""))[:400].strip()
-                        if query in evidence:
-                            answer = evidence[query]
+                        query = " ".join(str(args.get("query", ""))[:400].split())
+                        if not query:
+                            tool_reason = "empty_search_query"
+                            answer = {"error": "Research query was empty; no search performed."}
+                        elif query in evidence:
+                            answer = {"alreadyProvided": True, "note": "Reuse earlier research results for this query; no additional search performed."}
+                            tool_reason = "cached_research"
                         elif not os.environ.get("BRAVE_SEARCH_API_KEY"):
                             answer = {"error": "Search is not configured. Live verification unavailable."}
+                            tool_reason = "missing_brave_key"
                         else:
                             search_cost = settings["NBA_SEARCH_COST_USD"]
-                            if not 0 < search_cost <= .05 or spent + search_cost + .005 > a.budget:
+                            # Preserve room for a following model call at the current
+                            # input ceiling and full output allowance; do not pay for
+                            # evidence that the remaining budget cannot analyze.
+                            next_reservation = (per_call_limit*rate*2.5 + body["max_output_tokens"]*output_rate)/1_000_000*1.1
+                            if spent + search_cost + next_reservation > a.budget:
                                 answer = {"error": "Research budget exhausted; verification incomplete."}
+                                tool_reason = "research_budget"
                             else:
                                 spent += search_cost
                                 searches += 1
                                 answer = search(query)
                                 evidence[query] = answer
+                                tool_reason = "sources_returned" if answer.get("sources") else "no_sources"
+                                if answer.get("sources"):
+                                    successful_searches += 1
+                                else:
+                                    answer = {"error": "Search returned no usable sources; no live verification.", **answer}
                 except ProviderFailure as error:
+                    tool_reason = "research_timeout" if error.code == "timeout" else "research_provider_error"
                     answer = {"error": str(error) + ". Research unavailable; do not claim verification."}
                     notes.append(str(error))
                 except Exception:
+                    tool_reason = "invalid_arguments_or_tool_error"
                     answer = {"error": "Tool failed; data is unavailable. Do not infer the missing result."}
             tool_status = "error" if "error" in answer else "completed"
             event("tool_result", step=step + 1, tool=item.get("name") if item.get("name") in {"get_players", "research"} else "unsupported",
-                  status=tool_status, duration_ms=int((time.monotonic()-tool_started)*1000),
+                  status=tool_status, reason=tool_reason, searches=searches, successful_searches=successful_searches, duration_ms=int((time.monotonic()-tool_started)*1000),
                   returned_players=len(answer.get("players", [])), returned_sources=len(answer.get("sources", [])))
             if tool_status == "error":
-                notes.append("A tool check was unavailable; the analysis must disclose missing verification.")
+                notes.append("Tool check unavailable: " + tool_reason + ". No verification may be claimed from this check.")
             conversation.append({"type": "function_call_output", "call_id": item["call_id"], "output": compact(answer)})
     if not text:
         text = f"Analysis stopped: {stop_reason}. No final predictions were produced. No automatic retry."
     if stop_reason != "completed":
         notes.append("Diagnostic reference: " + trace_id)
+    if successful_searches == 0:
+        text += "\n\nNo live web evidence was retrieved in this analysis. Current injuries, sportsbook lines and odds remain unverified by web research."
     event("finish", stop_reason=stop_reason, input_tokens=input_total, output_tokens=output_total,
-          tool_calls=calls, searches=searches, estimated_spent=spent, budget=a.budget)
+          tool_calls=calls, searches=searches, successful_searches=successful_searches, estimated_spent=spent, budget=a.budget,
+          remaining_budget=max(0, a.budget-spent), remaining_input=max(0, total_input_limit-input_total))
     sources = {s["url"]: s for e in evidence.values() for s in e.get("sources", [])}
     return {"text": text, "notes": notes, "model": a.model, "input_tokens": input_total,
-            "output_tokens": output_total, "searches": searches, "tool_calls": calls,
+            "output_tokens": output_total, "searches": searches, "successful_searches": successful_searches, "tool_calls": calls,
             "estimated_cost": round(spent, 6), "budget": a.budget, "records": records,
             "sources": list(sources.values()),
             "pricing_date": "2026-11-09", "incomplete": stop_reason != "completed" or bool(notes),
@@ -452,6 +507,7 @@ def analyze(a: Analysis, x_chat_token: str = Header(default="")):
     if a.model not in PRICES:
         raise HTTPException(422, "Unsupported model; no automatic fallback is permitted.")
     settings = cost_settings()
+    input_settings()
     # Reserve before spending. Protection lasts only while local storage survives.
     identity = hashlib.sha256((x_chat_token + a.analysis_id).encode()).hexdigest()
     with ledger() as db:
