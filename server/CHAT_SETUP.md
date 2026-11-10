@@ -6,14 +6,14 @@ Verified against the default live host: `POST /nba/chat` returned HTTP 404 with
 `{"detail":"Not Found"}` while `/health` returned HTTP 200. Its `/openapi.json`
 contained only feed routes, no chat route. This is an undeployed backend route,
 not an OpenAI model failure or invalid sports data. Deploy **both** `app.py` and
-`chat_api.py` from this workspace and configure the secrets/storage below. The
+`chat_api.py` from this workspace and configure the secrets below. The
 old production deployment cannot be fixed by rebuilding only the iOS app.
 
 After deploying, run `python3 server/check_chat_deployment.py` from the repository.
 With `NBA_CHAT_TOKEN` privately set, it checks your project's model access using
 `GET /v1/models/gpt-6-luna`; it never requests generation. The same check is in
 AI Chat → Settings → Check server and model access. HTTP 200 verifies model
-visibility and storage; actual generation permission still needs a smoke request.
+visibility and temporary accounting; actual generation permission still needs a smoke request.
 
 For one inexpensive end-to-end request, select Luna, $0.05 budget and one search:
 “Check one upcoming player's recent form, app projection, and latest injury
@@ -31,14 +31,17 @@ prediction algorithms and basketball database schema are unchanged.
 ## Required deployment
 
 Deploy `app.py` and `chat_api.py` with the existing server requirements. Keep one
-Uvicorn worker or use a shared durable ledger if scaling across machines.
-The updated `server/render.yaml` specifies Starter with a 1 GB persistent disk
-mounted at `/var/data`. This is a paid hosting configuration. Applying it to
-Render is required; editing the file does not purchase hosting or deploy.
+Uvicorn worker on the existing **Free** service. `server/render.yaml` specifies
+`plan: free` and no disk. No paid service or new infrastructure is needed.
+Temporary SQLite accounting uses the system temporary directory automatically.
+`NBA_CHAT_LEDGER` is a legacy setting and is ignored, including old `/var/data`
+values; it can be removed from Render Environment settings.
+
 The Blueprint path is `server/render.yaml` and its root directory is `server`.
-Existing services need new secret variables entered manually; `sync: false`
-does not prompt for new values during an existing Blueprint update. A manually
-created service also needs the YAML settings applied in its dashboard.
+For an existing manually created service, keep its Free instance type and the
+build/start commands in the YAML. A code push does not change dashboard settings.
+Keep existing secrets unchanged. Existing services need any missing secret values
+entered manually; `sync: false` does not prompt on existing Blueprint updates.
 
 Set these in the hosting provider's secret/environment settings, never source:
 
@@ -47,9 +50,8 @@ Set these in the hosting provider's secret/environment settings, never source:
 | `OPENAI_API_KEY` | OpenAI provider credential, server only |
 | `NBA_CHAT_TOKEN` | A separate randomly generated private access token; enter this in Chat Settings |
 | `BRAVE_SEARCH_API_KEY` | Bounded web research; absent means research explicitly unavailable |
-| `NBA_CHAT_LEDGER` | SQLite file on persistent storage, e.g. `/var/data/chat-ledger.sqlite` |
-| `NBA_CHAT_DAILY_USD` | Rolling 24-hour aggregate budget; default `2` dollars |
-| `NBA_SEARCH_COST_USD` | Conservative per-search price for your Brave plan; default `0.005` dollars; update if your plan changes |
+| `NBA_CHAT_DAILY_USD` | Local rolling 24-hour estimated allowance; default `2` dollars; resets with storage; valid range >0 to 100 |
+| `NBA_SEARCH_COST_USD` | Conservative per-search price for your Brave plan; default `0.005` dollars; must be finite, >0 and <=0.05; update if your plan changes |
 
 Use HTTPS. Do not paste the OpenAI key into the app. On first launch the upgrade
 selects Luna and removes the old device provider key. Add the separate access
@@ -75,17 +77,44 @@ multi-user authentication; use proper user accounts before distributing access.
 - Explicit-only caching without breakpoints avoids intentionally writing the
   changing sports data. Cost admission conservatively reserves at 2.5x input
   pricing plus an output allowance and 10% margin.
-- Server ledger atomically reserves the whole analysis budget. Duplicate IDs
-  return the saved result, or report an unresolved run instead of spending again.
+- Temporary local accounting atomically reserves the analysis allowance. Duplicate
+  IDs return the saved result or report an unresolved run while that storage survives.
 - Timeouts have no automatic retry; uncertain model costs retain their reserved
   allowance. A stopped client does not cancel server spending. Daily reservations
-  survive restarts only when the ledger is on durable storage.
+  are lost on restart, redeploy or idle spin-down. Duplicate protection also resets.
+  Never automatically resend interrupted requests, including after restarting the app.
 - Token counting is done before generation. Count-endpoint failures fail closed.
 - Post-response usage records include token/cache breakdowns and response IDs,
   never provider keys or request headers. Model/search prices are estimates, not
   an invoice. Review prices before enabling and whenever providers change them.
 - Budget accounting covers API usage, not hosting subscriptions or taxes. Search
   charges use your configured per-call rate, including uncertain failed calls.
+
+## Budget limitations and 503 diagnostics
+
+**$0.05 is an estimated request allowance, not a guaranteed provider billing cap.**
+Prices, token accounting, uncertain timeouts and provider behavior can differ from
+estimates. The local daily allowance is not an account-wide spending limit.
+Monitor actual OpenAI spending manually. No dashboard alert is treated as a hard cap.
+Render Free loses local files when it restarts or spins down:
+https://render.com/docs/free#local-files-lost-on-redeploy
+
+The former code returned 503 before any OpenAI call if `NBA_CHAT_LEDGER` was unset.
+This was reproduced offline. The production 503's exact cause cannot be confirmed
+from status alone without its authenticated error detail. A missing OpenAI key
+also produced 503. The persistent-storage dependency has been removed.
+
+Authenticated 503 responses now contain a sanitized `detail.code` and message:
+- `missing_openai_key`: set the server-side key in Render; never in the client.
+- `invalid_cost_settings`: correct the named cost setting; no provider call starts.
+- `temporary_accounting_unavailable`: temporary SQLite cannot be accessed; fail
+  safely without automatic retry. Previous work could already have been charged.
+
+Provider failures remain distinguishable as 502 with sanitized provider/status
+metadata. `/health` includes `chat_revision: free-storage-v2` and storage mode to
+identify the deployment; it does not prove authenticated generation works.
+The authenticated status check validates settings and writable temporary storage
+before the no-generation model lookup. Logs never contain credentials or prompts.
 
 ## Validation
 

@@ -10,6 +10,8 @@ import os
 import sqlite3
 import time
 import logging
+import math
+import tempfile
 from urllib.error import HTTPError, URLError
 from contextlib import contextmanager
 from urllib.request import Request, urlopen
@@ -19,6 +21,31 @@ from pydantic import BaseModel, Field
 
 router = APIRouter()
 log = logging.getLogger("nba.chat")
+# Free Render storage: intentionally ephemeral, independent of legacy /var/data.
+LEDGER_PATH = os.path.join(tempfile.gettempdir(), "nba-chat-budget-v2.sqlite")
+BUDGET_NOTICE = ("Cost estimates are not a guaranteed billing cap. Local daily accounting "
+                 "and duplicate protection reset when the service restarts or spins down. "
+                 "No automatic retries; monitor provider billing manually.")
+
+
+def unavailable(code, message):
+    log.warning("stage=readiness status=503 code=%s", code)
+    return HTTPException(503, {"code": code, "message": message})
+
+
+def cost_settings():
+    values = {}
+    for name, default, maximum in (("NBA_CHAT_DAILY_USD", "2", 100),
+                                    ("NBA_SEARCH_COST_USD", ".005", .05)):
+        try:
+            value = float(os.environ.get(name, default))
+            if not math.isfinite(value) or not 0 < value <= maximum:
+                raise ValueError()
+        except (ValueError, TypeError):
+            raise unavailable("invalid_cost_settings", "Invalid " + name + "; no provider request started.") from None
+        values[name] = value
+    return values
+
 
 
 class ProviderFailure(Exception):
@@ -91,20 +118,23 @@ def authorize(token):
     if not expected or not hmac.compare_digest(token or "", expected):
         raise HTTPException(401, "Configure the private chat access token.")
     if not os.environ.get("OPENAI_API_KEY"):
-        raise HTTPException(503, "The server needs its OpenAI API key.")
+        raise unavailable("missing_openai_key", "The server needs its OpenAI API key.")
 
 @contextmanager
 def ledger():
-    path = os.environ.get("NBA_CHAT_LEDGER")
-    if not path:
-        raise HTTPException(503, "Configure NBA_CHAT_LEDGER on persistent storage before enabling paid chat.")
-    db = sqlite3.connect(path, timeout=10)
+    """Atomic duplicate/reservation protection for this instance, not durable billing."""
+    db = None
     try:
+        db = sqlite3.connect(LEDGER_PATH, timeout=10)
         db.execute("CREATE TABLE IF NOT EXISTS analyses (id TEXT PRIMARY KEY, created REAL, reserved REAL, result TEXT)")
         with db:
             yield db
+    except sqlite3.Error:
+        raise unavailable("temporary_accounting_unavailable",
+                          "Temporary chat accounting is unavailable. No automatic retry; prior work may be charged.") from None
     finally:
-        db.close()
+        if db is not None:
+            db.close()
 
 def post_openai(path, body):
     request = Request("https://api.openai.com/v1/" + path,
@@ -121,6 +151,9 @@ def chat_status(model: str = Query(default="gpt-6-luna"), x_chat_token: str = He
     authorize(x_chat_token)
     if model not in PRICES:
         raise HTTPException(422, "Unsupported chat model.")
+    cost_settings()
+    with ledger() as db:
+        db.execute("SELECT 1")
     request = Request("https://api.openai.com/v1/models/" + model,
                       headers={"Authorization": "Bearer " + os.environ["OPENAI_API_KEY"]})
     try:
@@ -129,16 +162,10 @@ def chat_status(model: str = Query(default="gpt-6-luna"), x_chat_token: str = He
         raise HTTPException(502, str(error)) from None
     if result.get("id") != model:
         raise HTTPException(502, "OpenAI returned an unexpected model identifier.")
-    try:
-        with ledger() as db:
-            db.execute("SELECT 1")
-    except HTTPException:
-        raise
-    except sqlite3.Error:
-        raise HTTPException(503, "Chat budget ledger is not writable.") from None
     return {"protocol": 1, "model": model, "model_access": True,
+            "storage_mode": "ephemeral", "budget_notice": BUDGET_NOTICE,
             "research_configured": bool(os.environ.get("BRAVE_SEARCH_API_KEY")),
-            "message": "Chat route, model access and budget ledger verified. No text was generated."}
+            "message": "Chat route, model access and temporary accounting verified. No text was generated. " + BUDGET_NOTICE}
 
 def function(name, description, properties, required):
     return {"type": "function", "name": name, "description": description,
@@ -175,6 +202,7 @@ def usage_cost(usage, model):
             long_write*rate*2.5 + usage["output_tokens"]*output_rate)/1_000_000
 
 def run_analysis(a):
+    settings = cost_settings()
     players = a.context.get("players", [])
     if len(players) > 160 or len(compact(a.context).encode()) > 600_000:
         raise HTTPException(413, "Sports context exceeds the record/byte limit.")
@@ -287,7 +315,7 @@ def run_analysis(a):
                         elif not os.environ.get("BRAVE_SEARCH_API_KEY"):
                             answer = {"error": "Search is not configured. Live verification unavailable."}
                         else:
-                            search_cost = float(os.environ.get("NBA_SEARCH_COST_USD", ".005"))
+                            search_cost = settings["NBA_SEARCH_COST_USD"]
                             if not 0 < search_cost <= .05 or spent + search_cost + .005 > a.budget:
                                 answer = {"error": "Research budget exhausted; verification incomplete."}
                             else:
@@ -306,15 +334,16 @@ def run_analysis(a):
             "output_tokens": output_total, "searches": searches, "tool_calls": calls,
             "estimated_cost": round(spent, 6), "budget": a.budget, "records": records,
             "sources": list(sources.values()),
-            "pricing_date": "2026-11-09", "incomplete": bool(notes)}
+            "pricing_date": "2026-11-09", "incomplete": bool(notes),
+            "storage_mode": "ephemeral", "budget_notice": BUDGET_NOTICE}
 
 @router.post("/nba/chat")
 def analyze(a: Analysis, x_chat_token: str = Header(default="")):
     authorize(x_chat_token)
     if a.model not in PRICES:
         raise HTTPException(422, "Unsupported model; no automatic fallback is permitted.")
-    # Persist the entire budget before spending. Duplicate or interrupted runs
-    # cannot silently restart. The daily cap includes unresolved reservations.
+    settings = cost_settings()
+    # Reserve before spending. Protection lasts only while local storage survives.
     identity = hashlib.sha256((x_chat_token + a.analysis_id).encode()).hexdigest()
     with ledger() as db:
         db.execute("BEGIN IMMEDIATE")
@@ -324,8 +353,8 @@ def analyze(a: Analysis, x_chat_token: str = Header(default="")):
                 return json.loads(prior[0])
             raise HTTPException(409, "Analysis is running or unresolved; its budget remains reserved.")
         total = db.execute("SELECT COALESCE(SUM(reserved),0) FROM analyses WHERE created>?", (time.time()-86400,)).fetchone()[0]
-        if total + a.budget > float(os.environ.get("NBA_CHAT_DAILY_USD", "2")):
-            raise HTTPException(429, "Daily chat budget reached.")
+        if total + a.budget > settings["NBA_CHAT_DAILY_USD"]:
+            raise HTTPException(429, "Local daily chat allowance reached. Accounting resets on service restart; monitor provider billing.")
         db.execute("INSERT INTO analyses VALUES (?,?,?,NULL)", (identity, time.time(), a.budget))
     try:
         result = run_analysis(a)

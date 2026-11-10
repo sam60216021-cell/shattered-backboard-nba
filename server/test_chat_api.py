@@ -21,6 +21,54 @@ def response(output=None, **extra):
 
 
 class ChatTests(unittest.TestCase):
+    def setUp(self):
+        directory = tempfile.TemporaryDirectory()
+        self.addCleanup(directory.cleanup)
+        path = patch.object(chat, "LEDGER_PATH", directory.name + "/ledger.sqlite")
+        path.start()
+        self.addCleanup(path.stop)
+
+    def test_free_storage_ignores_legacy_paid_disk_setting(self):
+        for legacy in ("", "/unavailable/paid/disk/ledger.sqlite"):
+            with self.subTest(legacy=legacy), patch.dict(os.environ, {
+                "NBA_CHAT_LEDGER": legacy, "NBA_CHAT_TOKEN": "fixture-token",
+                "OPENAI_API_KEY": "fixture-not-a-key"}), patch.object(chat, "run_analysis", return_value={"estimated_cost": .001}):
+                self.assertEqual(chat.analyze(request(), "fixture-token")["estimated_cost"], .001)
+
+    def test_invalid_settings_fail_before_provider_calls(self):
+        for name in ("NBA_CHAT_DAILY_USD", "NBA_SEARCH_COST_USD"):
+            for value in ("nan", "inf", "-1", "0", "bad", ""):
+                with self.subTest(name=name, value=value), patch.dict(os.environ, {
+                    name: value, "NBA_CHAT_TOKEN": "fixture-token", "OPENAI_API_KEY": "fixture"}), patch.object(chat, "post_openai") as api:
+                    with self.assertRaises(HTTPException) as error:
+                        chat.analyze(request(), "fixture-token")
+                    self.assertEqual(error.exception.status_code, 503)
+                    self.assertEqual(error.exception.detail["code"], "invalid_cost_settings")
+                    api.assert_not_called()
+
+    def test_unwritable_temporary_storage_fails_without_spending(self):
+        with patch.object(chat, "LEDGER_PATH", "/nonexistent-parent/ledger.sqlite"), patch.dict(os.environ, {
+            "NBA_CHAT_TOKEN": "fixture-token", "OPENAI_API_KEY": "fixture"}), patch.object(chat, "post_openai") as api:
+            with self.assertRaises(HTTPException) as error:
+                chat.analyze(request(), "fixture-token")
+            self.assertEqual(error.exception.detail["code"], "temporary_accounting_unavailable")
+            api.assert_not_called()
+
+    def test_missing_provider_key_is_distinguishable(self):
+        with patch.dict(os.environ, {"NBA_CHAT_TOKEN": "fixture-token", "OPENAI_API_KEY": ""}):
+            with self.assertRaises(HTTPException) as error:
+                chat.authorize("fixture-token")
+            self.assertEqual(error.exception.detail["code"], "missing_openai_key")
+
+    def test_interrupted_duplicate_does_not_retry(self):
+        with patch.dict(os.environ, {"NBA_CHAT_TOKEN": "fixture-token", "OPENAI_API_KEY": "fixture"}), patch.object(chat, "run_analysis", side_effect=TimeoutError()) as run:
+            with self.assertRaises(HTTPException):
+                chat.analyze(request(), "fixture-token")
+            with self.assertRaises(HTTPException) as error:
+                chat.analyze(request(), "fixture-token")
+            self.assertEqual(error.exception.status_code, 409)
+            self.assertEqual(run.call_count, 1)
+
     def test_upstream_error_does_not_leak_keys_or_messages(self):
         import io
         from urllib.error import HTTPError
@@ -40,6 +88,8 @@ class ChatTests(unittest.TestCase):
             "OPENAI_API_KEY": "fixture-not-a-key"}), patch.object(chat, "provider_json", return_value={"id": "gpt-6-luna"}) as provider:
             result = chat.chat_status("gpt-6-luna", "fixture-token")
         self.assertTrue(result["model_access"])
+        self.assertEqual(result["protocol"], 1)  # Existing installed clients remain compatible.
+        self.assertEqual(result["storage_mode"], "ephemeral")
         self.assertEqual(provider.call_args.args[2], "/v1/models/gpt-6-luna")
 
     def test_chat_routes_are_registered(self):

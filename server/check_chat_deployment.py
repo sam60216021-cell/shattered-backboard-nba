@@ -23,10 +23,20 @@ def main():
         with urlopen(request, timeout=60) as response:
             result = json.load(response)
             print("HTTP", response.status, "model_access=", bool(result.get("model_access")),
-                  "research_configured=", bool(result.get("research_configured")))
+                  "research_configured=", bool(result.get("research_configured")),
+                  "storage_mode=", result.get("storage_mode"))
             return 0 if result.get("model_access") else 1
     except HTTPError as error:
-        print("FAIL: readiness HTTP", error.code, "— inspect sanitized nba.chat server logs. No generation requested.")
+        code = "unclassified"
+        try:
+            detail = json.loads(error.read(8192)).get("detail", {})
+            candidate = detail.get("code") if isinstance(detail, dict) else None
+            if candidate in {"missing_openai_key", "invalid_cost_settings", "temporary_accounting_unavailable"}:
+                code = candidate
+        except (ValueError, AttributeError):
+            pass
+        print("FAIL: readiness HTTP", error.code, "code=", code,
+              "— inspect sanitized nba.chat logs. No generation requested.")
         return 1
 
 

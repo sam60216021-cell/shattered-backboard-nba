@@ -24,8 +24,8 @@ depends on the deleted `~/Documents/sports/nba-server` directory.
 
 Use `server/render.yaml` as the Blueprint path. It explicitly sets `rootDir:
 server`, declares both provider secrets and the private chat access token, and
-mounts a 1 GB persistent disk for budget accounting. It selects the paid Starter
-plan; applying it changes hosting costs. No credentials belong in this repo.
+uses the **Free** plan with temporary local budget accounting. No persistent disk
+or paid service is required. No credentials belong in this repo.
 
 For the existing service, add `OPENAI_API_KEY`, `NBA_CHAT_TOKEN`, and
 `BRAVE_SEARCH_API_KEY` manually in Render's Environment settings. Render does
@@ -34,9 +34,11 @@ Blueprint. Choose a long random value for `NBA_CHAT_TOKEN` and enter that same
 value in the app's Chat Settings; it is separate from the OpenAI key.
 
 If the service was created manually, updating YAML alone does not apply its
-settings. Set Root Directory to `server`, select Starter, attach a 1 GB disk
-at `/var/data`, and set `NBA_CHAT_LEDGER=/var/data/chat-ledger.sqlite` and
-`NBA_CHAT_DAILY_USD=2`. Use the build and start commands in the Blueprint.
+settings. Keep Root Directory `server`, instance type Free, and
+`NBA_CHAT_DAILY_USD=2`. The old `NBA_CHAT_LEDGER` variable is ignored and may be
+removed. Use the build and start commands in the Blueprint. Temporary accounting
+and duplicate protection reset on restart/redeploy/spin-down. Request budgets
+are estimates, not guaranteed billing caps; monitor OpenAI spending manually.
 Deploy the commit containing `app.py`, `chat_api.py`, and the chat tests together.
 The build now runs the offline regression suite, including route registration.
 

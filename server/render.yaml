@@ -3,15 +3,11 @@ services:
     name: shattered-backboard-nba
     runtime: python
     rootDir: server
-    # Persistent budget reservations require a paid service and durable disk.
-    plan: starter
+    # Temporary accounting works on Free; no persistent disk or paid service.
+    plan: free
     buildCommand: pip install -r requirements.txt && python -m unittest discover -s . -p test_chat_api.py -v
     startCommand: uvicorn app:app --host 0.0.0.0 --port $PORT --workers 1 --no-access-log
     healthCheckPath: /health
-    disk:
-      name: nba-chat-budget
-      mountPath: /var/data
-      sizeGB: 1
     envVars:
       - key: PYTHON_VERSION
         value: 3.12.4
@@ -21,8 +17,6 @@ services:
         sync: false
       - key: BRAVE_SEARCH_API_KEY
         sync: false
-      - key: NBA_CHAT_LEDGER
-        value: /var/data/chat-ledger.sqlite
       - key: NBA_CHAT_DAILY_USD
         value: "2"
       - key: NBA_SEARCH_COST_USD
