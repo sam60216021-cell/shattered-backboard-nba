@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-11-10T17:28:53.771110+00:00",
+  "last_updated": "2026-11-11T03:21:38.172795+00:00",
   "method": "FGA + 0.44*FTA + TOV share",
   "players": [
     {
@@ -318,15 +318,6 @@
       "team": "BOS"
     },
     {
-      "estimated_usage_pct": 3.28,
-      "games": 3,
-      "minutes_per_game": 8.67,
-      "name": "5142621",
-      "player_id": "5142621",
-      "possessions_used_per_36": 19.38,
-      "team": "BOS"
-    },
-    {
       "estimated_usage_pct": 6.02,
       "games": 1,
       "minutes_per_game": 27.0,
@@ -351,6 +342,15 @@
       "name": "Baylor Scheierman",
       "player_id": "1631248",
       "possessions_used_per_36": 13.33,
+      "team": "BOS"
+    },
+    {
+      "estimated_usage_pct": 3.28,
+      "games": 3,
+      "minutes_per_game": 8.67,
+      "name": "Chris Cenac Jr.",
+      "player_id": "5142621",
+      "possessions_used_per_36": 19.38,
       "team": "BOS"
     },
     {
@@ -1308,6 +1308,15 @@
       "team": "DEN"
     },
     {
+      "estimated_usage_pct": 2.51,
+      "games": 4,
+      "minutes_per_game": 5.75,
+      "name": "1642404",
+      "player_id": "1642404",
+      "possessions_used_per_36": 17.22,
+      "team": "DET"
+    },
+    {
       "estimated_usage_pct": 0.88,
       "games": 1,
       "minutes_per_game": 3.0,
@@ -1332,15 +1341,6 @@
       "name": "Cade Cunningham",
       "player_id": "1630595",
       "possessions_used_per_36": 24.36,
-      "team": "DET"
-    },
-    {
-      "estimated_usage_pct": 2.51,
-      "games": 4,
-      "minutes_per_game": 5.75,
-      "name": "Chaz Lanier",
-      "player_id": "1642404",
-      "possessions_used_per_36": 17.22,
       "team": "DET"
     },
     {
@@ -2073,6 +2073,15 @@
       "team": "LAL"
     },
     {
+      "estimated_usage_pct": 0.0,
+      "games": 2,
+      "minutes_per_game": 1.0,
+      "name": "4596528",
+      "player_id": "4596528",
+      "possessions_used_per_36": 0.0,
+      "team": "LAL"
+    },
+    {
       "estimated_usage_pct": 1.85,
       "games": 1,
       "minutes_per_game": 6.0,
@@ -2115,6 +2124,15 @@
       "name": "Cameron Carr",
       "player_id": "5113969",
       "possessions_used_per_36": 10.8,
+      "team": "LAL"
+    },
+    {
+      "estimated_usage_pct": 1.65,
+      "games": 1,
+      "minutes_per_game": 3.0,
+      "name": "Carson Cooper",
+      "player_id": "5105817",
+      "possessions_used_per_36": 22.56,
       "team": "LAL"
     },
     {
@@ -2169,15 +2187,6 @@
       "name": "Kevon Looney",
       "player_id": "1626172",
       "possessions_used_per_36": 6.52,
-      "team": "LAL"
-    },
-    {
-      "estimated_usage_pct": 0.0,
-      "games": 2,
-      "minutes_per_game": 1.0,
-      "name": "Lawson Lovering",
-      "player_id": "4596528",
-      "possessions_used_per_36": 0.0,
       "team": "LAL"
     },
     {
@@ -2250,15 +2259,6 @@
       "name": "Cameron Boozer",
       "player_id": "5041935",
       "possessions_used_per_36": 22.03,
-      "team": "MEM"
-    },
-    {
-      "estimated_usage_pct": 1.65,
-      "games": 1,
-      "minutes_per_game": 3.0,
-      "name": "Carson Cooper",
-      "player_id": "5105817",
-      "possessions_used_per_36": 22.56,
       "team": "MEM"
     },
     {
@@ -2604,30 +2604,30 @@
       "team": "MIL"
     },
     {
-      "estimated_usage_pct": 5.54,
-      "games": 11,
-      "minutes_per_game": 20.09,
+      "estimated_usage_pct": 5.17,
+      "games": 12,
+      "minutes_per_game": 19.08,
       "name": "AJ Green",
       "player_id": "1631260",
-      "possessions_used_per_36": 11.62,
+      "possessions_used_per_36": 11.37,
       "team": "MIL"
     },
     {
-      "estimated_usage_pct": 4.74,
-      "games": 2,
-      "minutes_per_game": 10.0,
+      "estimated_usage_pct": 3.16,
+      "games": 3,
+      "minutes_per_game": 8.0,
       "name": "Bogoljub Markovic",
       "player_id": "5214989",
-      "possessions_used_per_36": 24.98,
+      "possessions_used_per_36": 20.82,
       "team": "MIL"
     },
     {
-      "estimated_usage_pct": 9.32,
-      "games": 11,
-      "minutes_per_game": 21.45,
+      "estimated_usage_pct": 9.07,
+      "games": 12,
+      "minutes_per_game": 21.83,
       "name": "Brayden Burries",
       "player_id": "5082206",
-      "possessions_used_per_36": 18.35,
+      "possessions_used_per_36": 17.35,
       "team": "MIL"
     },
     {
@@ -2640,30 +2640,30 @@
       "team": "MIL"
     },
     {
-      "estimated_usage_pct": 2.11,
-      "games": 2,
-      "minutes_per_game": 6.5,
+      "estimated_usage_pct": 3.15,
+      "games": 3,
+      "minutes_per_game": 6.33,
       "name": "Gary Trent Jr.",
       "player_id": "1629018",
-      "possessions_used_per_36": 13.85,
+      "possessions_used_per_36": 18.95,
       "team": "MIL"
     },
     {
-      "estimated_usage_pct": 12.11,
-      "games": 11,
-      "minutes_per_game": 27.27,
+      "estimated_usage_pct": 12.67,
+      "games": 12,
+      "minutes_per_game": 27.08,
       "name": "Jaime Jaquez Jr.",
       "player_id": "1631170",
-      "possessions_used_per_36": 18.96,
+      "possessions_used_per_36": 19.48,
       "team": "MIL"
     },
     {
-      "estimated_usage_pct": 0.67,
-      "games": 6,
-      "minutes_per_game": 7.83,
+      "estimated_usage_pct": 0.73,
+      "games": 7,
+      "minutes_per_game": 7.86,
       "name": "Jericho Sims",
       "player_id": "1630579",
-      "possessions_used_per_36": 3.06,
+      "possessions_used_per_36": 3.27,
       "team": "MIL"
     },
     {
@@ -2676,66 +2676,66 @@
       "team": "MIL"
     },
     {
-      "estimated_usage_pct": 6.08,
-      "games": 11,
-      "minutes_per_game": 18.18,
+      "estimated_usage_pct": 6.75,
+      "games": 12,
+      "minutes_per_game": 18.58,
       "name": "Kasparas Jakucionis",
       "player_id": "5214640",
-      "possessions_used_per_36": 14.38,
+      "possessions_used_per_36": 15.07,
       "team": "MIL"
     },
     {
-      "estimated_usage_pct": 9.06,
-      "games": 11,
-      "minutes_per_game": 18.0,
+      "estimated_usage_pct": 9.16,
+      "games": 12,
+      "minutes_per_game": 17.92,
       "name": "Kel'el Ware",
       "player_id": "1642276",
-      "possessions_used_per_36": 21.86,
+      "possessions_used_per_36": 21.77,
       "team": "MIL"
     },
     {
-      "estimated_usage_pct": 9.84,
-      "games": 11,
-      "minutes_per_game": 26.55,
+      "estimated_usage_pct": 9.53,
+      "games": 12,
+      "minutes_per_game": 26.5,
       "name": "Kyle Kuzma",
       "player_id": "1628398",
-      "possessions_used_per_36": 15.46,
+      "possessions_used_per_36": 14.86,
       "team": "MIL"
     },
     {
-      "estimated_usage_pct": 8.53,
-      "games": 11,
-      "minutes_per_game": 26.73,
+      "estimated_usage_pct": 8.6,
+      "games": 12,
+      "minutes_per_game": 26.75,
       "name": "Myles Turner",
       "player_id": "1626167",
-      "possessions_used_per_36": 13.55,
+      "possessions_used_per_36": 13.42,
       "team": "MIL"
     },
     {
-      "estimated_usage_pct": 6.86,
-      "games": 8,
-      "minutes_per_game": 16.0,
+      "estimated_usage_pct": 7.08,
+      "games": 9,
+      "minutes_per_game": 16.67,
       "name": "Nate Ament",
       "player_id": "5164559",
-      "possessions_used_per_36": 17.36,
+      "possessions_used_per_36": 16.84,
       "team": "MIL"
     },
     {
-      "estimated_usage_pct": 3.26,
-      "games": 8,
-      "minutes_per_game": 12.5,
+      "estimated_usage_pct": 3.95,
+      "games": 9,
+      "minutes_per_game": 13.78,
       "name": "Ousmane Dieng",
       "player_id": "1631172",
-      "possessions_used_per_36": 11.43,
+      "possessions_used_per_36": 11.83,
       "team": "MIL"
     },
     {
-      "estimated_usage_pct": 11.16,
-      "games": 11,
-      "minutes_per_game": 22.64,
+      "estimated_usage_pct": 11.01,
+      "games": 12,
+      "minutes_per_game": 22.75,
       "name": "Ryan Rollins",
       "player_id": "1631157",
-      "possessions_used_per_36": 20.95,
+      "possessions_used_per_36": 20.3,
       "team": "MIL"
     },
     {
@@ -2784,6 +2784,15 @@
       "team": "MIN"
     },
     {
+      "estimated_usage_pct": 3.05,
+      "games": 5,
+      "minutes_per_game": 8.0,
+      "name": "5061585",
+      "player_id": "5061585",
+      "possessions_used_per_36": 16.88,
+      "team": "MIN"
+    },
+    {
       "estimated_usage_pct": 25.8,
       "games": 4,
       "minutes_per_game": 33.75,
@@ -2817,15 +2826,6 @@
       "name": "Cody Williams",
       "player_id": "1642262",
       "possessions_used_per_36": 12.07,
-      "team": "MIN"
-    },
-    {
-      "estimated_usage_pct": 3.05,
-      "games": 5,
-      "minutes_per_game": 8.0,
-      "name": "Isaiah Evans",
-      "player_id": "5061585",
-      "possessions_used_per_36": 16.88,
       "team": "MIN"
     },
     {
@@ -3072,21 +3072,21 @@
       "team": "NOP"
     },
     {
-      "estimated_usage_pct": 5.52,
-      "games": 8,
-      "minutes_per_game": 13.25,
+      "estimated_usage_pct": 5.11,
+      "games": 9,
+      "minutes_per_game": 13.56,
       "name": "Andre Drummond",
       "player_id": "203083",
-      "possessions_used_per_36": 17.46,
+      "possessions_used_per_36": 15.76,
       "team": "NYK"
     },
     {
-      "estimated_usage_pct": 2.03,
-      "games": 3,
-      "minutes_per_game": 9.67,
+      "estimated_usage_pct": 1.98,
+      "games": 4,
+      "minutes_per_game": 9.25,
       "name": "Dalton Knecht",
       "player_id": "4897943",
-      "possessions_used_per_36": 8.69,
+      "possessions_used_per_36": 8.76,
       "team": "NYK"
     },
     {
@@ -3099,39 +3099,39 @@
       "team": "NYK"
     },
     {
-      "estimated_usage_pct": 22.48,
-      "games": 8,
-      "minutes_per_game": 33.75,
+      "estimated_usage_pct": 22.25,
+      "games": 9,
+      "minutes_per_game": 33.11,
       "name": "Jalen Brunson",
       "player_id": "1628973",
-      "possessions_used_per_36": 27.49,
+      "possessions_used_per_36": 27.63,
       "team": "NYK"
     },
     {
-      "estimated_usage_pct": 2.78,
-      "games": 4,
+      "estimated_usage_pct": 2.22,
+      "games": 5,
       "minutes_per_game": 5.0,
       "name": "James Wiseman",
       "player_id": "1630164",
-      "possessions_used_per_36": 23.4,
+      "possessions_used_per_36": 18.72,
       "team": "NYK"
     },
     {
       "estimated_usage_pct": 4.53,
-      "games": 7,
-      "minutes_per_game": 10.57,
+      "games": 8,
+      "minutes_per_game": 10.62,
       "name": "Jordan Clarkson",
       "player_id": "203903",
-      "possessions_used_per_36": 17.94,
+      "possessions_used_per_36": 17.74,
       "team": "NYK"
     },
     {
-      "estimated_usage_pct": 4.39,
-      "games": 4,
-      "minutes_per_game": 11.25,
+      "estimated_usage_pct": 3.88,
+      "games": 5,
+      "minutes_per_game": 10.2,
       "name": "Jose Alvarado",
       "player_id": "1630631",
-      "possessions_used_per_36": 16.0,
+      "possessions_used_per_36": 15.53,
       "team": "NYK"
     },
     {
@@ -3144,75 +3144,75 @@
       "team": "NYK"
     },
     {
-      "estimated_usage_pct": 16.75,
-      "games": 8,
-      "minutes_per_game": 31.12,
+      "estimated_usage_pct": 17.22,
+      "games": 9,
+      "minutes_per_game": 30.67,
       "name": "Karl-Anthony Towns",
       "player_id": "1626157",
-      "possessions_used_per_36": 22.1,
+      "possessions_used_per_36": 22.96,
       "team": "NYK"
     },
     {
-      "estimated_usage_pct": 8.13,
-      "games": 8,
-      "minutes_per_game": 26.5,
+      "estimated_usage_pct": 7.94,
+      "games": 9,
+      "minutes_per_game": 26.67,
       "name": "Landry Shamet",
       "player_id": "1629013",
-      "possessions_used_per_36": 12.59,
+      "possessions_used_per_36": 12.17,
       "team": "NYK"
     },
     {
-      "estimated_usage_pct": 7.84,
-      "games": 8,
-      "minutes_per_game": 25.5,
+      "estimated_usage_pct": 7.58,
+      "games": 9,
+      "minutes_per_game": 24.56,
       "name": "Mikal Bridges",
       "player_id": "1628969",
-      "possessions_used_per_36": 12.49,
+      "possessions_used_per_36": 12.5,
       "team": "NYK"
     },
     {
-      "estimated_usage_pct": 5.07,
-      "games": 8,
-      "minutes_per_game": 16.5,
+      "estimated_usage_pct": 5.11,
+      "games": 9,
+      "minutes_per_game": 17.44,
       "name": "Miles McBride",
       "player_id": "1630540",
-      "possessions_used_per_36": 12.6,
+      "possessions_used_per_36": 11.97,
       "team": "NYK"
     },
     {
-      "estimated_usage_pct": 2.83,
-      "games": 4,
-      "minutes_per_game": 10.5,
+      "estimated_usage_pct": 3.72,
+      "games": 5,
+      "minutes_per_game": 12.0,
       "name": "Mohamed Diawara",
       "player_id": "1642885",
-      "possessions_used_per_36": 10.94,
+      "possessions_used_per_36": 12.46,
       "team": "NYK"
     },
     {
-      "estimated_usage_pct": 15.3,
-      "games": 8,
-      "minutes_per_game": 33.0,
+      "estimated_usage_pct": 15.0,
+      "games": 9,
+      "minutes_per_game": 32.56,
       "name": "OG Anunoby",
       "player_id": "1628384",
-      "possessions_used_per_36": 19.04,
+      "possessions_used_per_36": 18.86,
       "team": "NYK"
     },
     {
-      "estimated_usage_pct": 1.72,
-      "games": 2,
-      "minutes_per_game": 5.0,
+      "estimated_usage_pct": 2.8,
+      "games": 3,
+      "minutes_per_game": 5.33,
       "name": "Pacome Dadiet",
       "player_id": "5211983",
-      "possessions_used_per_36": 14.4,
+      "possessions_used_per_36": 21.24,
       "team": "NYK"
     },
     {
-      "estimated_usage_pct": 2.74,
-      "games": 6,
-      "minutes_per_game": 12.33,
+      "estimated_usage_pct": 3.26,
+      "games": 7,
+      "minutes_per_game": 12.71,
       "name": "Tyler Kolek",
       "player_id": "1642278",
-      "possessions_used_per_36": 9.18,
+      "possessions_used_per_36": 10.47,
       "team": "NYK"
     },
     {

@@ -1,5 +1,5 @@
 {
-  "as_of": "2026-11-10T17:28:53.771110+00:00",
+  "as_of": "2026-11-11T03:21:38.172795+00:00",
   "players": [
     {
       "name": "Aaron Wiggins",
@@ -227,6 +227,12 @@
       "name": "Baylor Scheierman",
       "player_id": "1631248",
       "pos": "G",
+      "team": "BOS"
+    },
+    {
+      "name": "Chris Cenac Jr.",
+      "player_id": "5142621",
+      "pos": "F",
       "team": "BOS"
     },
     {
@@ -836,12 +842,6 @@
       "team": "DET"
     },
     {
-      "name": "Chaz Lanier",
-      "player_id": "1642404",
-      "pos": "G",
-      "team": "DET"
-    },
-    {
       "name": "Daniss Jenkins",
       "player_id": "1642450",
       "pos": "G",
@@ -1394,6 +1394,12 @@
       "team": "LAL"
     },
     {
+      "name": "Carson Cooper",
+      "player_id": "5105817",
+      "pos": "C",
+      "team": "LAL"
+    },
+    {
       "name": "Chris Manon",
       "player_id": "4702972",
       "pos": "G",
@@ -1427,12 +1433,6 @@
       "name": "Kevon Looney",
       "player_id": "1626172",
       "pos": "F",
-      "team": "LAL"
-    },
-    {
-      "name": "Lawson Lovering",
-      "player_id": "4596528",
-      "pos": "C",
       "team": "LAL"
     },
     {
@@ -1481,12 +1481,6 @@
       "name": "Cameron Boozer",
       "player_id": "5041935",
       "pos": "F",
-      "team": "MEM"
-    },
-    {
-      "name": "Carson Cooper",
-      "player_id": "5105817",
-      "pos": "C",
       "team": "MEM"
     },
     {
@@ -1823,12 +1817,6 @@
       "name": "Donte DiVincenzo",
       "player_id": "1628978",
       "pos": "G",
-      "team": "MIN"
-    },
-    {
-      "name": "Isaiah Evans",
-      "player_id": "5061585",
-      "pos": "F",
       "team": "MIN"
     },
     {
