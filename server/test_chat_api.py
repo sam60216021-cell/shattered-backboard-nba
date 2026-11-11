@@ -327,6 +327,39 @@ class ChatTests(unittest.TestCase):
         self.assertEqual(api.call_count, 1)
         self.assertEqual(result["estimated_cost"], 0)
 
+    def test_database_conditional_picks_return_without_web_verification(self):
+        answer = "Conditional parlay: Fixture A points above a model-derived target. Availability and odds unverified."
+        with patch.object(chat, "post_openai", side_effect=[{"input_tokens": 1000}, response([{ "type": "message", "content": [{"text": answer}]}])]) as api:
+            result = chat.run_analysis(request(web=False))
+        self.assertEqual(result["stop_reason"], "completed")
+        self.assertIn(answer, result["text"])
+        self.assertEqual(result["sources"], [])
+        instructions = api.call_args.args[1]["instructions"]
+        self.assertIn("Web research improves recommendations; it is not a", instructions)
+        self.assertIn("never an actual sportsbook", instructions)
+        self.assertNotIn("Before presenting actionable picks, verify", instructions)
+
+    def test_failed_web_action_does_not_discard_completed_conditional_picks(self):
+        web = {"type": "web_search_call", "status": "failed", "action": {"type": "search"}}
+        answer = "Database-based conditional pick: Fixture A rebounds. Injury status and odds unverified."
+        with patch.object(chat, "post_openai", side_effect=[{"input_tokens": 1000}, response([web, {"type": "message", "content": [{"text": answer}]}])]) as api:
+            result = chat.run_analysis(request(web=True))
+        self.assertEqual(api.call_count, 2)
+        self.assertEqual(result["stop_reason"], "completed")
+        self.assertIn(answer, result["text"])
+        self.assertEqual(result["searches"], 0)
+        self.assertEqual(result["sources"], [])
+        self.assertIn("remain unverified", result["text"])
+
+    def test_general_player_research_does_not_require_sportsbook_lines(self):
+        with patch.object(chat, "post_openai", side_effect=[{"input_tokens": 1000}, response()]) as api:
+            result = chat.run_analysis(request(web=True))
+        body = api.call_args.args[1]
+        self.assertIn("Do not search\nfor or verify sportsbooks by default", body["instructions"])
+        self.assertIn("Only compare betting lines or odds when", body["instructions"])
+        self.assertIn("Do not research sportsbook lines unless the user asks", body["input"][-1]["content"])
+        self.assertNotIn("sportsbook lines and odds remain unverified", result["text"])
+
     def test_upstream_error_does_not_leak_keys_or_messages(self):
         import io
         from urllib.error import HTTPError

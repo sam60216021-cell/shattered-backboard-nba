@@ -48,9 +48,14 @@ The compatibility field research_configured now describes native-tool configurat
 not a separate search credential. Search is optional when available; the model
 must not claim research when it did not run.
 
-Instructions distinguish app projections from live facts, require actual sportsbook
-lines/odds before actionable picks, and consider alternate lines only if verified.
-Unknown availability or offerings require explicit limitations or abstention.
+Instructions use database statistics and existing projections to generate picks
+and conditional parlays even when web research is incomplete. Web research improves
+recommendations but is not a prerequisite. Unverified availability/injuries must
+be labeled; questionable or doubtful players require explicit participation/minutes
+conditions and added risk. Known out/inactive/suspended players remain excluded.
+Model-derived thresholds must be labeled as targets, never as actual sportsbook
+offerings. Missing odds remain unavailable; no invented prices or payouts.
+Unsupported statistical legs may still be omitted rather than fabricated.
 Provider url_citation annotations become inline clickable links. Source records
 include URLs and a UTC retrieved_at timestamp observed when the provider response
 arrived (not the publication date). Retrieved sources alone do not independently
@@ -116,3 +121,13 @@ Official references:
 - https://developers.openai.com/api/docs/models/gpt-6-luna
 - https://developers.openai.com/api/docs/guides/tools-web-search
 - https://developers.openai.com/api/docs/pricing
+
+## Default recommendation workflow
+
+General picks/parlays are player/category recommendations based on the existing
+database, projections and player-specific web research (form, minutes, roles,
+injuries, availability and matchups). Sportsbook lookup and verification are not
+part of the default workflow. Compare lines/odds only when the user provides them
+or explicitly requests that comparison. Supplied lines are inputs, not independently
+verified offerings. Explain strengths, realistic upside and risks; label unknown
+player information without burying ordinary research in missing-odds disclaimers.
