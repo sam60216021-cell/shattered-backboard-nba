@@ -23,7 +23,3 @@ services:
         value: "2"
       - key: NBA_CHAT_SEARCH_INPUT_RESERVE
         value: "6000"
-      - key: NBA_CHAT_MAX_INPUT_PER_CALL
-        value: "24000"
-      - key: NBA_CHAT_MAX_INPUT_TOTAL
-        value: "100000"

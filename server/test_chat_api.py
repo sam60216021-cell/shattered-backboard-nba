@@ -136,10 +136,10 @@ class ChatTests(unittest.TestCase):
         self.assertEqual(api.call_count, 2)
 
     def test_input_budget_is_not_labeled_output_exhaustion(self):
-        with patch.object(chat, "post_openai", return_value={"input_tokens": 25000}):
+        with patch.object(chat, "post_openai", return_value={"input_tokens": 1000001}):
             result = chat.run_analysis(request())
-        self.assertEqual(result["stop_reason"], "input_per_call_limit")
-        self.assertIn("input_per_call_limit", result["text"])
+        self.assertEqual(result["stop_reason"], "model_context_limit")
+        self.assertIn("model_context_limit", result["text"])
 
     def test_failed_and_cancelled_responses_preserve_status(self):
         for status in ("failed", "cancelled"):
@@ -148,12 +148,6 @@ class ChatTests(unittest.TestCase):
                 self.assertEqual(result["stop_reason"], "openai_" + status)
                 self.assertTrue(result["incomplete"])
 
-    def test_shrinking_preflight_failure_returns_diagnostics(self):
-        with patch.object(chat, "post_openai", side_effect=[{"input_tokens": 15000}, TimeoutError()]) as api:
-            result = chat.run_analysis(request(max_input=12000, context={"players": [{"id": "p"}]}))
-        self.assertEqual(result["stop_reason"], "preflight_timeout")
-        self.assertEqual(result["estimated_cost"], 0)
-        self.assertEqual(api.call_count, 2)
 
     def test_reported_input_growth_fits_new_separate_limits(self):
         call = {"type": "function_call", "name": "get_players", "call_id": "db", "arguments": '{"ids":["p"]}'}
@@ -164,8 +158,7 @@ class ChatTests(unittest.TestCase):
             result = chat.run_analysis(request(budget=.25, context={"players": [{"id": "p", "logs": [{"PTS": 21}]}]}))
         self.assertEqual(result["stop_reason"], "completed")
         self.assertEqual(result["input_tokens"], 44320)
-        self.assertEqual(result["diagnostics"][0]["max_input"], 24000)
-        self.assertEqual(result["diagnostics"][0]["aggregate_input_limit"], 100000)
+        self.assertEqual(result["diagnostics"][0]["model_context_tokens"], 1050000)
         body = api.call_args.args[1]
         self.assertEqual(body["max_output_tokens"], 50000)
         outputs = [i for i in body["input"] if i.get("type") == "function_call_output"]
@@ -179,28 +172,6 @@ class ChatTests(unittest.TestCase):
         from pydantic import ValidationError
         with self.assertRaises(ValidationError):
             request(budget=.26)
-
-    def test_invalid_input_env_fails_closed(self):
-        for name in ("NBA_CHAT_MAX_INPUT_PER_CALL", "NBA_CHAT_MAX_INPUT_TOTAL"):
-            for value in ("0", "nan", "-1", "1000001", ""):
-                with patch.dict(os.environ, {name: value}), patch.object(chat, "post_openai") as api:
-                    with self.assertRaises(HTTPException):
-                        chat.run_analysis(request())
-                    api.assert_not_called()
-
-    def test_cumulative_ceiling_not_raised_by_per_call_setting(self):
-        call = {"type": "function_call", "name": "get_players", "call_id": "db", "arguments": '{"ids":[]}'}
-        fixtures = []
-        for i in range(4):
-            fixtures.extend([{"input_tokens": 24000}, response([dict(call, call_id=str(i))], usage={"input_tokens": 24000, "output_tokens": 100})])
-            if i == 3:
-                fixtures.insert(-1, {"input_tokens": 24000})
-        fixtures.extend([{"input_tokens": 24000}, {"input_tokens": 24000}])
-        with patch.object(chat, "post_openai", side_effect=fixtures) as api:
-            result = chat.run_analysis(request())
-        self.assertEqual(result["stop_reason"], "aggregate_input_limit")
-        self.assertEqual(result["input_tokens"], 96000)
-        self.assertEqual(sum(c.args[0] == "responses" for c in api.call_args_list), 4)
 
 
 
@@ -280,18 +251,18 @@ class ChatTests(unittest.TestCase):
             result = chat.run_analysis(request(web=True))
         self.assertFalse(any(t["type"] == "web_search" for t in api.call_args.args[1]["tools"]))
         self.assertEqual(result["searches"], 0)
-        with patch.object(chat, "post_openai", return_value={"input_tokens": 19000}) as api:
+        with patch.object(chat, "post_openai", side_effect=[{"input_tokens": 19000}, response()]) as api:
             result = chat.run_analysis(request(web=True))
-        self.assertEqual(result["stop_reason"], "input_per_call_limit")
-        self.assertEqual(api.call_count, 1)
+        self.assertEqual(result["stop_reason"], "completed")
+        self.assertEqual(api.call_count, 2)
 
     def test_search_reported_usage_overrun_stops_without_more_calls(self):
         web = {"type": "web_search_call", "status": "completed", "action": {"type": "search"}}
-        with patch.object(chat, "post_openai", side_effect=[{"input_tokens": 1000}, response([web], usage={"input_tokens": 25000, "output_tokens": 100})]) as api:
+        with patch.object(chat, "post_openai", side_effect=[{"input_tokens": 1000}, response([web], usage={"input_tokens": 1050001, "output_tokens": 100})]) as api:
             result = chat.run_analysis(request(web=True))
         self.assertEqual(result["stop_reason"], "reported_usage_limit_exceeded")
         self.assertEqual(api.call_count, 2)
-        self.assertEqual(result["input_tokens"], 25000)
+        self.assertEqual(result["input_tokens"], 1050001)
 
     def test_native_search_budget_cannot_be_underpriced(self):
         with patch.dict(os.environ, {"NBA_NATIVE_SEARCH_COST_USD": ".005"}), patch.object(chat, "post_openai") as api:
@@ -326,6 +297,35 @@ class ChatTests(unittest.TestCase):
                     with self.assertRaises(HTTPException):
                         chat.run_analysis(request(web=True))
                     api.assert_not_called()
+
+    def test_legacy_caps_do_not_block_valid_web_request(self):
+        with patch.dict(os.environ, {"NBA_CHAT_MAX_INPUT_PER_CALL": "24000", "NBA_CHAT_MAX_INPUT_TOTAL": "100000"}), patch.object(chat, "post_openai", side_effect=[{"input_tokens": 30000}, response(usage={"input_tokens": 35000, "output_tokens": 100})]) as api:
+            result = chat.run_analysis(request(web=True, max_input=8000))
+        self.assertEqual(result["stop_reason"], "completed")
+        self.assertEqual(api.call_count, 2)
+        self.assertTrue(any(t["type"] == "web_search" for t in api.call_args.args[1]["tools"]))
+        self.assertEqual(api.call_args.args[1]["max_output_tokens"], 50000)
+
+    def test_cumulative_input_is_tracked_without_arbitrary_cutoff(self):
+        fixtures = []
+        for i in range(4):
+            call = {"type": "function_call", "name": "get_players", "call_id": str(i), "arguments": '{"ids":[]}'}
+            fixtures.extend([{"input_tokens": 30000}, response([call] if i < 3 else None, usage={"input_tokens": 30000, "output_tokens": 100})])
+        with patch.object(chat, "post_openai", side_effect=fixtures):
+            result = chat.run_analysis(request())
+        self.assertEqual(result["stop_reason"], "completed")
+        self.assertEqual(result["input_tokens"], 120000)
+        self.assertLess(result["estimated_cost"], .25)
+
+    def test_long_context_usage_applies_published_price_multipliers(self):
+        self.assertAlmostEqual(chat.usage_cost({"input_tokens": 300000, "output_tokens": 1000}, "gpt-6-luna"), .06075)
+
+    def test_long_context_preflight_retains_quarter_dollar_ceiling(self):
+        with patch.object(chat, "post_openai", return_value={"input_tokens": 500000}) as api:
+            result = chat.run_analysis(request())
+        self.assertEqual(result["stop_reason"], "spending_limit")
+        self.assertEqual(api.call_count, 1)
+        self.assertEqual(result["estimated_cost"], 0)
 
     def test_upstream_error_does_not_leak_keys_or_messages(self):
         import io
@@ -363,7 +363,7 @@ class ChatTests(unittest.TestCase):
         self.assertAlmostEqual(chat.usage_cost(usage, "gpt-6-luna"), .00152)
 
     def test_input_gate_prevents_generation(self):
-        with patch.object(chat, "post_openai", return_value={"input_tokens": 25000}) as api:
+        with patch.object(chat, "post_openai", return_value={"input_tokens": 1000001}) as api:
             result = chat.run_analysis(request())
         self.assertTrue(result["incomplete"])
         self.assertEqual(result["estimated_cost"], 0)
@@ -435,14 +435,6 @@ class ChatTests(unittest.TestCase):
 
 
 
-    def test_initial_detail_shrinks_but_directory_remains(self):
-        players = [{"id": str(i), "name": "Player " + str(i)} for i in range(8)]
-        with patch.object(chat, "post_openai", side_effect=[{"input_tokens": 13000},
-                {"input_tokens": 11000}, response()]) as api:
-            chat.run_analysis(request(max_input=12000, context={"players": players}))
-        evidence = api.call_args.args[1]["input"][0]["content"]
-        self.assertIn('"omittedCandidates":4', evidence)
-        self.assertIn('"id":"7"', evidence)
 
     def test_request_body_size_is_enforced_before_parsing(self):
         import asyncio

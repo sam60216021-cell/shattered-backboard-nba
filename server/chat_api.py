@@ -28,6 +28,7 @@ log = logging.getLogger("nba.chat")
 # Free Render storage: intentionally ephemeral, independent of legacy /var/data.
 LEDGER_PATH = os.path.join(tempfile.gettempdir(), "nba-chat-budget-v2.sqlite")
 LUNA_MAX_OUTPUT_TOKENS = 50_000
+MODEL_CONTEXT_LIMITS = {"gpt-6-luna": 1_050_000, "gpt-6.1-sol": 1_050_000}
 
 BUDGET_NOTICE = ("Cost estimates are not a guaranteed billing cap. Local daily accounting "
                  "and duplicate protection reset when the service restarts or spins down. "
@@ -63,20 +64,6 @@ def cost_settings():
                 raise ValueError()
         except (ValueError, TypeError):
             raise unavailable("invalid_cost_settings", "Invalid " + name + "; no provider request started.") from None
-        values[name] = value
-    return values
-
-
-def input_settings():
-    values = {}
-    for name, default, maximum in (("NBA_CHAT_MAX_INPUT_PER_CALL", "24000", 64000),
-                                    ("NBA_CHAT_MAX_INPUT_TOTAL", "100000", 1000000)):
-        try:
-            value = int(os.environ.get(name, default))
-            if not 2000 <= value <= maximum:
-                raise ValueError()
-        except (ValueError, TypeError):
-            raise unavailable("invalid_input_settings", "Invalid " + name + "; no provider request started.") from None
         values[name] = value
     return values
 
@@ -163,7 +150,7 @@ class Analysis(BaseModel):
     analysis_id: str = Field(min_length=16, max_length=80)
     model: str = "gpt-6-luna"
     budget: float = Field(default=.25, ge=.01, le=.25)
-    max_input: Optional[int] = Field(default=None, ge=2000, le=64000)
+    max_input: Optional[int] = Field(default=None, ge=1, le=1_050_000)  # Legacy client field; no longer an admission limit.
     max_searches: int = Field(default=2, ge=0, le=3)
     web: bool = True
     context: dict
@@ -208,7 +195,7 @@ def chat_status(model: str = Query(default="gpt-6-luna"), x_chat_token: str = He
     if model not in PRICES:
         raise HTTPException(422, "Unsupported chat model.")
     cost_settings()
-    limits = input_settings()
+    limits = {"model_context_tokens": MODEL_CONTEXT_LIMITS[model]}
     research_limits = search_settings()
     with ledger() as db:
         db.execute("SELECT 1")
@@ -276,12 +263,15 @@ def cited_text(output, allow_sources):
 
 def usage_cost(usage, model):
     rate, output_rate = PRICES[model]
+    long_context = usage["input_tokens"] > 272000
+    rate *= 2 if long_context else 1
+    output_rate *= 1.5 if long_context else 1
     details = usage.get("input_tokens_details", {})
     read = details.get("cached_tokens", 0)
     write = details.get("cache_write_tokens", 0)
     long_write = details.get("cache_write_tokens_details", {}).get("ttl_12h_tokens", 0)
     regular = max(0, usage["input_tokens"] - read - write)
-    read_rate = .01 if model == "gpt-6-luna" else .10
+    read_rate = (.01 if model == "gpt-6-luna" else .10) * (2 if long_context else 1)
     return (regular * rate + read * read_rate + (write-long_write)*rate*1.25 +
             long_write*rate*2.5 + usage["output_tokens"]*output_rate)/1_000_000
 
@@ -293,17 +283,13 @@ def run_analysis(a):
         row = {"trace_id": trace_id, "stage": stage, "elapsed_ms": int((time.monotonic()-started)*1000), **fields}
         diagnostics.append(row)
         log.warning("analysis=%s", compact(row))
-    limits = input_settings()
-    per_call_limit = min(a.max_input or limits["NBA_CHAT_MAX_INPUT_PER_CALL"], limits["NBA_CHAT_MAX_INPUT_PER_CALL"])
-    if a.model != "gpt-6-luna":
-        per_call_limit = min(per_call_limit, 16000)
-    total_input_limit = limits["NBA_CHAT_MAX_INPUT_TOTAL"]
+    context_limit = MODEL_CONTEXT_LIMITS[a.model]
     research_limits = search_settings()
     max_searches = min(a.max_searches, research_limits["NBA_CHAT_MAX_WEB_SEARCHES"])
     research_configured = max_searches > 0
     native_search_available = "not_tested"
     event("start", model=a.model, output_allowance=LUNA_MAX_OUTPUT_TOKENS if a.model == "gpt-6-luna" else 2500,
-          budget=a.budget, max_input=per_call_limit, client_input_limit=a.max_input, aggregate_input_limit=total_input_limit,
+          budget=a.budget, model_context_tokens=context_limit,
           max_searches=max_searches, web_enabled=a.web, research_configured=research_configured, native_search_available=native_search_available)
     settings = cost_settings()
     players = a.context.get("players", [])
@@ -366,20 +352,6 @@ def run_analysis(a):
             return value
         try:
             count = count_input()
-            # Reduce initial detail only; preserve coverage and the player directory.
-            while step == 0 and count + (research_limits["NBA_CHAT_SEARCH_INPUT_RESERVE"] if any(t["type"] == "web_search" for t in body["tools"]) else 0) > per_call_limit and overview["candidates"]:
-                overview["candidates"] = overview["candidates"][:-4]
-                overview["omittedCandidates"] = len(players) - len(overview["candidates"])
-                conversation[0]["content"] = "APP EVIDENCE: " + compact(overview)
-                count = count_input()
-            # Leave room for a conclusion rather than inviting another tool round
-            # that the unchanged aggregate input ceiling probably cannot admit.
-            if tools and input_total + 2 * (count + (research_limits["NBA_CHAT_SEARCH_INPUT_RESERVE"] if any(t["type"] == "web_search" for t in body["tools"]) else 0)) > total_input_limit:
-                body["tools"] = []
-                count_body["tools"] = []
-                conversation.append({"role": "user", "content": "Input budget is nearly exhausted. Conclude now from available evidence; explicitly state missing checks and unverified sportsbook lines. Do not invent picks."})
-                count = count_input()
-                event("finalization", step=step + 1, reason="aggregate_input_headroom")
         except Exception as error:
             stop_reason = "preflight_timeout" if isinstance(error, TimeoutError) or (isinstance(error, ProviderFailure) and error.code == "timeout") else "preflight_error"
             notes.append("Token preflight failed; no generation was started for this step. No automatic retry.")
@@ -397,14 +369,16 @@ def run_analysis(a):
             body.pop("max_tool_calls", None)
         event("admission", step=step + 1, input_tokens=count, search_input_reserve=search_input_reserve, input_consumed=input_total,
               output_allowance=body["max_output_tokens"], budget=a.budget, estimated_spent=spent,
-              remaining_budget=max(0, a.budget-spent), remaining_input=max(0, total_input_limit-input_total), per_call_limit=per_call_limit)
-        if admission_input > per_call_limit or input_total + admission_input > total_input_limit or body["max_output_tokens"] < 256:
-            stop_reason = "input_per_call_limit" if admission_input > per_call_limit else "aggregate_input_limit" if input_total + admission_input > total_input_limit else "aggregate_output_limit"
-            notes.append(f"Internal {stop_reason}: next input {count:,} plus native search reserve {search_input_reserve:,}, per-call allowance {per_call_limit:,}, consumed input {input_total:,}, cumulative allowance {total_input_limit:,}. This is not an OpenAI output-limit response.")
+              remaining_budget=max(0, a.budget-spent), remaining_context=max(0, context_limit-count-body["max_output_tokens"]))
+        if count + body["max_output_tokens"] > context_limit or body["max_output_tokens"] < 256:
+            stop_reason = "model_context_limit" if count + body["max_output_tokens"] > context_limit else "aggregate_output_limit"
+            notes.append(f"Request needs {count:,} input plus {body['max_output_tokens']:,} output tokens; model context capacity is {context_limit:,}. No generation was started.")
             break
         # Include hosted search content headroom and one possible search fee.
         # Headroom is an estimate, not a provider-enforced token or billing cap.
-        reservation = ((admission_input*rate*2.5 + body["max_output_tokens"]*output_rate)/1_000_000 +
+        long_context = admission_input > 272000
+        reservation = ((admission_input*rate*2.5*(2 if long_context else 1) +
+                        body["max_output_tokens"]*output_rate*(1.5 if long_context else 1))/1_000_000 +
                        (settings["NBA_NATIVE_SEARCH_COST_USD"] if web_allowed else 0))*1.1
         if spent + reservation > a.budget:
             stop_reason = "spending_limit"
@@ -515,9 +489,9 @@ def run_analysis(a):
             stop_reason = "native_tool_limit_exceeded"
             notes.append("Provider returned unexpected native tool executions; stopped without retry.")
             break
-        if usage["input_tokens"] > per_call_limit or input_total > total_input_limit or spent > a.budget:
+        if usage["input_tokens"] + usage["output_tokens"] > context_limit or spent > a.budget:
             stop_reason = "reported_usage_limit_exceeded"
-            notes.append("Reported usage exceeded an input or estimated spending limit after execution; no further call will be made.")
+            notes.append("Reported usage exceeded model context capacity or the estimated spending limit after execution; no further call will be made.")
             break
         functions = [item for item in output if item.get("type") == "function_call"]
         if not functions:
@@ -564,7 +538,7 @@ def run_analysis(a):
     event("finish", native_search_available=native_search_available, estimated_model_cost=model_cost_total,
           estimated_web_search_cost=web_cost_total, uncertain_cost_reservation=uncertain_cost, stop_reason=stop_reason, input_tokens=input_total, output_tokens=output_total,
           tool_calls=calls, searches=searches, successful_searches=successful_searches, estimated_spent=spent, budget=a.budget,
-          remaining_budget=max(0, a.budget-spent), remaining_input=max(0, total_input_limit-input_total))
+          remaining_budget=max(0, a.budget-spent))
     return {"text": text, "notes": notes, "model": a.model, "input_tokens": input_total,
             "output_tokens": output_total, "searches": searches, "successful_searches": successful_searches, "tool_calls": calls,
             "estimated_cost": round(spent, 6), "estimated_model_cost": round(model_cost_total, 6),
@@ -581,7 +555,6 @@ def analyze(a: Analysis, x_chat_token: str = Header(default="")):
     if a.model not in PRICES:
         raise HTTPException(422, "Unsupported model; no automatic fallback is permitted.")
     settings = cost_settings()
-    input_settings()
     search_settings()
     # Reserve before spending. Protection lasts only while local storage survives.
     identity = hashlib.sha256((x_chat_token + a.analysis_id).encode()).hexdigest()

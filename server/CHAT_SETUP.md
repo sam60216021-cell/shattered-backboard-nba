@@ -11,8 +11,6 @@ Chat Completions or install the OpenAI SDK. Authentication remains `X-Chat-Token
 | --- | --- |
 | OPENAI_API_KEY | Server-only credential for model analysis and native web search |
 | NBA_CHAT_TOKEN | Private app access token; unchanged |
-| NBA_CHAT_MAX_INPUT_PER_CALL | 24,000; integer 2,000–64,000 |
-| NBA_CHAT_MAX_INPUT_TOTAL | 100,000; integer 2,000–1,000,000 |
 | NBA_CHAT_MAX_WEB_SEARCHES | 2; integer 0–3; bounds all native web actions, including page opens |
 | NBA_CHAT_SEARCH_INPUT_RESERVE | 6,000; integer 2,000–16,000; estimated hosted-result input headroom per response |
 | NBA_NATIVE_SEARCH_COST_USD | $0.01 per search action; finite $0.01–$0.05 |
@@ -24,9 +22,11 @@ underpricing OpenAI searches. Code defaults apply if the new variables are absen
 Manually created Render services need environment changes applied in the dashboard;
 a YAML edit alone does not change their settings. Keep secrets out of source control.
 
-The updated iOS app sends null max_input for Server default. Older builds sending
-8,000–16,000 still impose that lower explicit cap. Rebuild to use Server default.
-Client-selected budgets below $0.25 remain respected. Requests above $0.25 fail
+The legacy client `max_input` field remains accepted for request compatibility but
+no longer restricts generation. `NBA_CHAT_MAX_INPUT_PER_CALL` and
+`NBA_CHAT_MAX_INPUT_TOTAL` are obsolete and ignored; remove them from Render if
+present. No app rebuild or interface changes are required for this backend fix.
+Client-selected budgets below $0.25 remain respected; requests above $0.25 fail
 validation. A stopped client does not cancel server spending; do not blindly retry.
 
 ## Native research and evidence
@@ -60,25 +60,32 @@ actions are excluded. A completed action without URLs is reported as unverified.
 ## Token and spending protection
 
 - Luna remains gpt-6-luna, max_output_tokens=50000 including reasoning on each call.
-- Per-call and cumulative input controls remain distinct. Initial detail is reduced
-  to fit input plus hosted-search headroom; omitted players remain retrievable.
+- Input admission checks the actual model context: counted input plus configured
+  output must fit 1,050,000 tokens. Luna retains 50,000 output tokens, leaving up to
+  1,000,000 counted input tokens before the independent cost check. There is no
+  arbitrary cumulative input cutoff; cumulative usage is still charged/tracked.
+  Removed repeated shrinking/recounting and premature tool disabling based on the
+  old 100,000 aggregate ceiling. Initial player summaries and targeted tools remain.
 - Up to 160 catalog players, 24 initial summaries, four players/tool, ten logs/player.
   Predictions, database structure and statistical calculations are unchanged.
 - Six model calls, six database tool calls maximum; native actions have their own
   smaller bound. No automatic retries or background resubmission.
 - All request input is counted before generation. Native search result content is
   produced inside OpenAI and cannot be pre-counted exactly. Preflight admits the
-  count plus NBA_CHAT_SEARCH_INPUT_RESERVE against both input ceilings and reserves
-  those tokens, full output, one possible search fee, conservative cache-write
+  counted input against model context capacity and uses NBA_CHAT_SEARCH_INPUT_RESERVE
+  only for cost estimation. It reserves estimated input, full output, one possible
+  search fee, conservative cache-write
   pricing and a 10% margin before dispatch.
 - The reserve and search_context_size are NOT hard limits on hosted result tokens.
   Actual reported input (including search content), output (including reasoning),
   and cache categories are reconciled once; search action fees are added separately.
-  If reported usage exceeds input/budget controls, further calls stop and no final
+  If reported usage exceeds model context capacity or budget, further calls stop and no final
   predictions from that over-limit response are presented. Charges can already
   have occurred. A timeout retains the whole reservation with unknown usage.
 - Standard Luna prices: $0.10/M uncached input, $0.01/M cached input, $0.50/M output,
-  $0.125/M 30-minute cache writes, $0.25/M 12-hour writes. Native search: $0.01/search
+  $0.125/M 30-minute cache writes, $0.25/M 12-hour writes. Above 272,000 input
+  tokens, input/cache rates double and output rates multiply by 1.5, in both cost
+  preflight and actual usage accounting. Native search: $0.01/search
   action plus content tokens at model rates. Page opens/finds have no listed search
   action fee. Failed reported search actions are conservatively included in costs.
 - **$0.25 is an enforced estimated admission ceiling, not a guaranteed invoice cap.**
