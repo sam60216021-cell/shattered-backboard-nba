@@ -131,3 +131,5 @@ part of the default workflow. Compare lines/odds only when the user provides the
 or explicitly requests that comparison. Supplied lines are inputs, not independently
 verified offerings. Explain strengths, realistic upside and risks; label unknown
 player information without burying ordinary research in missing-odds disclaimers.
+
+Completed answers are retained when the provider reports extra native web actions. All reported searches still count toward estimated spending. Pending database tools still execute after an unexpected web-action overrun, and the analysis continues without further web research, subject to the existing spending and context checks; no automatic retry occurs. Context and spending protections remain active.

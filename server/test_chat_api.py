@@ -351,6 +351,48 @@ class ChatTests(unittest.TestCase):
         self.assertEqual(result["sources"], [])
         self.assertIn("remain unverified", result["text"])
 
+    def test_extra_native_actions_preserve_completed_answer_and_costs(self):
+        web = {"type": "web_search_call", "status": "completed",
+               "action": {"type": "search", "sources": [{"url": "https://example.com/report"}]}}
+        answer = "Database pick: Fixture A rebounds, subject to playing time."
+        output = [web, web, {"type": "message", "content": [{"text": answer}]}]
+        with patch.object(chat, "post_openai", side_effect=[{"input_tokens": 1000}, response(output)]) as api:
+            result = chat.run_analysis(request(web=True, max_searches=1))
+        self.assertEqual(api.call_count, 2)
+        self.assertEqual(result["stop_reason"], "completed")
+        self.assertIn(answer, result["text"])
+        self.assertEqual(result["searches"], 2)
+        self.assertAlmostEqual(result["estimated_web_search_cost"], .02)
+        self.assertNotIn("independent verification of every claim", result["text"])
+        self.assertLess(result["estimated_cost"], result["budget"])
+
+    def test_web_overrun_continues_database_tools_for_six_leg_request(self):
+        import copy
+        web = {"type": "web_search_call", "status": "failed", "action": {"type": "search"}}
+        db = {"type": "function_call", "name": "get_players", "call_id": "db", "arguments": '{"ids":["p"]}'}
+        final = "Six database-based player/category ideas; availability unverified."
+        fixtures = iter([{"input_tokens": 18000}, response([web, web, db]),
+                         {"input_tokens": 20000}, response([{"type": "message", "content": [{"text": final}]}])])
+        sent = []
+        def provider(path, body):
+            sent.append((path, copy.deepcopy(body)))
+            return next(fixtures)
+        with patch.object(chat, "post_openai", side_effect=provider):
+            result = chat.run_analysis(request(web=True, max_searches=1,
+                messages=[{"role": "user", "content": "Build a six-leg parlay"}],
+                context={"players": [{"id": "p", "logs": [{"PTS": 21}]}]}))
+        self.assertEqual(result["stop_reason"], "completed")
+        self.assertIn(final, result["text"])
+        self.assertEqual(result["searches"], 0)
+        self.assertEqual(result["sources"], [])
+        self.assertEqual(result["estimated_web_search_cost"], .02)
+        self.assertLess(result["estimated_cost"], .25)
+        self.assertFalse(any(t["type"] == "web_search" for t in sent[-1][1]["tools"]))
+        results = [i for i in sent[-1][1]["input"] if i.get("type") == "function_call_output"]
+        self.assertEqual(len(results), 1)
+        self.assertIn('"PTS":21', results[0]["output"])
+        self.assertEqual(sent[-1][1]["max_output_tokens"], 50000)
+
     def test_general_player_research_does_not_require_sportsbook_lines(self):
         with patch.object(chat, "post_openai", side_effect=[{"input_tokens": 1000}, response()]) as api:
             result = chat.run_analysis(request(web=True))
