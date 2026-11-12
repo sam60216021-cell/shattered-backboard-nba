@@ -1,5 +1,5 @@
 {
-  "as_of": "2026-11-11T14:17:05.757518+00:00",
+  "as_of": "2026-11-12T15:50:03.919406+00:00",
   "players": [
     {
       "name": "Aaron Wiggins",
@@ -2675,6 +2675,12 @@
       "name": "Malik Monk",
       "player_id": "1628370",
       "pos": "G",
+      "team": "SAC"
+    },
+    {
+      "name": "Mason Plumlee",
+      "player_id": "2488653",
+      "pos": "C",
       "team": "SAC"
     },
     {
