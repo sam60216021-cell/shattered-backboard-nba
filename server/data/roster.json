@@ -1,5 +1,5 @@
 {
-  "as_of": "2026-11-12T15:50:03.919406+00:00",
+  "as_of": "2026-11-13T19:44:01.034914+00:00",
   "players": [
     {
       "name": "Aaron Wiggins",
@@ -1817,6 +1817,12 @@
       "name": "Donte DiVincenzo",
       "player_id": "1628978",
       "pos": "G",
+      "team": "MIN"
+    },
+    {
+      "name": "Isaiah Evans",
+      "player_id": "5061585",
+      "pos": "F",
       "team": "MIN"
     },
     {
