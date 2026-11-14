@@ -423,23 +423,23 @@
       "tip": "2026-11-19T01:00Z"
     },
     {
-      "away": "BOS",
-      "away_score": 0,
-      "date": "2026-11-18",
-      "game_id": "401910015",
-      "home": "DEN",
-      "home_score": 0,
-      "period": 0,
-      "status": "Scheduled",
-      "status_code": 1,
-      "tip": "2026-11-19T02:00Z"
-    },
-    {
       "away": "GSW",
       "away_score": 0,
       "date": "2026-11-18",
       "game_id": "401910016",
       "home": "DAL",
+      "home_score": 0,
+      "period": 0,
+      "status": "Scheduled",
+      "status_code": 1,
+      "tip": "2026-11-19T01:00Z"
+    },
+    {
+      "away": "BOS",
+      "away_score": 0,
+      "date": "2026-11-18",
+      "game_id": "401910015",
+      "home": "DEN",
       "home_score": 0,
       "period": 0,
       "status": "Scheduled",
@@ -471,6 +471,6 @@
       "tip": "2026-11-19T03:00Z"
     }
   ],
-  "last_updated": "2026-11-14T12:56:06.005330+00:00",
+  "last_updated": "2026-11-14T21:55:57.426532+00:00",
   "source": "ESPN scoreboard"
 }
