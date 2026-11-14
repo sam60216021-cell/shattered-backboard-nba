@@ -1,5 +1,5 @@
 {
-  "as_of": "2026-11-13T19:44:01.034914+00:00",
+  "as_of": "2026-11-14T12:56:06.005330+00:00",
   "players": [
     {
       "name": "Aaron Wiggins",
@@ -506,6 +506,12 @@
       "team": "CHI"
     },
     {
+      "name": "Orlando Robinson",
+      "player_id": "4593049",
+      "pos": "C",
+      "team": "CHI"
+    },
+    {
       "name": "Patrick Williams",
       "player_id": "1630172",
       "pos": "F",
@@ -572,6 +578,12 @@
       "team": "CLE"
     },
     {
+      "name": "Khalifa Diop",
+      "player_id": "4997530",
+      "pos": "C",
+      "team": "CLE"
+    },
+    {
       "name": "Mario Hezonja",
       "player_id": "2995706",
       "pos": "F",
@@ -581,6 +593,12 @@
       "name": "Meleek Thomas",
       "player_id": "5041951",
       "pos": "G",
+      "team": "CLE"
+    },
+    {
+      "name": "Nae'Qwan Tomlin",
+      "player_id": "5106268",
+      "pos": "F",
       "team": "CLE"
     },
     {
@@ -1840,6 +1858,12 @@
     {
       "name": "Joan Beringer",
       "player_id": "1642866",
+      "pos": "F",
+      "team": "MIN"
+    },
+    {
+      "name": "Johni Broome",
+      "player_id": "4433569",
       "pos": "F",
       "team": "MIN"
     },
