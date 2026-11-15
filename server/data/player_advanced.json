@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-11-15T06:08:27.600135+00:00",
+  "last_updated": "2026-11-15T18:50:53.638279+00:00",
   "method": "FGA + 0.44*FTA + TOV share",
   "players": [
     {
@@ -1029,7 +1029,7 @@
       "team": "DAL"
     },
     {
-      "estimated_usage_pct": 3.75,
+      "estimated_usage_pct": 3.76,
       "games": 9,
       "minutes_per_game": 19.44,
       "name": "Caleb Martin",
@@ -1038,7 +1038,7 @@
       "team": "DAL"
     },
     {
-      "estimated_usage_pct": 20.37,
+      "estimated_usage_pct": 20.38,
       "games": 12,
       "minutes_per_game": 33.17,
       "name": "Cooper Flagg",
@@ -1065,7 +1065,7 @@
       "team": "DAL"
     },
     {
-      "estimated_usage_pct": 16.82,
+      "estimated_usage_pct": 16.84,
       "games": 11,
       "minutes_per_game": 29.91,
       "name": "Kyrie Irving",
@@ -1092,7 +1092,7 @@
       "team": "DAL"
     },
     {
-      "estimated_usage_pct": 6.34,
+      "estimated_usage_pct": 6.35,
       "games": 12,
       "minutes_per_game": 16.33,
       "name": "Morez Johnson Jr.",
@@ -1110,7 +1110,7 @@
       "team": "DAL"
     },
     {
-      "estimated_usage_pct": 11.09,
+      "estimated_usage_pct": 11.1,
       "games": 11,
       "minutes_per_game": 24.64,
       "name": "Naji Marshall",
@@ -1119,16 +1119,16 @@
       "team": "DAL"
     },
     {
-      "estimated_usage_pct": 12.65,
+      "estimated_usage_pct": 12.59,
       "games": 13,
       "minutes_per_game": 31.31,
       "name": "P.J. Washington",
       "player_id": "1629023",
-      "possessions_used_per_36": 16.74,
+      "possessions_used_per_36": 16.65,
       "team": "DAL"
     },
     {
-      "estimated_usage_pct": 7.51,
+      "estimated_usage_pct": 7.52,
       "games": 5,
       "minutes_per_game": 14.6,
       "name": "Santi Aldama",
@@ -1155,7 +1155,7 @@
       "team": "DAL"
     },
     {
-      "estimated_usage_pct": 6.17,
+      "estimated_usage_pct": 6.18,
       "games": 12,
       "minutes_per_game": 16.58,
       "name": "Walter Clayton Jr.",
@@ -2820,16 +2820,16 @@
       "team": "MIN"
     },
     {
-      "estimated_usage_pct": 14.66,
+      "estimated_usage_pct": 14.6,
       "games": 12,
       "minutes_per_game": 31.25,
       "name": "Ayo Dosunmu",
       "player_id": "1630245",
-      "possessions_used_per_36": 19.83,
+      "possessions_used_per_36": 19.73,
       "team": "MIN"
     },
     {
-      "estimated_usage_pct": 6.96,
+      "estimated_usage_pct": 6.97,
       "games": 12,
       "minutes_per_game": 13.25,
       "name": "Bones Hyland",
@@ -2892,7 +2892,7 @@
       "team": "MIN"
     },
     {
-      "estimated_usage_pct": 16.76,
+      "estimated_usage_pct": 16.77,
       "games": 12,
       "minutes_per_game": 27.67,
       "name": "LaMelo Ball",
@@ -2919,7 +2919,7 @@
       "team": "MIN"
     },
     {
-      "estimated_usage_pct": 9.55,
+      "estimated_usage_pct": 9.56,
       "games": 10,
       "minutes_per_game": 21.1,
       "name": "Terrence Shannon Jr.",
@@ -3261,7 +3261,7 @@
       "team": "OKC"
     },
     {
-      "estimated_usage_pct": 7.53,
+      "estimated_usage_pct": 7.52,
       "games": 13,
       "minutes_per_game": 21.31,
       "name": "Aday Mara",
@@ -3270,12 +3270,12 @@
       "team": "OKC"
     },
     {
-      "estimated_usage_pct": 15.21,
+      "estimated_usage_pct": 15.28,
       "games": 11,
       "minutes_per_game": 27.27,
       "name": "Ajay Mitchell",
       "player_id": "1642349",
-      "possessions_used_per_36": 22.53,
+      "possessions_used_per_36": 22.65,
       "team": "OKC"
     },
     {
@@ -3288,7 +3288,7 @@
       "team": "OKC"
     },
     {
-      "estimated_usage_pct": 5.96,
+      "estimated_usage_pct": 5.95,
       "games": 13,
       "minutes_per_game": 18.08,
       "name": "Bennett Stirtz",
@@ -3342,7 +3342,7 @@
       "team": "OKC"
     },
     {
-      "estimated_usage_pct": 12.74,
+      "estimated_usage_pct": 12.73,
       "games": 13,
       "minutes_per_game": 26.54,
       "name": "Jared McCain",
@@ -3405,7 +3405,7 @@
       "team": "OKC"
     },
     {
-      "estimated_usage_pct": 25.58,
+      "estimated_usage_pct": 25.56,
       "games": 13,
       "minutes_per_game": 33.31,
       "name": "Shai Gilgeous-Alexander",

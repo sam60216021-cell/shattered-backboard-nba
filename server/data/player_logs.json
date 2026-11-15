@@ -1,6 +1,6 @@
 {
-  "games_imported": 49,
-  "last_updated": "2026-11-15T06:08:27.600135+00:00",
+  "games_imported": 42,
+  "last_updated": "2026-11-15T18:50:53.638279+00:00",
   "logs_by_player": {
     "1626145": [
       {
@@ -31881,7 +31881,7 @@
         "player_id": "1628380",
         "plus_minus": 8.0,
         "pts": 8.0,
-        "reb": 5.0,
+        "reb": 6.0,
         "season": 2027,
         "stl": 0.0,
         "team": "CHI",
@@ -77094,7 +77094,7 @@
       {
         "ast": 1.0,
         "blk": 1.0,
-        "fga": 10.0,
+        "fga": 9.0,
         "fgm": 3.0,
         "fta": 2.0,
         "ftm": 2.0,
@@ -77105,7 +77105,7 @@
         "player_id": "1629023",
         "plus_minus": -20.0,
         "pts": 10.0,
-        "reb": 4.0,
+        "reb": 3.0,
         "season": 2027,
         "stl": 0.0,
         "team": "DAL",
@@ -129371,7 +129371,7 @@
         "pts": 14.0,
         "reb": 5.0,
         "season": 2027,
-        "stl": 3.0,
+        "stl": 2.0,
         "team": "CHI",
         "three_p": 2.0,
         "three_pa": 4.0,
@@ -152767,13 +152767,13 @@
         "player_id": "1630245",
         "plus_minus": 1.0,
         "pts": 24.0,
-        "reb": 5.0,
+        "reb": 4.0,
         "season": 2027,
         "stl": 3.0,
         "team": "MIN",
         "three_p": 0.0,
         "three_pa": 2.0,
-        "tov": 3.0
+        "tov": 2.0
       },
       {
         "ast": 1.0,
@@ -178789,7 +178789,7 @@
         "player_id": "1630573",
         "plus_minus": 24.0,
         "pts": 12.0,
-        "reb": 5.0,
+        "reb": 4.0,
         "season": 2027,
         "stl": 0.0,
         "team": "BOS",
@@ -252077,7 +252077,7 @@
       },
       {
         "ast": 3.0,
-        "blk": 9.0,
+        "blk": 8.0,
         "fga": 19.0,
         "fgm": 15.0,
         "fta": 10.0,
@@ -318717,7 +318717,7 @@
         "team": "OKC",
         "three_p": 0.0,
         "three_pa": 1.0,
-        "tov": 2.0
+        "tov": 3.0
       },
       {
         "ast": 0.0,
@@ -387941,7 +387941,7 @@
         "player_id": "203083",
         "plus_minus": -9.0,
         "pts": 0.0,
-        "reb": 4.0,
+        "reb": 5.0,
         "season": 2027,
         "stl": 0.0,
         "team": "NYK",
@@ -432151,7 +432151,7 @@
         "player_id": "5175647",
         "plus_minus": 17.0,
         "pts": 10.0,
-        "reb": 2.0,
+        "reb": 3.0,
         "season": 2027,
         "stl": 3.0,
         "team": "BOS",
@@ -435299,7 +435299,7 @@
       }
     ]
   },
-  "rows_imported": 1100,
+  "rows_imported": 939,
   "season": 2027,
   "source": "ESPN completed game box scores"
 }
