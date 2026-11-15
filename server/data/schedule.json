@@ -4,11 +4,11 @@
   "games": [
     {
       "away": "IND",
-      "away_score": 47,
+      "away_score": 51,
       "date": "2026-11-15",
       "game_id": "401909985",
       "home": "PHI",
-      "home_score": 40,
+      "home_score": 47,
       "period": 2,
       "status": "In Progress",
       "status_code": 2,
@@ -459,6 +459,6 @@
       "tip": "2026-11-20T01:00Z"
     }
   ],
-  "last_updated": "2026-11-15T18:50:53.638279+00:00",
+  "last_updated": "2026-11-15T18:57:54.098448+00:00",
   "source": "ESPN scoreboard"
 }
