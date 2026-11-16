@@ -196,6 +196,57 @@ class DataTests(unittest.TestCase):
         self.assertEqual(result.status_code, 503)
         self.assertEqual(result.json()["detail"]["code"], "app_data_sync_unavailable")
 
+    def test_every_major_category_and_game_model_values_reach_ai(self):
+        game_values = {"home_moneyline": -150, "away_moneyline": 150,
+                       "home_win_probability": .6, "away_win_probability": .4,
+                       "spread": 3.5, "total": 225.5,
+                       "source": "existing app-generated predictions"}
+        game = self.upload({"schedule": {"game_id": "g", "player_props": [{"stat": "PTS", "line": 25.5}]},
+                            "team_projection": game_values, "simulation": game_values,
+                            "schedule_simulation": {**game_values, "spread": 4.0},
+                            "stored_injuries": [{"name": "Player Example", "status": "QUESTIONABLE"}],
+                            "stored_lineups": [{"name": "Player Example", "position": "G"}],
+                            "stored_props": [{"stat": "REB", "line": 8.5}]})
+        player = self.upload({"identity": {"player_id": "p", "name": "Player Example", "team": "BOS"},
+                              "advanced": {"estimated_usage_pct": 21},
+                              "projections": [{"game_id": "g", "stats": {"PTS": {"analytics": 26, "numberModels": {"ai": 25, "blended": 25.5}, "simulation": {"p90": 34}}}, "defender_estimate": {"name": "Defender"}}],
+                              "pipeline_outputs": [{"game_id": "g", "model": "Blended", "value": 25.5}],
+                              "tracked": [{"gameID": "g", "actualValue": 27}]})
+        team = self.upload({"standings": {"wins": 10}, "advanced": {"def_rating": 110},
+                            "position_splits": [{"position": "GUARD", "pts_allowed": 24}]})
+        health = self.upload({"backtest": {"samples": 20}, "weights": {"PTS": 1.0}})
+        records = {"game:g": game, "player:p": player, "team:BOS": team, "model_health": health}
+        results = {}
+        for kind in ("coverage", "players", "player", "history", "team", "matchup", "projections"):
+            r = self.client.post("/nba/ai/query", headers=self.headers, json={"records": records, "query": {
+                "kind": kind, "player_id": "p", "team": "BOS", "game_id": "g"}})
+            self.assertEqual(r.status_code, 200)
+            results[kind] = r.json()
+        self.assertEqual(len(results["coverage"]["query_categories"]), 6)
+        self.assertTrue(results["players"]["rows"])
+        self.assertEqual(results["player"]["app_advanced"]["estimated_usage_pct"], 21)
+        self.assertEqual(results["history"]["total"], 3)
+        self.assertEqual(results["team"]["app"]["advanced"]["def_rating"], 110)
+        matchup = results["matchup"]["rows"][0]["app"]
+        self.assertEqual(matchup["simulation"], game_values)
+        self.assertEqual(matchup["team_projection"], game_values)
+        self.assertEqual(matchup["schedule_simulation"]["spread"], 4.0)
+        for field in ("stored_injuries", "stored_lineups", "stored_props"):
+            self.assertTrue(matchup[field])
+        self.assertTrue(matchup["schedule"]["player_props"])
+        self.assertTrue(results["projections"]["rows"][0]["defender_estimate"])
+        self.assertTrue(results["projections"]["pipeline_outputs"]["rows"])
+        self.assertTrue(results["projections"]["tracked"]["rows"])
+        self.assertEqual(results["projections"]["model_health"]["weights"]["PTS"], 1)
+        function = {"type": "function_call", "name": "query_nba_data", "call_id": "game", "arguments": json.dumps({"queries": [{"kind": "matchup", "game_id": "g"}]})}
+        with patch.object(chat, "post_openai", side_effect=[{"input_tokens": 1000}, response([function]),
+                {"input_tokens": 2000}, response()]) as provider:
+            result = chat.run_analysis(request(context={"players": [], "data_records": records}))
+        self.assertEqual(result["stop_reason"], "completed")
+        output = next(r for r in provider.call_args.args[1]["input"] if r.get("type") == "function_call_output")
+        self.assertEqual(json.loads(output["output"])["results"][0]["rows"][0]["app"]["simulation"], game_values)
+        self.assertIn("not live markets", provider.call_args.args[1]["instructions"])
+
     def test_body_limit_applies_to_sync(self):
         response = self.client.post("/nba/ai/sync/record", headers=self.headers, content=b"x" * 700001)
         self.assertEqual(response.status_code, 413)

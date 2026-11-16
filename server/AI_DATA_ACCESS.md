@@ -40,7 +40,7 @@ retrieve historical IDs; no new fuzzy identity guessing is introduced.
 | Player and team Monte Carlo | `SimulationEngine` (used by player analytics and `ScheduleStore`) | Existing engine produces player quantiles and game score distributions/win probabilities for synchronized slate projections. Not a new server model. |
 | Team baseline probabilities | `TeamProjection`, `OddsMath` | `matchup.app.team_projection`; model-implied probabilities, not sportsbook odds. |
 | Graded projection history and backtests | `ProjectionTracker` JSON store; `LocalDataService.latestBacktestSummary` | `projections.tracked`, model-health bias/MAE, saved weights. Records outside a requested game are filtered. |
-| Market lines already in app | `StoredProp`, `ScheduleGame.playerProps` | Matchup snapshot; app-supplied and freshness unverified. No sportsbook verification requirement is added. |
+| App-generated player props | `StoredProp`, `ScheduleGame.playerProps` | Matchup snapshot; app-supplied and freshness unverified. No sportsbook verification requirement is added. |
 
 ## Structured endpoints and synchronization
 
@@ -102,3 +102,24 @@ build to synchronize app-only history and projections; it requires these new
 backend routes. The original $0.25 admission checks, 50,000 output allowance,
 authentication, native web toggle and no-automatic-retry behavior are unchanged.
 Cost estimates remain conservative estimates, not guaranteed provider billing caps.
+
+
+## Game-level prediction clarification
+
+The app does not use live sportsbook markets. AI exports now include both home
+and away moneyline-style values directly from `TeamProjection.homeML/awayML` and
+`GameSimulationResult.impliedHomeML/impliedAwayML`, alongside both win
+probabilities, projected scores, spreads and totals. The exact existing
+`ScheduleStore.simulations` cache is also synchronized as `schedule_simulation`,
+separate from fresh calculations and the standings-based `team_projection`.
+Positive spread means home favored/projected to outscore away; it is not an
+invented sportsbook handicap. Player props remain existing app predictions.
+
+Verification: Xcode runtime compared exported moneylines, probabilities, spreads
+and totals to the unchanged engine for nine actual slate games; every value
+matched exactly. The category integration check authenticates and queries every
+major retrieval category, checks game/player models, props, injuries, lineups,
+defense, history and model health, then verifies game predictions reach the next
+model request through tool continuation. The suite now has 64 passing tests.
+No sportsbook API or new prediction algorithm was added. Phone synchronization
+is required for these app-only outputs; absent caches remain absent.

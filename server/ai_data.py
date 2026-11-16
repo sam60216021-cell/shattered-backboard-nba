@@ -191,6 +191,12 @@ class DataAccess:
                 "unavailable": {"play_by_play": "Not collected by the existing app or feed publisher",
                                 "rotation_stints": "No substitution/stint feed; minutes and projected lineups only",
                                 "tracking_matchups": "Defender assignments are app estimates, not measured tracking data"},
+                "query_categories": {
+                    "players": "Identity and roster search", "player": "Season stats and advanced usage",
+                    "history": "Raw game logs, minutes and independent statistical summaries",
+                    "team": "Standings, defensive metrics and position splits",
+                    "matchup": "Schedules, scores, injuries, lineups, app-generated moneylines, win probabilities, spreads, totals and player props; team_projection, simulation and cached schedule_simulation are separate",
+                    "projections": "Player statistical predictions, Analytics/AI/Blended, simulations, defender estimates, tracked forecasts and model health"},
                 "projections": "App-only outputs require current phone sync; never inferred from raw statistics",
                 "history": "Paginate history; date/season/opponent filters apply before pagination. Missing stats remain null."}
 
