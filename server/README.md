@@ -53,3 +53,5 @@ For manual Web Service setup, use this start command:
 ```text
 uvicorn app:app --host 0.0.0.0 --port $PORT --workers 1 --no-access-log
 ```
+
+See [AI_DATA_ACCESS.md](AI_DATA_ACCESS.md) for the complete source inventory, targeted AI queries, incremental app snapshot synchronization, measured validation, and unavailable data.

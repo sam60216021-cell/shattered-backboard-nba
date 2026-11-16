@@ -147,7 +147,11 @@ numerical target, label it a model-derived estimate, never an actual sportsbook
 line. Never invent odds or payouts.
 Explain correlated legs; never multiply marginal estimates and call the result a
 calibrated parlay probability. Do not promise wins or place bets.
-Use get_players to inspect omitted candidates or raw history. Narrow broad
+Use query_nba_data to access the full Render archive and synchronized app data,
+including players outside the uploaded shortlist. For independent analysis, retrieve
+history and matchup/team evidence first, then retrieve projections and compare.
+Missing snapshot records or empty feeds mean unavailable, never zero or confirmed.
+Use get_players for the compact current shortlist. Narrow broad
 requests internally using the supplied database. Use native web_search when enabled
 to improve player-specific injury, availability, role and matchup information; reuse evidence.
 If research fails or has no useful sources, finish using the database evidence
@@ -173,11 +177,11 @@ class Analysis(BaseModel):
     context: dict
     messages: list[dict] = Field(max_length=8)
 
-def authorize(token):
+def authorize(token, require_openai=True):
     expected = os.environ.get("NBA_CHAT_TOKEN", "")
     if not expected or not hmac.compare_digest(token or "", expected):
         raise HTTPException(401, "Configure the private chat access token.")
-    if not os.environ.get("OPENAI_API_KEY"):
+    if require_openai and not os.environ.get("OPENAI_API_KEY"):
         raise unavailable("missing_openai_key", "The server needs its OpenAI API key.")
 
 @contextmanager
@@ -237,6 +241,16 @@ def function(name, description, properties, required):
 
 TOOLS = [function("get_players", "Retrieve up to 4 player summaries and up to 10 raw logs each, by exact directory ID.",
                   {"ids": {"type": "array", "items": {"type": "string"}, "maxItems": 4}}, ["ids"])]
+# This tool reads existing feeds and only the app snapshot attached to this analysis.
+from ai_data import DataAccess, DataQuery
+_data_properties = DataQuery.model_json_schema()["properties"]
+_data_properties = {k: {p: v for p, v in spec.items() if p not in {"default", "title"}}
+                    for k, spec in _data_properties.items()}
+TOOLS.append(function("query_nba_data", "Batch up to four targeted queries for stored NBA players, full paginated history, team defense, matchups and separately app projections. Search players by name first. Null filters mean no filter. Use offset=0, limit=20 initially; next_offset retrieves more. History summaries cover all matches, not just the page. coverage lists unavailable sources.",
+                      {"queries": {"type": "array", "minItems": 1, "maxItems": 4,
+                                   "items": {"type": "object", "properties": _data_properties,
+                                             "required": list(_data_properties), "additionalProperties": False}}}, ["queries"]))
+TOOL_NAMES = {"get_players", "query_nba_data"}
 WEB_TOOL = {"type": "web_search", "search_context_size": "low", "external_web_access": True,
             "return_token_budget": "default"}
 
@@ -321,7 +335,10 @@ def run_analysis(a):
     catalog = {p["id"]: p for p in players}
     log.warning("stage=context players=%d games=%d bytes=%d model=%s", len(players),
                 len(a.context.get("games", [])), len(compact(a.context).encode()), a.model)
-    overview = {k: v for k, v in a.context.items() if k != "players"}
+    data_access = DataAccess(a.context.get("data_records", {}))
+    overview = {k: v for k, v in a.context.items() if k not in {"players", "data_records"}}
+    overview["dataAccess"] = {"tool": "query_nba_data", "appRecords": len(data_access.records),
+                              "scope": "All server players and historical logs, paginated; app-only projections require sync. Ask coverage for missing feeds."}
     overview["directory"] = [{k: p.get(k) for k in ("id", "name", "team", "game", "latestLog", "samples")} for p in players]
     overview["candidates"] = []
     for player in players[:24]:
@@ -470,7 +487,7 @@ def run_analysis(a):
               response_model=safe_model, input_tokens=safe_number(safe_usage.get("input_tokens")),
               output_tokens=safe_number(safe_usage.get("output_tokens")), reasoning_tokens=reasoning_tokens,
               model_matches=result.get("model", "").split("-202")[0] == a.model,
-              tool_count=len(functions), tool_types=[item.get("name") if item.get("name") in {"get_players"} else "unsupported" for item in functions],
+              tool_count=len(functions), tool_types=[item.get("name") if item.get("name") in TOOL_NAMES else "unsupported" for item in functions],
               output_types=[item.get("type") if item.get("type") in {"message", "reasoning", "function_call", "web_search_call"} else "other" for item in output])
         if not safe_usage or safe_number(safe_usage.get("input_tokens")) is None or safe_number(safe_usage.get("output_tokens")) is None or result.get("model", "").split("-202")[0] != a.model or result.get("service_tier", "default") != "default":
             spent += reservation
@@ -529,7 +546,14 @@ def run_analysis(a):
             if calls <= 6:
                 try:
                     args = json.loads(item["arguments"])
-                    if item["name"] == "get_players":
+                    if item["name"] == "query_nba_data":
+                        queries = args.get("queries", [args])
+                        if not isinstance(queries, list) or not 1 <= len(queries) <= 4:
+                            raise ValueError("Invalid query batch")
+                        answers = [data_access.query(query) for query in queries]
+                        answer = {"results": answers} if "queries" in args else answers[0]
+                        tool_reason = "data_retrieved" if "error" not in answer else "data_unavailable"
+                    elif item["name"] == "get_players":
                         ids = list(dict.fromkeys(args.get("ids", [])[:4]))
                         answer = {"players": [catalog[i] for i in ids if i in catalog and i not in retrieved_players],
                                   "alreadyProvidedIDs": [i for i in ids if i in retrieved_players],
@@ -541,7 +565,7 @@ def run_analysis(a):
                     tool_reason = "invalid_arguments_or_tool_error"
                     answer = {"error": "Tool failed; data is unavailable. Do not infer the missing result."}
             tool_status = "error" if "error" in answer else "completed"
-            event("tool_result", step=step + 1, tool=item.get("name") if item.get("name") in {"get_players"} else "unsupported",
+            event("tool_result", step=step + 1, tool=item.get("name") if item.get("name") in TOOL_NAMES else "unsupported",
                   status=tool_status, reason=tool_reason, searches=searches, successful_searches=successful_searches, duration_ms=int((time.monotonic()-tool_started)*1000),
                   returned_players=len(answer.get("players", [])), returned_sources=len(answer.get("sources", [])))
             if tool_status == "error":
@@ -576,6 +600,7 @@ def analyze(a: Analysis, x_chat_token: str = Header(default="")):
         raise HTTPException(422, "Unsupported model; no automatic fallback is permitted.")
     settings = cost_settings()
     search_settings()
+    DataAccess(a.context.get("data_records", {})).require_snapshot()
     # Reserve before spending. Protection lasts only while local storage survives.
     identity = hashlib.sha256((x_chat_token + a.analysis_id).encode()).hexdigest()
     with ledger() as db:

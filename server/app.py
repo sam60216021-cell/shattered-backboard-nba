@@ -24,6 +24,8 @@ app.add_middleware(GZipMiddleware, minimum_size=1_024, compresslevel=5)
 
 from chat_api import router as chat_router
 app.include_router(chat_router)
+from ai_data import router as ai_data_router
+app.include_router(ai_data_router)
 
 
 class ChatBodyLimit:
@@ -32,7 +34,7 @@ class ChatBodyLimit:
         self.app = app
 
     async def __call__(self, scope, receive, send):
-        if scope.get("type") != "http" or scope.get("path") != "/nba/chat":
+        if scope.get("type") != "http" or (scope.get("path") != "/nba/chat" and not scope.get("path", "").startswith("/nba/ai/")):
             return await self.app(scope, receive, send)
         chunks = []
         size = 0
@@ -95,7 +97,7 @@ def index_head():
 @app.get("/health")
 def health():
     return {"status": "ok", "manifest": (DATA / "manifest.json").exists(),
-            "chat_revision": "optional-research-v2", "chat_storage": "ephemeral"}
+            "chat_revision": "data-access-v1", "chat_storage": "ephemeral"}
 
 
 @app.head("/health", status_code=200)
