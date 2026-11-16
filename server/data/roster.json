@@ -1,5 +1,5 @@
 {
-  "as_of": "2026-11-15T18:57:54.098448+00:00",
+  "as_of": "2026-11-16T18:52:06.724556+00:00",
   "players": [
     {
       "name": "Aaron Wiggins",
@@ -62,12 +62,6 @@
       "team": "ATL"
     },
     {
-      "name": "Keshon Gilbert",
-      "player_id": "1642933",
-      "pos": "G",
-      "team": "ATL"
-    },
-    {
       "name": "Kingston Flemings",
       "player_id": "5149077",
       "pos": "G",
@@ -94,6 +88,12 @@
     {
       "name": "Onyeka Okongwu",
       "player_id": "1630168",
+      "pos": "F",
+      "team": "ATL"
+    },
+    {
+      "name": "Rafael Castro",
+      "player_id": "4684443",
       "pos": "F",
       "team": "ATL"
     },

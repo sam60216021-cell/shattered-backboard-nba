@@ -1,35 +1,35 @@
 {
   "feeds": {
     "lineups": {
-      "bytes": 23021,
-      "sha256": "fee3b8c7a13bb6b688ad28a21c54578cd81a58ef936b99f4d9d4e0641bee7cbd"
+      "bytes": 20477,
+      "sha256": "1112c834cee80538b147c57625592c0660452121255dac52035b594c508829af"
     },
     "player_advanced": {
-      "bytes": 118561,
-      "sha256": "f4cdcef0e8ff0e9829ed85d3d6c224ec3c2293924d88b980a9719a60d0163912"
+      "bytes": 119020,
+      "sha256": "c0b533773871218816a1ef8545c12f68e153d199a4039ec6e2a366bc2a9da88e"
     },
     "player_logs": {
-      "bytes": 9532930,
-      "sha256": "47145d978332d25f5db7fa177f5810779900187246641c480c60e71e2d98e296"
+      "bytes": 9627816,
+      "sha256": "fefb848bd7b288cb2ee5555123759efdbb947bfef00b71cdab24d2718cc3831b"
     },
     "roster": {
-      "bytes": 59052,
-      "sha256": "3ae5d7541e7f3029b5b159d0e9bc535a163b2c4fa0b07f69ca164c23bba7475e"
+      "bytes": 59051,
+      "sha256": "1b568602a090f8d46c10321e004fb5057c8687115fd338f52d21de75136f5e86"
     },
     "schedule": {
-      "bytes": 10185,
-      "sha256": "49e8d00bb188d9670ce19ebf09701095b4171309e5fbfa0cdf3f40de41093194"
+      "bytes": 10181,
+      "sha256": "1f9406b7235fdde8445f6acce467d8cfba1acfe8d92907da3c97cbeb4999cb9c"
     },
     "standings": {
-      "bytes": 13487,
-      "sha256": "daaedf0532e1a9d364662161295bcc2adc90744cef5d97147c3fb9ec68e3b081"
+      "bytes": 13482,
+      "sha256": "7b72ee1ebcbc29b72ef48d171e6dc20317950c5e843e0176194d97edb50dcd47"
     },
     "stats": {
-      "bytes": 177863,
-      "sha256": "e2bf14d20f5c7206e9c4ec7301f1a76dcc7d25596651d855588065125e007b08"
+      "bytes": 178554,
+      "sha256": "0ed06bcc5663864e0aef217ceb6550d3a03f2269cd1e2169f88c45eb2be1f02a"
     }
   },
-  "generated_at": "2026-11-15T18:57:54.098448+00:00",
+  "generated_at": "2026-11-16T18:52:06.724556+00:00",
   "schema_version": 3,
   "season": 2027,
   "source": "desktop-nba-updater"
