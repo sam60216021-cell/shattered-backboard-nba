@@ -285,7 +285,7 @@ class DataAccess:
                 rows = [r for r in rows if r.get("game_id") == q.game_id]
             return {**page(rows, q), "model_outputs": "ios_snapshot; estimates, not confirmed outcomes or sportsbook lines",
                     "pipeline_outputs": page([r for r in record.get("pipeline_outputs", []) if not q.game_id or r.get("game_id") == q.game_id], q),
-                    "pipeline_run_at": record.get("pipeline_run_at"),
+                    "pipeline_run_at": self.app("model_health").get("pipeline_run_at", record.get("pipeline_run_at")),
                     "model_health": self.app("model_health"),
                     "tracked": page([r for r in record.get("tracked", []) if not q.game_id or r.get("gameID") == q.game_id], q), "missing_app_records": self.missing}
         if q.kind == "team":

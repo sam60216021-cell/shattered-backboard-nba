@@ -127,13 +127,15 @@ class DataTests(unittest.TestCase):
         player = self.upload({"projections": [{"game_id": "g", "stats": {"PTS": {"analytics": 25, "ai": 23}}}],
                               "pipeline_outputs": [{"game_id": "g", "model": "Blended", "value": 24}]})
         game = self.upload({"schedule": {"game_id": "g"}, "simulation": {"home_win_probability": .6}})
-        records = {"player:p": player, "game:g": game}
+        health = self.upload({"pipeline_run_at": "2026-11-15T12:00:00Z"})
+        records = {"player:p": player, "game:g": game, "model_health": health}
         result = self.client.post("/nba/ai/query", headers=self.headers, json={"records": records, "query": {"kind": "matchup", "team": "BOS", "opponent": "NYK"}})
         self.assertEqual(result.status_code, 200)
         self.assertEqual(result.json()["rows"][0]["app"]["simulation"]["home_win_probability"], .6)
         self.assertEqual(result.json()["rows"][0]["lineups"][0]["away_lineup"][0]["status"], "QUESTIONABLE")
         projected = data.DataAccess(records).query({"kind": "projections", "player_id": "p", "game_id": "g"})
         self.assertEqual(projected["pipeline_outputs"]["rows"][0]["value"], 24)
+        self.assertEqual(projected["pipeline_run_at"], "2026-11-15T12:00:00Z")
         historical = data.DataAccess(records).query({"kind": "history", "player_id": "p"})
         self.assertNotIn("projections", historical)
 
