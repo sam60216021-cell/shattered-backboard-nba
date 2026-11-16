@@ -43,7 +43,7 @@ def fetch_text(url: str) -> str:
 def write_json(path: Path, payload: dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_suffix(path.suffix + ".tmp")
-    temporary.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    temporary.write_text(json.dumps(payload, indent=None if path.name == "game_details.json" else 2, sort_keys=True) + "\n", encoding="utf-8")
     temporary.replace(path)
 
 
@@ -135,7 +135,11 @@ def refresh_roster(output: Path, generated_at: str) -> dict:
                 # Preserve the NBA/stat-feed ID when names match so player logs remain linked.
                 player_id = str(prior.get("player_id") or athlete.get("id") or "")
                 if player_id:
-                    players.append({"player_id": player_id, "name": name, "team": team, "pos": position})
+                    players.append({"player_id": player_id, "espn_id": str(athlete.get("id") or ""),
+                                    "name": name, "team": team, "pos": position,
+                                    "injuries": [{"status": injury.get("status"), "reported_at": injury.get("date")}
+                                                 for injury in athlete.get("injuries") or []],
+                                    "injury_checked_at": generated_at})
 
     deduped = {row["player_id"]: row for row in players}
     players = sorted(deduped.values(), key=lambda row: (row["team"], row["name"]))
@@ -191,7 +195,41 @@ def refresh_schedule(generated_at: str, days: int = 5) -> dict:
     }
 
 
-def refresh_player_logs(output: Path, generated_at: str, season: int, lookback_days: int = 7) -> dict:
+def normalize_game_details(summary, game_id, game_date, away, home, generated_at, known_players):
+    """Keep observed events and box scores only; exclude markets and provider predictions."""
+    box = summary.get("boxscore") or {}
+    identities = {}
+    starters = []
+    for block in box.get("players") or []:
+        team = normalize_team((block.get("team") or {}).get("abbreviation"))
+        for group in block.get("statistics") or []:
+            for row in group.get("athletes") or []:
+                athlete = row.get("athlete") or {}
+                eid = str(athlete.get("id") or "")
+                name = athlete.get("displayName")
+                identities[eid] = {"espn_id": eid, "player_id": str((known_players.get(normalized_name(name)) or {}).get("player_id") or eid), "name": name, "team": team}
+                if row.get("starter") and not row.get("didNotPlay"):
+                    starters.append(identities[eid])
+    events = []
+    for play in summary.get("plays") or []:
+        events.append({"event_id": play.get("id"), "sequence": play.get("sequenceNumber"),
+                       "type": (play.get("type") or {}).get("text"), "text": play.get("text"),
+                       "period": (play.get("period") or {}).get("number"),
+                       "clock": (play.get("clock") or {}).get("displayValue"),
+                       "away_score": play.get("awayScore"), "home_score": play.get("homeScore"),
+                       "participants": [identities.get(str((v.get("athlete") or {}).get("id")),
+                                        {"espn_id": str((v.get("athlete") or {}).get("id") or "")})
+                                        for v in play.get("participants") or []]})
+    return {"game_id": game_id, "date": game_date, "away": away, "home": home,
+            "retrieved_at": generated_at, "source_url": f"https://www.espn.com/nba/playbyplay/_/gameId/{game_id}",
+            "starters": starters, "events": events,
+            "team_box_scores": [{"team": normalize_team((b.get("team") or {}).get("abbreviation")),
+                                  "statistics": {v.get("name"): v.get("displayValue") for v in b.get("statistics") or [] if v.get("name")}}
+                                 for b in box.get("teams") or []],
+            "limitations": "Observed source events; event completeness not guaranteed. No measured defender assignments or reconstructed rotation stints."}
+
+
+def refresh_player_logs(output: Path, generated_at: str, season: int, lookback_days: int = 7, game_details: dict | None = None) -> dict:
     """Merge recent completed ESPN box scores into the historical player log feed."""
     existing_path = output / "player_logs.json"
     try:
@@ -214,7 +252,7 @@ def refresh_player_logs(output: Path, generated_at: str, season: int, lookback_d
             if not status_type.get("completed"):
                 continue
             competition = (event.get("competitions") or [{}])[0]
-            completed.append((event, competition))
+            completed.append(({**event, "slate_date": day.isoformat()}, competition))
 
     merged: dict[str, list[dict]] = {
         str(player_id): list(rows or []) for player_id, rows in existing_by_player.items()
@@ -231,7 +269,9 @@ def refresh_player_logs(output: Path, generated_at: str, season: int, lookback_d
         competitors = {row.get("homeAway"): row for row in competition.get("competitors") or []}
         away = normalize_team(competitors.get("away", {}).get("team", {}).get("abbreviation"))
         home = normalize_team(competitors.get("home", {}).get("team", {}).get("abbreviation"))
-        game_date = str(event.get("date") or "")[:10]
+        game_date = event["slate_date"]
+        if game_details is not None:
+            game_details[game_id] = normalize_game_details(summary, game_id, game_date, away, home, generated_at, known_players)
         game_rows = 0
 
         for team_block in ((summary.get("boxscore") or {}).get("players") or []):
@@ -438,6 +478,7 @@ def refresh_lineups(schedule: dict, generated_at: str) -> dict:
     chunks = re.split(r'<div class="lineup is-nba[^>]*>', page)[1:]
     schedule_by_matchup = {
         (row["away"], row["home"]): row for row in schedule.get("games") or []
+        if row.get("date") == schedule.get("date")
     }
     rows = []
     rotowire_games = 0
@@ -498,6 +539,7 @@ def refresh_manifest(output: Path, generated_at: str) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--output", type=Path, default=DATA)
+    parser.add_argument("--lookback-days", type=int, default=7, choices=range(1, 61))
     args = parser.parse_args()
     generated_at = datetime.now(timezone.utc).isoformat()
     season = season_end_year()
@@ -505,12 +547,15 @@ def main() -> None:
     roster = refresh_roster(args.output, generated_at)
     schedule = refresh_schedule(generated_at)
     lineups = refresh_lineups(schedule, generated_at)
-    player_logs = refresh_player_logs(args.output, generated_at, season)
+    details_path = args.output / "game_details.json"
+    details = json.loads(details_path.read_text()).get("games_by_id", {}) if details_path.exists() else {}
+    player_logs = refresh_player_logs(args.output, generated_at, season, args.lookback_days, details)
     stats = rebuild_stats(player_logs, roster, generated_at, season)
     player_advanced = rebuild_player_advanced(player_logs, roster, generated_at, season)
     standings = refresh_standings(generated_at, season)
 
     # Write only after all downloads and validation succeed, avoiding partial publishes.
+    write_json(details_path, {"last_updated": generated_at, "source": "ESPN completed game summaries", "games_by_id": details})
     write_json(args.output / "roster.json", roster)
     write_json(args.output / "schedule.json", schedule)
     write_json(args.output / "lineups.json", lineups)

@@ -222,7 +222,7 @@ class DataTests(unittest.TestCase):
                 "kind": kind, "player_id": "p", "team": "BOS", "game_id": "g"}})
             self.assertEqual(r.status_code, 200)
             results[kind] = r.json()
-        self.assertEqual(len(results["coverage"]["query_categories"]), 6)
+        self.assertEqual(len(results["coverage"]["query_categories"]), 10)
         self.assertTrue(results["players"]["rows"])
         self.assertEqual(results["player"]["app_advanced"]["estimated_usage_pct"], 21)
         self.assertEqual(results["history"]["total"], 3)

@@ -29,7 +29,7 @@ SNAPSHOT_DB = str(Path(tempfile.gettempdir()) / "nba-ai-snapshots-v1.sqlite")
 router = APIRouter(prefix="/nba/ai")
 FEEDS = {"roster": "players", "stats": "players", "standings": "standings",
          "schedule": "games", "lineups": "rows", "team_advanced": "teams",
-         "team_position_splits": "splits", "player_advanced": "players", "player_logs": "logs_by_player"}
+         "team_position_splits": "splits", "player_advanced": "players", "player_logs": "logs_by_player", "game_details": "games_by_id"}
 
 
 def authenticate(token):
@@ -131,7 +131,7 @@ def sync_records(value: SyncBatch, x_chat_token: Optional[str] = Header(default=
 
 
 class DataQuery(BaseModel):
-    kind: Literal["coverage", "players", "player", "history", "matchup", "team", "projections"]
+    kind: Literal["coverage", "players", "player", "history", "matchup", "team", "projections", "game_details", "play_by_play", "substitutions", "injuries"]
     player_id: Optional[str] = Field(default=None, max_length=80)
     search: Optional[str] = Field(default=None, max_length=120)
     team: Optional[str] = Field(default=None, max_length=12)
@@ -188,10 +188,15 @@ class DataAccess:
                            "updated_at": value.get("last_updated", value.get("as_of")),
                            "source": value.get("source", value.get("method"))}
         return {"feeds": feeds, "app_records": len(self.records),
-                "unavailable": {"play_by_play": "Not collected by the existing app or feed publisher",
-                                "rotation_stints": "No substitution/stint feed; minutes and projected lineups only",
+                "unavailable": {
+                                **({"play_by_play": "No published game events"} if not feeds["game_details"]["available"] else {}),
+                                "rotation_stints": "Observed substitutions available; full five-player stints not reconstructed",
                                 "tracking_matchups": "Defender assignments are app estimates, not measured tracking data"},
                 "query_categories": {
+                    "game_details": "Historical games, observed starters and team box scores; filter by date/team/game_id",
+                    "play_by_play": "Paginated observed events; game_id required",
+                    "substitutions": "Observed substitution events; game_id required",
+                    "injuries": "Roster injury reports with source timestamps; absent reports do not establish health",
                     "players": "Identity and roster search", "player": "Season stats and advanced usage",
                     "history": "Raw game logs, minutes and independent statistical summaries",
                     "team": "Standings, defensive metrics and position splits",
@@ -229,6 +234,33 @@ class DataAccess:
             q = DataQuery(**q)
         if q.kind == "coverage":
             return self.coverage()
+        if q.kind == "injuries":
+            rows = [r for r in feed("roster").get("players", []) if r.get("injuries")
+                    and (not q.team or r.get("team") == q.team.upper())
+                    and (not q.player_id or str(r.get("player_id")) == q.player_id)]
+            return {**page(rows, q), "note": "Source-reported availability only. Missing injury reports do not confirm health.",
+                    "checked_at": feed("roster").get("as_of")}
+        if q.kind in {"game_details", "play_by_play", "substitutions"}:
+            games = feed("game_details").get("games_by_id", {})
+            if q.kind != "game_details":
+                if not q.game_id:
+                    return {"error": "game_id required; use game_details to discover archived games"}
+                game = games.get(q.game_id, {})
+                rows = game.get("events", [])
+                if q.player_id:
+                    rows = [r for r in rows if any(q.player_id in (v.get("player_id"), v.get("espn_id")) for v in r.get("participants", []))]
+                if q.kind == "substitutions":
+                    rows = [r for r in rows if r.get("type") == "Substitution"]
+                return {**page(rows, q), "available": bool(game.get("events")), "retrieved_at": game.get("retrieved_at"),
+                        "source_url": game.get("source_url"), "limitations": game.get("limitations")}
+            rows = [{k: v for k, v in r.items() if k != "events"} | {"event_count": len(r.get("events", []))}
+                    for r in games.values()
+                    if (not q.game_id or r.get("game_id") == q.game_id)
+                    and (not q.team or q.team.upper() in (r.get("away"), r.get("home")))
+                    and (not q.opponent or q.opponent.upper() in (r.get("away"), r.get("home")))
+                    and (not q.start_date or r.get("date", "") >= q.start_date)
+                    and (not q.end_date or r.get("date", "") <= q.end_date)]
+            return page(sorted(rows, key=lambda r: r.get("date", ""), reverse=True), q)
         if q.kind == "players":
             rows = self.players()
             if q.search:

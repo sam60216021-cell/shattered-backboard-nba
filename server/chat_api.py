@@ -253,7 +253,7 @@ from ai_data import DataAccess, DataQuery
 _data_properties = DataQuery.model_json_schema()["properties"]
 _data_properties = {k: {p: v for p, v in spec.items() if p not in {"default", "title"}}
                     for k, spec in _data_properties.items()}
-TOOLS.append(function("query_nba_data", "Batch up to four targeted queries for stored NBA players, full paginated history, team defense, matchups and separately app projections. Search players by name first. Null filters mean no filter. Use offset=0, limit=20 initially; next_offset retrieves more. History summaries cover all matches, not just the page. coverage lists unavailable sources.",
+TOOLS.append(function("query_nba_data", "Batch up to four targeted queries for stored NBA players, full paginated history, team defense, matchups and separately app projections. Search players by name first. Null filters mean no filter. Use offset=0, limit=20 initially; next_offset retrieves more. History summaries cover all matches, not just the page. coverage lists unavailable sources. game_details discovers archived games and team box scores; play_by_play and substitutions return paginated observed events by game_id. injuries returns current roster reports; absent reports do not confirm health.",
                       {"queries": {"type": "array", "minItems": 1, "maxItems": 4,
                                    "items": {"type": "object", "properties": _data_properties,
                                              "required": list(_data_properties), "additionalProperties": False}}}, ["queries"]))

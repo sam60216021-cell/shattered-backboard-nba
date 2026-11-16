@@ -28,12 +28,12 @@ retrieve historical IDs; no new fuzzy identity guessing is introduced.
 | Game logs and minutes | ESPN completed box scores merged into `player_logs.json`; bundled `StarterLogs.json`; incremental `/nba/player_logs[_bulk]`; SwiftData `StoredGameLog` | `history` retrieves full stored records, shooting/defensive stats and minutes in seconds. Server keeps richer fields such as FGM, 3PA, plus-minus and game IDs. Phone export reads all retained local rows, not the ten-log shortlist. |
 | Player season averages and usage | `stats.json`, `player_advanced.json`; local persisted advanced map | `player`; estimated possession usage remains labeled as an estimate, not official USG%. |
 | Schedule, scores, game state | ESPN scoreboard -> schedule feed; app scoreboard fallback; `StoredGame`, `StoredGameDetails` | `matchup`; active and historical phone schedules/details supplement published server games. A published in-progress score may be stale; this is not a live score subscription. |
-| Lineups and injury/availability labels | RotoWire lineup publisher; schedule missing-player fields; `StoredLineupPlayer`, `StoredMissingPlayer` | `matchup` returns existing feed and phone evidence with available timestamps. No complete injury feed is added. Optional native web research remains available. |
+| Lineups and injury/availability labels | RotoWire lineup publisher; schedule missing-player fields; `StoredLineupPlayer`, `StoredMissingPlayer` | `matchup` returns existing feed and phone evidence with available timestamps. The `injuries` query also exposes ESPN roster injury statuses and report/check timestamps; an absent report does not confirm health. Optional native web research remains available. |
 | Team records, points allowed | ESPN standings; `StoredStandings` | `team`, including app fallback values when present. |
 | Team advanced defense and position splits | Optional `build_feeds.py` imports; `StoredTeamAdvanced`, `StoredTeamPositionSplit` | `team`; current published `team_advanced.json` and `team_position_splits.json` are absent. Existing cached phone values synchronize if present. Missing values remain unavailable. |
 | Player-vs-player defense | `MatchupDefenseEvaluator` uses official/projected lineups, recent minutes, steals, blocks, rebounds | `projections` exports estimated defender, assignment confidence and activity. These are inferred assignments, not player-tracking observations. |
-| Rotations | Recent minutes, projected starters, `SimulationEngine` top-rotation estimate | Minutes, lineups, projected minutes and game estimates are exposed. No observed substitution stints/rotation timeline exists. |
-| Play-by-play | No persistent collector/model in the app or publisher | Unavailable. Existing `/nba/box_score` ESPN summary used for tracker grading is not a stored play-by-play archive. |
+| Rotations | Recent minutes, projected starters, `SimulationEngine` top-rotation estimate | Minutes, lineups, projected minutes and game estimates are exposed. The `substitutions` query exposes observed substitution events by game ID. Full five-player stints are not reconstructed. |
+| Play-by-play | Existing ESPN completed-game summaries retained by the publisher | `game_details` discovers historical game IDs, team box scores and observed starters; `play_by_play` pages events. Coverage is limited to collected games, not the entire historical archive. |
 | Main statistical projections | `PredictionEngine.projectGame`, user category weights and calibration | `projections`: all 14 exported categories, confidence, ranges, minutes, decline/volatility. Values calculated by the unchanged Swift engine. Current calculations for finished games are explicitly not historical pregame forecasts. |
 | Analytics / on-device AI / Blended numbers | `PredictionNumberEngine` | `projections`, separate values per category when enough history exists. |
 | Prediction pipeline modules | `AnalyticsPredictionModule`, `OnDeviceAIPredictionModule`, `BlendedPredictionModule`, `PredictionPipeline.latestOutputs` | `projections.pipeline_outputs` includes existing latest run, model versions, reasoning and run time. Empty if that pipeline has not run on the phone; not silently manufactured. |
@@ -123,3 +123,28 @@ defense, history and model health, then verifies game predictions reach the next
 model request through tool continuation. The suite now has 64 passing tests.
 No sportsbook API or new prediction algorithm was added. Phone synchronization
 is required for these app-only outputs; absent caches remain absent.
+
+
+## Observed game data refresh (November 16, 2026)
+
+The existing collector now retains normalized play-by-play, substitution events,
+observed starters, team box-score totals, source URLs and retrieval timestamps in
+`game_details.json`. It does not retain sportsbook fields or ESPN predictions.
+These data are retrieved through the existing authenticated `/nba/ai/query`
+endpoint and the model's `query_nba_data` tool. Event pages remain limited to 50
+rows to avoid dumping entire games into context. No schema or algorithm changes.
+
+`python3 server/update_server.py --lookback-days 30` backfills recent completed
+games. Normal publishing refreshes seven days and merges retained older games.
+The supported explicit backfill range is 1–60 days. Each refresh still fetches
+recent summaries to pick up corrections; it never makes a paid OpenAI request.
+Use the existing NBA Publish.command to refresh and publish subsequent updates;
+Render serves the published snapshot, not an automatically updating live feed.
+
+Lineup matching now uses only the current schedule date, preventing a later
+repeat matchup from taking today's lineup. Historical logs use the scoreboard
+slate date instead of the UTC tip-off date. ESPN roster injury reports are kept
+with their original status/date, without interpreting absent reports as healthy.
+Team box-score defensive observations are available; missing official defensive
+ratings, position-defense splits and tracking assignments are not fabricated.
+App-only projections still require phone synchronization.
