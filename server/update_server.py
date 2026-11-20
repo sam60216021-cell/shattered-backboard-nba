@@ -544,16 +544,21 @@ def main() -> None:
     generated_at = datetime.now(timezone.utc).isoformat()
     season = season_end_year()
 
+    print("[1/6] Refreshing team rosters and injury reports", flush=True)
     roster = refresh_roster(args.output, generated_at)
+    print("[2/6] Refreshing schedule and starting lineups", flush=True)
     schedule = refresh_schedule(generated_at)
     lineups = refresh_lineups(schedule, generated_at)
     details_path = args.output / "game_details.json"
     details = json.loads(details_path.read_text()).get("games_by_id", {}) if details_path.exists() else {}
+    print(f"[3/6] Downloading completed games from the last {args.lookback_days} days", flush=True)
     player_logs = refresh_player_logs(args.output, generated_at, season, args.lookback_days, details)
+    print("[4/6] Updating statistics and standings", flush=True)
     stats = rebuild_stats(player_logs, roster, generated_at, season)
     player_advanced = rebuild_player_advanced(player_logs, roster, generated_at, season)
     standings = refresh_standings(generated_at, season)
 
+    print("[5/6] Saving validated feeds", flush=True)
     # Write only after all downloads and validation succeed, avoiding partial publishes.
     write_json(details_path, {"last_updated": generated_at, "source": "ESPN completed game summaries", "games_by_id": details})
     write_json(args.output / "roster.json", roster)
@@ -565,6 +570,7 @@ def main() -> None:
     write_json(args.output / "standings.json", standings)
     refresh_manifest(args.output, generated_at)
     bundle_path = ROOT.parent / "Shattered Backboard NBA Stats" / "StarterLogs.json"
+    print("[6/6] Updating the app offline archive", flush=True)
     bundle_logs, bundle_players = export_bundle(args.output, bundle_path)
     print(f"Roster: {len(roster['players'])} players")
     print(f"Schedule: {len(schedule['games'])} games across the next 5 days")
