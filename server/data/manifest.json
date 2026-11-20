@@ -2,42 +2,42 @@
   "feeds": {
     "data_quality": {
       "bytes": 3866,
-      "sha256": "ad0f8784680fc67e44f739f6a96a86873228ba33405c934fd579e222744aed29"
+      "sha256": "bcbbdb036b1af6f86ef9af26ab8880c0fa7dd48567f369c048b551fb022b1d8a"
     },
     "game_details": {
-      "bytes": 37017557,
-      "sha256": "fb716cd8f2c96f04df595764b8c22e477f4d44441fb2685fe2fce288b4a9e188"
+      "bytes": 37017575,
+      "sha256": "fd145e0d7690167f9f8778cd1641c8d8904d393d2c19465cf02a99cd5c4b769e"
     },
     "lineups": {
       "bytes": 10335,
-      "sha256": "c6d57b72444529fc791aef4e1d5dd0d9a1a2e12b200dc3557b54a69f0179407a"
+      "sha256": "64ff7f9496e88267082bcedcd23daa8a7dd71d999f419233b260e2fd1a4a2d68"
     },
     "player_advanced": {
       "bytes": 119537,
-      "sha256": "5e20b23a77dd3ed5cd8cb6e71051e0a6d38d1243b36614afa274b8c7e05e8cb2"
+      "sha256": "d33018d2e952960c9771516a3a4eae6b327439608e70143b6ec67e23b010eb4c"
     },
     "player_logs": {
       "bytes": 10085473,
-      "sha256": "5b8911b076c3f297ddeeba8caa8e28d14f758702c592446fa1f3e539b2a112fe"
+      "sha256": "9c08bd18c9057192b11009ee0c29ad604b683e8dd3d5f083cc07702232cd9982"
     },
     "roster": {
       "bytes": 129727,
-      "sha256": "1e3dce18196618cc53f58edfd6c1782c9a6eebb94c29011d17e2cd2a710e0fdb"
+      "sha256": "ee7474a9dcac99a62e3d6cad00ec7462099d4d87590b8ed41a7129b22052a5bc"
     },
     "schedule": {
       "bytes": 9651,
-      "sha256": "93f5cdc82f9b482bc2319e266cca877a3cfe76fb54cd648430b3e9de6d20c809"
+      "sha256": "a5a9719781e34f6f91f11397fa7f76d7cda6dfab44f85104d8bc350d23de6615"
     },
     "standings": {
       "bytes": 13375,
-      "sha256": "c08924a9da1affd8d742ad647962258cc723278f19c7292287ec01aba7232129"
+      "sha256": "e5708b8d2416abc065eefe984811c5aec7a4d5f984fd3afb9fa96a625657d44d"
     },
     "stats": {
       "bytes": 179371,
-      "sha256": "1573c2ed3c00123a930a55198003f5c666496295464f1e9d842288a5275154f1"
+      "sha256": "022d2691a0ff40c73c5b942aa9a23d468305703ee5f32e871b9f886edb992055"
     }
   },
-  "generated_at": "2026-11-20T04:11:50.766826+00:00",
+  "generated_at": "2026-11-20T04:13:32.891959+00:00",
   "schema_version": 3,
   "season": 2027,
   "source": "desktop-nba-updater"

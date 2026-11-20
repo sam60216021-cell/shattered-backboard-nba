@@ -2,7 +2,7 @@
   "date": "2026-11-19",
   "game_count": 4,
   "games_with_lineups": 4,
-  "last_updated": "2026-11-20T04:09:31.000182+00:00",
+  "last_updated": "2026-11-20T04:13:32.891959+00:00",
   "rows": [
     {
       "away": "POR",
@@ -13,7 +13,7 @@
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "POR",
-          "updated_at": "2026-11-20T04:09:31.000182+00:00"
+          "updated_at": "2026-11-20T04:13:32.891959+00:00"
         },
         {
           "name": "Jayson Kent",
@@ -21,7 +21,7 @@
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "POR",
-          "updated_at": "2026-11-20T04:09:31.000182+00:00"
+          "updated_at": "2026-11-20T04:13:32.891959+00:00"
         },
         {
           "name": "Toumani Camara",
@@ -29,7 +29,7 @@
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "POR",
-          "updated_at": "2026-11-20T04:09:31.000182+00:00"
+          "updated_at": "2026-11-20T04:13:32.891959+00:00"
         },
         {
           "name": "Sidy Cissoko",
@@ -37,7 +37,7 @@
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "POR",
-          "updated_at": "2026-11-20T04:09:31.000182+00:00"
+          "updated_at": "2026-11-20T04:13:32.891959+00:00"
         },
         {
           "name": "Donovan Clingan",
@@ -45,7 +45,7 @@
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "POR",
-          "updated_at": "2026-11-20T04:09:31.000182+00:00"
+          "updated_at": "2026-11-20T04:13:32.891959+00:00"
         }
       ],
       "date": "2026-11-19",
@@ -58,7 +58,7 @@
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "MIL",
-          "updated_at": "2026-11-20T04:09:31.000182+00:00"
+          "updated_at": "2026-11-20T04:13:32.891959+00:00"
         },
         {
           "name": "Tyler Herro",
@@ -66,7 +66,7 @@
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "MIL",
-          "updated_at": "2026-11-20T04:09:31.000182+00:00"
+          "updated_at": "2026-11-20T04:13:32.891959+00:00"
         },
         {
           "name": "Nate Ament",
@@ -74,7 +74,7 @@
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "MIL",
-          "updated_at": "2026-11-20T04:09:31.000182+00:00"
+          "updated_at": "2026-11-20T04:13:32.891959+00:00"
         },
         {
           "name": "Pete Nance",
@@ -82,7 +82,7 @@
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "MIL",
-          "updated_at": "2026-11-20T04:09:31.000182+00:00"
+          "updated_at": "2026-11-20T04:13:32.891959+00:00"
         },
         {
           "name": "Kel'el Ware",
@@ -90,7 +90,7 @@
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "MIL",
-          "updated_at": "2026-11-20T04:09:31.000182+00:00"
+          "updated_at": "2026-11-20T04:13:32.891959+00:00"
         }
       ],
       "time": "2026-11-20T01:00Z"
@@ -104,7 +104,7 @@
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "NYK",
-          "updated_at": "2026-11-20T04:09:31.000182+00:00"
+          "updated_at": "2026-11-20T04:13:32.891959+00:00"
         },
         {
           "name": "Mikal Bridges",
@@ -112,7 +112,7 @@
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "NYK",
-          "updated_at": "2026-11-20T04:09:31.000182+00:00"
+          "updated_at": "2026-11-20T04:13:32.891959+00:00"
         },
         {
           "name": "Josh Hart",
@@ -120,7 +120,7 @@
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "NYK",
-          "updated_at": "2026-11-20T04:09:31.000182+00:00"
+          "updated_at": "2026-11-20T04:13:32.891959+00:00"
         },
         {
           "name": "OG Anunoby",
@@ -128,7 +128,7 @@
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "NYK",
-          "updated_at": "2026-11-20T04:09:31.000182+00:00"
+          "updated_at": "2026-11-20T04:13:32.891959+00:00"
         },
         {
           "name": "Karl-Anthony Towns",
@@ -136,7 +136,7 @@
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "NYK",
-          "updated_at": "2026-11-20T04:09:31.000182+00:00"
+          "updated_at": "2026-11-20T04:13:32.891959+00:00"
         }
       ],
       "date": "2026-11-19",
@@ -149,7 +149,7 @@
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "MIN",
-          "updated_at": "2026-11-20T04:09:31.000182+00:00"
+          "updated_at": "2026-11-20T04:13:32.891959+00:00"
         },
         {
           "name": "Ayo Dosunmu",
@@ -157,7 +157,7 @@
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "MIN",
-          "updated_at": "2026-11-20T04:09:31.000182+00:00"
+          "updated_at": "2026-11-20T04:13:32.891959+00:00"
         },
         {
           "name": "Jonathan Kuminga",
@@ -165,7 +165,7 @@
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "MIN",
-          "updated_at": "2026-11-20T04:09:31.000182+00:00"
+          "updated_at": "2026-11-20T04:13:32.891959+00:00"
         },
         {
           "name": "Jaden McDaniels",
@@ -173,7 +173,7 @@
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "MIN",
-          "updated_at": "2026-11-20T04:09:31.000182+00:00"
+          "updated_at": "2026-11-20T04:13:32.891959+00:00"
         },
         {
           "name": "Rudy Gobert",
@@ -181,7 +181,7 @@
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "MIN",
-          "updated_at": "2026-11-20T04:09:31.000182+00:00"
+          "updated_at": "2026-11-20T04:13:32.891959+00:00"
         }
       ],
       "time": "2026-11-20T01:00Z"
@@ -195,7 +195,7 @@
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "LAC",
-          "updated_at": "2026-11-20T04:09:31.000182+00:00"
+          "updated_at": "2026-11-20T04:13:32.891959+00:00"
         },
         {
           "name": "Max Strus",
@@ -203,7 +203,7 @@
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "LAC",
-          "updated_at": "2026-11-20T04:09:31.000182+00:00"
+          "updated_at": "2026-11-20T04:13:32.891959+00:00"
         },
         {
           "name": "Derrick Jones",
@@ -211,7 +211,7 @@
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "LAC",
-          "updated_at": "2026-11-20T04:09:31.000182+00:00"
+          "updated_at": "2026-11-20T04:13:32.891959+00:00"
         },
         {
           "name": "Rui Hachimura",
@@ -219,7 +219,7 @@
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "LAC",
-          "updated_at": "2026-11-20T04:09:31.000182+00:00"
+          "updated_at": "2026-11-20T04:13:32.891959+00:00"
         },
         {
           "name": "Brook Lopez",
@@ -227,7 +227,7 @@
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "LAC",
-          "updated_at": "2026-11-20T04:09:31.000182+00:00"
+          "updated_at": "2026-11-20T04:13:32.891959+00:00"
         }
       ],
       "date": "2026-11-19",
@@ -240,7 +240,7 @@
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "SAS",
-          "updated_at": "2026-11-20T04:09:31.000182+00:00"
+          "updated_at": "2026-11-20T04:13:32.891959+00:00"
         },
         {
           "name": "Stephon Castle",
@@ -248,7 +248,7 @@
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "SAS",
-          "updated_at": "2026-11-20T04:09:31.000182+00:00"
+          "updated_at": "2026-11-20T04:13:32.891959+00:00"
         },
         {
           "name": "Julian Champagnie",
@@ -256,7 +256,7 @@
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "SAS",
-          "updated_at": "2026-11-20T04:09:31.000182+00:00"
+          "updated_at": "2026-11-20T04:13:32.891959+00:00"
         },
         {
           "name": "Devin Vassell",
@@ -264,7 +264,7 @@
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "SAS",
-          "updated_at": "2026-11-20T04:09:31.000182+00:00"
+          "updated_at": "2026-11-20T04:13:32.891959+00:00"
         },
         {
           "name": "Victor Wembanyama",
@@ -272,7 +272,7 @@
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "SAS",
-          "updated_at": "2026-11-20T04:09:31.000182+00:00"
+          "updated_at": "2026-11-20T04:13:32.891959+00:00"
         }
       ],
       "time": "2026-11-20T01:00Z"
@@ -286,7 +286,7 @@
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "GSW",
-          "updated_at": "2026-11-20T04:09:31.000182+00:00"
+          "updated_at": "2026-11-20T04:13:32.891959+00:00"
         },
         {
           "name": "Brandin Podziemski",
@@ -294,7 +294,7 @@
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "GSW",
-          "updated_at": "2026-11-20T04:09:31.000182+00:00"
+          "updated_at": "2026-11-20T04:13:32.891959+00:00"
         },
         {
           "name": "Yaxel Lendeborg",
@@ -302,7 +302,7 @@
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "GSW",
-          "updated_at": "2026-11-20T04:09:31.000182+00:00"
+          "updated_at": "2026-11-20T04:13:32.891959+00:00"
         },
         {
           "name": "Gui Santos",
@@ -310,7 +310,7 @@
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "GSW",
-          "updated_at": "2026-11-20T04:09:31.000182+00:00"
+          "updated_at": "2026-11-20T04:13:32.891959+00:00"
         },
         {
           "name": "Charles Bassey",
@@ -318,7 +318,7 @@
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "GSW",
-          "updated_at": "2026-11-20T04:09:31.000182+00:00"
+          "updated_at": "2026-11-20T04:13:32.891959+00:00"
         }
       ],
       "date": "2026-11-19",
@@ -331,7 +331,7 @@
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "MEM",
-          "updated_at": "2026-11-20T04:09:31.000182+00:00"
+          "updated_at": "2026-11-20T04:13:32.891959+00:00"
         },
         {
           "name": "Cedric Coward",
@@ -339,7 +339,7 @@
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "MEM",
-          "updated_at": "2026-11-20T04:09:31.000182+00:00"
+          "updated_at": "2026-11-20T04:13:32.891959+00:00"
         },
         {
           "name": "Jaylen Wells",
@@ -347,7 +347,7 @@
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "MEM",
-          "updated_at": "2026-11-20T04:09:31.000182+00:00"
+          "updated_at": "2026-11-20T04:13:32.891959+00:00"
         },
         {
           "name": "Cameron Boozer",
@@ -355,7 +355,7 @@
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "MEM",
-          "updated_at": "2026-11-20T04:09:31.000182+00:00"
+          "updated_at": "2026-11-20T04:13:32.891959+00:00"
         },
         {
           "name": "Taylor Hendricks",
@@ -363,7 +363,7 @@
           "source": "rotowire",
           "status": "CONFIRMED",
           "team": "MEM",
-          "updated_at": "2026-11-20T04:09:31.000182+00:00"
+          "updated_at": "2026-11-20T04:13:32.891959+00:00"
         }
       ],
       "time": "2026-11-20T01:00Z"

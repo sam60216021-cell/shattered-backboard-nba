@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-11-20T04:09:31.000182+00:00",
+  "last_updated": "2026-11-20T04:13:32.891959+00:00",
   "method": "FGA + 0.44*FTA + TOV share",
   "players": [
     {
@@ -849,7 +849,7 @@
       "team": "CHI"
     },
     {
-      "estimated_usage_pct": 50.29,
+      "estimated_usage_pct": 2.99,
       "games": 3,
       "minutes_per_game": 10.0,
       "name": "1642400",
@@ -858,7 +858,7 @@
       "team": "CLE"
     },
     {
-      "estimated_usage_pct": 50.0,
+      "estimated_usage_pct": 2.4,
       "games": 1,
       "minutes_per_game": 6.0,
       "name": "1642434",
@@ -867,7 +867,7 @@
       "team": "CLE"
     },
     {
-      "estimated_usage_pct": 3.15,
+      "estimated_usage_pct": 2.99,
       "games": 3,
       "minutes_per_game": 10.0,
       "name": "4431734",
@@ -876,7 +876,7 @@
       "team": "CLE"
     },
     {
-      "estimated_usage_pct": 2.55,
+      "estimated_usage_pct": 2.53,
       "games": 13,
       "minutes_per_game": 11.77,
       "name": "Craig Porter Jr.",
@@ -885,7 +885,7 @@
       "team": "CLE"
     },
     {
-      "estimated_usage_pct": 20.53,
+      "estimated_usage_pct": 20.44,
       "games": 15,
       "minutes_per_game": 33.2,
       "name": "Donovan Mitchell",
@@ -894,7 +894,7 @@
       "team": "CLE"
     },
     {
-      "estimated_usage_pct": 12.87,
+      "estimated_usage_pct": 12.74,
       "games": 12,
       "minutes_per_game": 32.08,
       "name": "Evan Mobley",
@@ -903,7 +903,7 @@
       "team": "CLE"
     },
     {
-      "estimated_usage_pct": 15.04,
+      "estimated_usage_pct": 14.93,
       "games": 15,
       "minutes_per_game": 33.07,
       "name": "James Harden",
@@ -912,7 +912,7 @@
       "team": "CLE"
     },
     {
-      "estimated_usage_pct": 9.66,
+      "estimated_usage_pct": 9.59,
       "games": 13,
       "minutes_per_game": 26.46,
       "name": "Jarrett Allen",
@@ -930,7 +930,7 @@
       "team": "CLE"
     },
     {
-      "estimated_usage_pct": 7.85,
+      "estimated_usage_pct": 7.79,
       "games": 16,
       "minutes_per_game": 19.62,
       "name": "Mario Hezonja",
@@ -939,7 +939,7 @@
       "team": "CLE"
     },
     {
-      "estimated_usage_pct": 10.89,
+      "estimated_usage_pct": 10.81,
       "games": 13,
       "minutes_per_game": 23.85,
       "name": "Meleek Thomas",
@@ -957,7 +957,7 @@
       "team": "CLE"
     },
     {
-      "estimated_usage_pct": 11.88,
+      "estimated_usage_pct": 11.86,
       "games": 12,
       "minutes_per_game": 27.5,
       "name": "Peyton Watson",
@@ -966,7 +966,7 @@
       "team": "CLE"
     },
     {
-      "estimated_usage_pct": 3.9,
+      "estimated_usage_pct": 3.88,
       "games": 4,
       "minutes_per_game": 13.75,
       "name": "Riley Minix",
@@ -975,7 +975,7 @@
       "team": "CLE"
     },
     {
-      "estimated_usage_pct": 6.38,
+      "estimated_usage_pct": 6.31,
       "games": 10,
       "minutes_per_game": 23.1,
       "name": "Sam Merrill",
@@ -984,7 +984,7 @@
       "team": "CLE"
     },
     {
-      "estimated_usage_pct": 6.49,
+      "estimated_usage_pct": 6.42,
       "games": 10,
       "minutes_per_game": 14.8,
       "name": "Thomas Bryant",
@@ -993,7 +993,7 @@
       "team": "CLE"
     },
     {
-      "estimated_usage_pct": 7.09,
+      "estimated_usage_pct": 7.04,
       "games": 15,
       "minutes_per_game": 20.33,
       "name": "Tyrese Proctor",
@@ -1335,7 +1335,7 @@
       "team": "DEN"
     },
     {
-      "estimated_usage_pct": 35.42,
+      "estimated_usage_pct": 2.48,
       "games": 4,
       "minutes_per_game": 5.75,
       "name": "1642404",
@@ -1353,7 +1353,7 @@
       "team": "DET"
     },
     {
-      "estimated_usage_pct": 10.52,
+      "estimated_usage_pct": 10.49,
       "games": 14,
       "minutes_per_game": 27.64,
       "name": "Ausar Thompson",
@@ -1362,7 +1362,7 @@
       "team": "DET"
     },
     {
-      "estimated_usage_pct": 21.4,
+      "estimated_usage_pct": 21.34,
       "games": 14,
       "minutes_per_game": 34.36,
       "name": "Cade Cunningham",
@@ -1371,7 +1371,7 @@
       "team": "DET"
     },
     {
-      "estimated_usage_pct": 2.69,
+      "estimated_usage_pct": 2.66,
       "games": 6,
       "minutes_per_game": 9.17,
       "name": "Chaz Lanier",
@@ -1380,7 +1380,7 @@
       "team": "DET"
     },
     {
-      "estimated_usage_pct": 11.8,
+      "estimated_usage_pct": 11.79,
       "games": 15,
       "minutes_per_game": 28.47,
       "name": "Daniss Jenkins",
@@ -1389,7 +1389,7 @@
       "team": "DET"
     },
     {
-      "estimated_usage_pct": 12.23,
+      "estimated_usage_pct": 12.19,
       "games": 13,
       "minutes_per_game": 29.77,
       "name": "Duncan Robinson",
@@ -1398,7 +1398,7 @@
       "team": "DET"
     },
     {
-      "estimated_usage_pct": 3.32,
+      "estimated_usage_pct": 3.28,
       "games": 6,
       "minutes_per_game": 5.0,
       "name": "Ebuka Okorie",
@@ -1416,7 +1416,7 @@
       "team": "DET"
     },
     {
-      "estimated_usage_pct": 1.09,
+      "estimated_usage_pct": 1.08,
       "games": 6,
       "minutes_per_game": 3.83,
       "name": "Isaac Jones",
@@ -1443,7 +1443,7 @@
       "team": "DET"
     },
     {
-      "estimated_usage_pct": 5.22,
+      "estimated_usage_pct": 5.21,
       "games": 15,
       "minutes_per_game": 18.0,
       "name": "Javonte Green",
@@ -1452,7 +1452,7 @@
       "team": "DET"
     },
     {
-      "estimated_usage_pct": 9.33,
+      "estimated_usage_pct": 9.32,
       "games": 15,
       "minutes_per_game": 26.0,
       "name": "John Collins",
@@ -1461,7 +1461,7 @@
       "team": "DET"
     },
     {
-      "estimated_usage_pct": 8.51,
+      "estimated_usage_pct": 8.49,
       "games": 15,
       "minutes_per_game": 24.8,
       "name": "Kevin Huerter",
@@ -1470,7 +1470,7 @@
       "team": "DET"
     },
     {
-      "estimated_usage_pct": 9.73,
+      "estimated_usage_pct": 9.71,
       "games": 15,
       "minutes_per_game": 25.47,
       "name": "Paul Reed",
@@ -1479,7 +1479,7 @@
       "team": "DET"
     },
     {
-      "estimated_usage_pct": 5.75,
+      "estimated_usage_pct": 5.73,
       "games": 13,
       "minutes_per_game": 16.08,
       "name": "Ronald Holland II",
