@@ -1,5 +1,9 @@
 {
   "feeds": {
+    "data_quality": {
+      "bytes": 3866,
+      "sha256": "ad0f8784680fc67e44f739f6a96a86873228ba33405c934fd579e222744aed29"
+    },
     "game_details": {
       "bytes": 37017557,
       "sha256": "fb716cd8f2c96f04df595764b8c22e477f4d44441fb2685fe2fce288b4a9e188"
@@ -14,7 +18,7 @@
     },
     "player_logs": {
       "bytes": 10085473,
-      "sha256": "ad7487bead0140e1f17de879b4a39a651f699ebd7e337c94866cec12fa028c17"
+      "sha256": "5b8911b076c3f297ddeeba8caa8e28d14f758702c592446fa1f3e539b2a112fe"
     },
     "roster": {
       "bytes": 129727,
@@ -33,7 +37,7 @@
       "sha256": "1573c2ed3c00123a930a55198003f5c666496295464f1e9d842288a5275154f1"
     }
   },
-  "generated_at": "2026-11-20T04:09:31.000182+00:00",
+  "generated_at": "2026-11-20T04:11:50.766826+00:00",
   "schema_version": 3,
   "season": 2027,
   "source": "desktop-nba-updater"

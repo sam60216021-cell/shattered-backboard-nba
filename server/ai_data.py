@@ -29,7 +29,7 @@ SNAPSHOT_DB = str(Path(tempfile.gettempdir()) / "nba-ai-snapshots-v1.sqlite")
 router = APIRouter(prefix="/nba/ai")
 FEEDS = {"roster": "players", "stats": "players", "standings": "standings",
          "schedule": "games", "lineups": "rows", "team_advanced": "teams",
-         "team_position_splits": "splits", "player_advanced": "players", "player_logs": "logs_by_player", "game_details": "games_by_id"}
+         "team_position_splits": "splits", "player_advanced": "players", "player_logs": "logs_by_player", "game_details": "games_by_id", "data_quality": "issues"}
 
 
 def authenticate(token):
@@ -184,10 +184,11 @@ class DataAccess:
         feeds = {}
         for name, key in FEEDS.items():
             value = feed(name)
-            feeds[name] = {"records": len(value.get(key) or []), "available": bool(value.get(key)),
+            feeds[name] = {"records": len(value.get(key) or []), "available": bool(value) if name == "data_quality" else bool(value.get(key)),
                            "updated_at": value.get("last_updated", value.get("as_of")),
                            "source": value.get("source", value.get("method"))}
         return {"feeds": feeds, "app_records": len(self.records),
+                "data_quality": feed("data_quality"),
                 "unavailable": {
                                 **({"play_by_play": "No published game events"} if not feeds["game_details"]["available"] else {}),
                                 "rotation_stints": "Observed substitutions available; full five-player stints not reconstructed",

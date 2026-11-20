@@ -148,3 +148,21 @@ with their original status/date, without interpreting absent reports as healthy.
 Team box-score defensive observations are available; missing official defensive
 ratings, position-defense splits and tracking assignments are not fabricated.
 App-only projections still require phone synchronization.
+
+## Repeatable connection audit
+
+The publisher now writes `data_quality.json`, exposed to the AI through its
+existing `coverage` query. Run `python3 server/audit_data.py` for a read-only
+local report. It checks duplicate player/date rows, lineup/schedule joins,
+history/game date and team joins, event/starter coverage, missing fields by
+current season versus all history, unlinked roster IDs, and missing defensive
+feeds. Issues and coverage limitations are reported without blocking predictions.
+
+The November 19 audit found seven old UTC-date log mismatches. The publisher
+now reconciles dates only when the exact game ID and both teams match the
+archived game. It does not infer identity aliases, invent missing observations,
+or change prediction weights. No errors in these checks is not evidence of
+complete source coverage or improved forecast accuracy. Thirty-four roster IDs
+had no direct history; no alternate identity was established in the collected
+event participants. Phone-only identity aliases and model output availability
+still depend on an up-to-date app sync.

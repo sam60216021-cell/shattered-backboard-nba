@@ -40,3 +40,26 @@ class FeedUpdateTests(unittest.TestCase):
             result = ai_data.DataAccess().query({'kind': 'injuries', 'team': 'BOS'})
         self.assertEqual(result['total'], 1)
         self.assertEqual(result['rows'][0]['injuries'][0]['reported_at'], 'yesterday')
+
+    def test_date_reconciliation_requires_game_and_teams(self):
+        rows = {'p': [{'game_id': 'g', 'game_date': '2026-11-07', 'team': 'CLE', 'opponent': 'PHI'},
+                      {'game_id': 'g', 'game_date': '2026-11-07', 'team': 'BOS', 'opponent': 'PHI'}]}
+        count = updater.reconcile_game_dates(rows, {'g': {'date': '2026-11-06', 'away': 'PHI', 'home': 'CLE'}})
+        self.assertEqual(count, 1)
+        self.assertEqual(rows['p'][0]['game_date'], '2026-11-07')
+        self.assertEqual(rows['p'][1]['game_date'], '2026-11-06')
+
+    def test_audit_detects_missing_data_and_broken_links(self):
+        import json
+        import tempfile
+        from pathlib import Path
+        from audit_data import audit
+        with tempfile.TemporaryDirectory() as folder:
+            p = Path(folder)
+            (p / 'player_logs.json').write_text(json.dumps({'season': 2027, 'logs_by_player': {'p': [
+                {'game_id': 'g', 'game_date': '2026-11-07', 'season': 2027, 'team': 'CLE', 'opponent': 'PHI'}]}}))
+            (p / 'game_details.json').write_text(json.dumps({'games_by_id': {'g': {'date': '2026-11-06', 'away': 'PHI', 'home': 'CLE'}}}))
+            result = audit(p)
+        self.assertIn({'code': 'history_game_mismatch', 'count': 1}, result['issues'])
+        self.assertEqual(result['missing_fields_current_season']['pts'], 1)
+        self.assertIn('team_advanced', result['unavailable_feeds'])

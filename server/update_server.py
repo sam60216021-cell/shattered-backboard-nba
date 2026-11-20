@@ -20,6 +20,7 @@ from pathlib import Path
 from urllib.request import Request, urlopen
 
 from export_app_bundle import export_bundle
+from audit_data import audit
 
 
 ROOT = Path(__file__).resolve().parent
@@ -229,6 +230,20 @@ def normalize_game_details(summary, game_id, game_date, away, home, generated_at
             "limitations": "Observed source events; event completeness not guaranteed. No measured defender assignments or reconstructed rotation stints."}
 
 
+def reconcile_game_dates(logs_by_player, games):
+    """Use observed slate dates only when exact game IDs and both teams match."""
+    corrected = 0
+    for rows in logs_by_player.values():
+        for row in rows:
+            game = games.get(str(row.get("game_id") or ""))
+            if game and game.get("date") and {row.get("team"), row.get("opponent")} == {game.get("away"), game.get("home")}:
+                if row.get("game_date") != game["date"]:
+                    row["game_date"] = game["date"]
+                    corrected += 1
+        rows.sort(key=lambda row: str(row.get("game_date") or ""), reverse=True)
+    return corrected
+
+
 def refresh_player_logs(output: Path, generated_at: str, season: int, lookback_days: int = 7, game_details: dict | None = None) -> dict:
     """Merge recent completed ESPN box scores into the historical player log feed."""
     existing_path = output / "player_logs.json"
@@ -331,6 +346,7 @@ def refresh_player_logs(output: Path, generated_at: str, season: int, lookback_d
             imported_games += 1
             imported_rows += game_rows
 
+    reconcile_game_dates(merged, game_details or {})
     for rows in merged.values():
         rows.sort(key=lambda row: str(row.get("game_date") or ""), reverse=True)
     return {
@@ -568,6 +584,9 @@ def main() -> None:
     write_json(args.output / "stats.json", stats)
     write_json(args.output / "player_advanced.json", player_advanced)
     write_json(args.output / "standings.json", standings)
+    quality = audit(args.output)
+    write_json(args.output / "data_quality.json", quality)
+    print(f"Data audit: {len(quality['issues'])} integrity issues; {len(quality['roster_without_direct_history'])} roster IDs without direct history", flush=True)
     refresh_manifest(args.output, generated_at)
     bundle_path = ROOT.parent / "Shattered Backboard NBA Stats" / "StarterLogs.json"
     print("[6/6] Updating the app offline archive", flush=True)
