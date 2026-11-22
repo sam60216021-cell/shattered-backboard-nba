@@ -5,11 +5,11 @@
     "events": 120220,
     "games_without_events": 0,
     "games_without_ten_starters": 0,
-    "logs": 24566,
+    "logs": 25147,
     "roster": 528
   },
   "issues": [],
-  "last_updated": "2026-11-22T06:54:34.706004+00:00",
+  "last_updated": "2026-11-22T18:15:47.144719+00:00",
   "limitations": [
     "No direct history may mean no appearances or unresolved provider IDs; do not invent or fuzzy-match records.",
     "Non-null legacy stats do not prove original source completeness; older imports may contain default zeros.",
@@ -20,13 +20,13 @@
     "ast": 0,
     "blk": 0,
     "fga": 0,
-    "fgm": 18800,
-    "game_id": 18800,
+    "fgm": 3977,
+    "game_id": 3977,
     "mp_seconds": 0,
     "pts": 0,
     "reb": 0,
     "stl": 0,
-    "three_pa": 18800,
+    "three_pa": 3977,
     "tov": 0
   },
   "missing_fields_current_season": {
@@ -48,14 +48,6 @@
       "player_id": "5105571"
     },
     {
-      "name": "Jalen Wilson",
-      "player_id": "1630592"
-    },
-    {
-      "name": "Grant Nelson",
-      "player_id": "1641761"
-    },
-    {
       "name": "Tyler Bilodeau",
       "player_id": "5105626"
     },
@@ -72,10 +64,6 @@
       "player_id": "4997530"
     },
     {
-      "name": "Nae'Qwan Tomlin",
-      "player_id": "5106268"
-    },
-    {
       "name": "Zack Austin",
       "player_id": "4702099"
     },
@@ -88,28 +76,8 @@
       "player_id": "5037878"
     },
     {
-      "name": "Kristaps Porzingis",
-      "player_id": "3102531"
-    },
-    {
-      "name": "Moses Moody",
-      "player_id": "1630541"
-    },
-    {
       "name": "Quadir Copeland",
       "player_id": "4683860"
-    },
-    {
-      "name": "Johnny Furphy",
-      "player_id": "1642277"
-    },
-    {
-      "name": "Bradley Beal",
-      "player_id": "203078"
-    },
-    {
-      "name": "Jordan Miller",
-      "player_id": "1641757"
     },
     {
       "name": "AK Okereke",
@@ -124,10 +92,6 @@
       "player_id": "5105462"
     },
     {
-      "name": "Johni Broome",
-      "player_id": "4433569"
-    },
-    {
       "name": "Tyler Nickel",
       "player_id": "4838721"
     },
@@ -140,20 +104,8 @@
       "player_id": "5107251"
     },
     {
-      "name": "Maxime Raynaud",
-      "player_id": "1642875"
-    },
-    {
-      "name": "Sean Pedulla",
-      "player_id": "4709131"
-    },
-    {
       "name": "Jayden Quaintance",
       "player_id": "5101845"
-    },
-    {
-      "name": "Kevin McCullar Jr.",
-      "player_id": "4411057"
     },
     {
       "name": "Nate Bittle",
@@ -162,26 +114,10 @@
     {
       "name": "Jonas Aidoo",
       "player_id": "4684682"
-    },
-    {
-      "name": "Jusuf Nurkic",
-      "player_id": "3102530"
-    },
-    {
-      "name": "Kobe Bufkin",
-      "player_id": "4683736"
-    },
-    {
-      "name": "Jamir Watkins",
-      "player_id": "1642364"
-    },
-    {
-      "name": "Tristan Vukcevic",
-      "player_id": "1641774"
     }
   ],
   "source": "Local published-feed audit",
-  "source_updated_at": "2026-11-22T06:53:53.238408+00:00",
+  "source_updated_at": "2026-11-22T18:14:48.539182+00:00",
   "unavailable_feeds": [
     "team_advanced",
     "team_position_splits"

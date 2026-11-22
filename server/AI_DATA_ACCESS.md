@@ -166,3 +166,30 @@ complete source coverage or improved forecast accuracy. Thirty-four roster IDs
 had no direct history; no alternate identity was established in the collected
 event participants. Phone-only identity aliases and model output availability
 still depend on an up-to-date app sync.
+
+## Research gap repairs (November 22, 2026)
+
+Normal desktop publishing now joins ESPN's detailed injury reports to the roster
+by ESPN ID, retaining narratives, report dates, estimated return dates and source
+URLs. Raw status/narrative disagreements remain visible; neither is interpreted
+as medical clearance. If the supplemental endpoint fails, the updater explicitly
+reports that failure and retains basic roster statuses.
+
+`--backfill-missing-history` retrieves the current and previous regular seasons
+for roster IDs with no observations, using their existing ESPN identity. It keeps
+the player's team at the time of the game. Empty responses and failed requests
+are recorded in `history_backfill.json`; missing history is never manufactured.
+`--backfill-rich-history` fills absent game IDs and richer shooting fields from
+player-season logs only when player/date/team/opponent and overlapping scoring
+statistics match. Existing observations are not overwritten. These optional
+backfills use the existing public data provider and make no OpenAI requests.
+
+The AI's `team` query now includes `research_defense`: opponent points per game
+and box-score possession/rating estimates with game counts and date coverage.
+Source-listed positions in new box scores allow per-player-game opponent
+production summaries by position. These are limited observations, not measured
+defender assignments or official position-defense rankings. The feed stays
+separate from app model inputs and existing official-feed slots; prediction
+algorithms and weights are unchanged. Full rotation reconstruction and official
+tracking remain unavailable. Existing phone sync remains required for app-only
+projections; no claim is made about the currently installed phone build.

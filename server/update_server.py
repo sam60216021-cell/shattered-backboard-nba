@@ -21,6 +21,7 @@ from urllib.request import Request, urlopen
 
 from export_app_bundle import export_bundle
 from audit_data import audit
+from research_enrichment import enrich_injuries, parse_history, defensive_research, fill_missing_history
 
 
 ROOT = Path(__file__).resolve().parent
@@ -316,6 +317,7 @@ def refresh_player_logs(output: Path, generated_at: str, season: int, lookback_d
                         "game_id": game_id,
                         "game_date": game_date,
                         "player_id": player_id,
+                        "position": (athlete.get("position") or {}).get("abbreviation"),
                         "season": season,
                         "team": team,
                         "opponent": opponent,
@@ -555,6 +557,8 @@ def refresh_manifest(output: Path, generated_at: str) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--output", type=Path, default=DATA)
+    parser.add_argument("--backfill-rich-history", action="store_true", help="Fill missing old shooting fields using exact matching source observations")
+    parser.add_argument("--backfill-missing-history", action="store_true", help="Fetch current and previous season for roster IDs without any logs")
     parser.add_argument("--lookback-days", type=int, default=7, choices=range(1, 61))
     args = parser.parse_args()
     generated_at = datetime.now(timezone.utc).isoformat()
@@ -562,6 +566,12 @@ def main() -> None:
 
     print("[1/6] Refreshing team rosters and injury reports", flush=True)
     roster = refresh_roster(args.output, generated_at)
+    try:
+        enriched = enrich_injuries(roster, fetch_json("https://site.api.espn.com/apis/site/v2/sports/basketball/nba/injuries"), generated_at)
+        print(f"Detailed injury reports: {enriched}", flush=True)
+    except (OSError, ValueError) as error:
+        roster["injury_details_status"] = "unavailable; basic roster statuses retained"
+        print(f"Detailed injuries unavailable ({type(error).__name__}); using roster reports", flush=True)
     print("[2/6] Refreshing schedule and starting lineups", flush=True)
     schedule = refresh_schedule(generated_at)
     lineups = refresh_lineups(schedule, generated_at)
@@ -569,6 +579,45 @@ def main() -> None:
     details = json.loads(details_path.read_text()).get("games_by_id", {}) if details_path.exists() else {}
     print(f"[3/6] Downloading completed games from the last {args.lookback_days} days", flush=True)
     player_logs = refresh_player_logs(args.output, generated_at, season, args.lookback_days, details)
+    if args.backfill_missing_history:
+        missing = [r for r in roster["players"] if r.get("espn_id") and not player_logs["logs_by_player"].get(r["player_id"])]
+        checks = []
+        for player in missing:
+            imported = []
+            failures = []
+            for year in (season - 1, season):
+                try:
+                    payload = fetch_json(f"https://site.web.api.espn.com/apis/common/v3/sports/basketball/nba/athletes/{player['espn_id']}/gamelog?season={year}")
+                    imported.extend(parse_history(payload, player, year))
+                except (OSError, ValueError) as error:
+                    failures.append({"season": year, "error_type": type(error).__name__})
+            if imported:
+                player_logs["logs_by_player"][player["player_id"]] = sorted(imported, key=lambda r: r["game_date"], reverse=True)
+            checks.append({"player_id": player["player_id"], "name": player["name"], "rows_imported": len(imported), "failures": failures})
+        write_json(args.output / "history_backfill.json", {"last_updated": generated_at, "checks": checks})
+        print(f"History backfill: {sum(c['rows_imported'] for c in checks)} rows for {sum(bool(c['rows_imported']) for c in checks)} players", flush=True)
+    if args.backfill_rich_history:
+        tasks = []
+        for player in roster['players']:
+            if not player.get('espn_id'): continue
+            old_rows = player_logs['logs_by_player'].get(player['player_id'], [])
+            for year in sorted({r['season'] for r in old_rows if r.get('season') and r.get('fgm') is None}):
+                tasks.append((player, year))
+        def fetch_history(task):
+            player, year = task
+            payload = fetch_json(f"https://site.web.api.espn.com/apis/common/v3/sports/basketball/nba/athletes/{player['espn_id']}/gamelog?season={year}")
+            return player['player_id'], parse_history(payload, player, year)
+        filled = 0
+        failed = 0
+        print(f"Checking {len(tasks)} player-season histories for exact matches", flush=True)
+        with ThreadPoolExecutor(max_workers=4) as pool:
+            for future in as_completed([pool.submit(fetch_history, task) for task in tasks]):
+                try:
+                    pid, observed = future.result()
+                    filled += fill_missing_history(player_logs['logs_by_player'][pid], observed)
+                except (OSError, ValueError):
+                    failed += 1
+        print(f"Legacy history: {filled} missing fields filled; {failed} source requests failed (no retry)", flush=True)
     print("[4/6] Updating statistics and standings", flush=True)
     stats = rebuild_stats(player_logs, roster, generated_at, season)
     player_advanced = rebuild_player_advanced(player_logs, roster, generated_at, season)
@@ -576,6 +625,7 @@ def main() -> None:
 
     print("[5/6] Saving validated feeds", flush=True)
     # Write only after all downloads and validation succeed, avoiding partial publishes.
+    write_json(args.output / "research_defense.json", defensive_research(details, player_logs, season, generated_at))
     write_json(details_path, {"last_updated": generated_at, "source": "ESPN completed game summaries", "games_by_id": details})
     write_json(args.output / "roster.json", roster)
     write_json(args.output / "schedule.json", schedule)

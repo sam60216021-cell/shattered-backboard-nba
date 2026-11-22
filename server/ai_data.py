@@ -29,7 +29,7 @@ SNAPSHOT_DB = str(Path(tempfile.gettempdir()) / "nba-ai-snapshots-v1.sqlite")
 router = APIRouter(prefix="/nba/ai")
 FEEDS = {"roster": "players", "stats": "players", "standings": "standings",
          "schedule": "games", "lineups": "rows", "team_advanced": "teams",
-         "team_position_splits": "splits", "player_advanced": "players", "player_logs": "logs_by_player", "game_details": "games_by_id", "data_quality": "issues"}
+         "team_position_splits": "splits", "player_advanced": "players", "player_logs": "logs_by_player", "game_details": "games_by_id", "data_quality": "issues", "research_defense": "teams"}
 
 
 def authenticate(token):
@@ -332,10 +332,12 @@ class DataAccess:
                 return {"error": "team required"}
             team = q.team.upper()
             result = {}
-            for name in ("standings", "team_advanced", "team_position_splits"):
+            for name in ("standings", "team_advanced", "team_position_splits", "research_defense"):
                 value = feed(name)
-                result[name] = [r for r in value.get(FEEDS[name], []) if (r.get("abbr") or r.get("team_abbr") or r.get("team") or "").upper() == team]
+                result[name] = [r for r in value.get(FEEDS[name], []) if (r.get("abbr") or r.get("team_abbreviation") or r.get("team_abbr") or r.get("team") or "").upper() == team]
             return {"team": team, "server": result, "app": self.app("team:" + team),
+                    "research_defense_method": feed("research_defense").get("method"),
+                    "research_defense_limitations": feed("research_defense").get("limitations"),
                     "missing_app_records": self.missing}
         # Date/team/game filters work even when the player is outside today's slate.
         rows = list(feed("schedule").get("games", []))
