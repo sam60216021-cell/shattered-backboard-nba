@@ -133,3 +133,32 @@ verified offerings. Explain strengths, realistic upside and risks; label unknown
 player information without burying ordinary research in missing-odds disclaimers.
 
 Completed answers are retained when the provider reports extra native web actions. All reported searches still count toward estimated spending. Pending database tools still execute after an unexpected web-action overrun, and the analysis continues without further web research, subject to the existing spending and context checks; no automatic retry occurs. Context and spending protections remain active.
+
+## Candidate research and output allowance (November 22, 2026)
+
+Luna now defaults to `NBA_CHAT_MAX_OUTPUT_TOKENS=100000` per Responses API call,
+validated against the documented 128,000 maximum. `NBA_CHAT_MAX_MODEL_CALLS=12`
+and `NBA_CHAT_MAX_DATA_TOOL_CALLS=16` replace the previous six-call limits. These
+are ceilings, not targets. Existing model context, native search limits, pricing,
+$0.25 per-analysis admission checks and duplicate/no-retry behavior remain.
+The status endpoint exposes effective settings; Render environment overrides take
+precedence over defaults. The Blueprint declares the new defaults.
+
+Every uploaded player (up to the existing 160-player payload ceiling) receives
+comparable compact PTS/REB/AST/3PM/PRA evidence instead of only the first 24.
+Raw logs remain targeted tool retrievals. Players outside the upload remain
+accessible through the paginated database tools. Instructions require fresh
+comparison with alternatives, including earlier picks, without random rotation
+or substituting weaker recommendations just for variety.
+
+`research_coverage` reports supplied candidate count, unique player IDs actually
+retrieved, database query count and successful searches. These are evidence
+access counts, not proof the model thoroughly analyzed each player or verified
+every claim. No paid live recommendation-quality test is performed automatically.
+
+Higher output allowance includes reasoning and can increase cost and latency.
+The budget may reject a later call whose full allowance cannot be reserved.
+Existing 90-second provider timeout and 600-second iOS request timeout still
+apply. Increasing tokens does not guarantee completion, diverse picks, or a
+hard provider-billing cap; exact stop reasons remain in diagnostics.
+Official limit: https://developers.openai.com/api/docs/models/gpt-6-luna

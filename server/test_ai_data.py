@@ -155,7 +155,7 @@ class DataTests(unittest.TestCase):
         body = provider.call_args.args[1]
         outputs = [r for r in body["input"] if r.get("type") == "function_call_output"]
         self.assertEqual(json.loads(outputs[0]["output"])["total"], 3)
-        self.assertEqual(body["max_output_tokens"], 50000)
+        self.assertEqual(body["max_output_tokens"], 100000)
         self.assertLess(result["estimated_cost"], .25)
 
     def test_missing_snapshot_rejected_before_paid_request(self):

@@ -27,7 +27,7 @@ router = APIRouter()
 log = logging.getLogger("nba.chat")
 # Free Render storage: intentionally ephemeral, independent of legacy /var/data.
 LEDGER_PATH = os.path.join(tempfile.gettempdir(), "nba-chat-budget-v2.sqlite")
-LUNA_MAX_OUTPUT_TOKENS = 50_000
+LUNA_MAX_OUTPUT_TOKENS = 100_000
 MODEL_CONTEXT_LIMITS = {"gpt-6-luna": 1_050_000, "gpt-6.1-sol": 1_050_000}
 
 BUDGET_NOTICE = ("Cost estimates are not a guaranteed billing cap. Local daily accounting "
@@ -52,6 +52,23 @@ def response_diagnostic(status, reason, usage=None, estimated_cost=None, cost_ba
                 status, reason, safe_number(usage.get("input_tokens")), safe_number(usage.get("output_tokens")),
                 safe_number(details.get("reasoning_tokens")) if isinstance(details, dict) else None,
                 safe_number(estimated_cost), cost_basis)
+
+
+def analysis_settings():
+    values = {}
+    for name, default, minimum, maximum in (
+        ("NBA_CHAT_MAX_OUTPUT_TOKENS", LUNA_MAX_OUTPUT_TOKENS, 256, 128000),
+        ("NBA_CHAT_MAX_MODEL_CALLS", 12, 2, 20),
+        ("NBA_CHAT_MAX_DATA_TOOL_CALLS", 16, 1, 32),
+    ):
+        try:
+            value = int(os.environ.get(name, str(default)))
+            if not minimum <= value <= maximum:
+                raise ValueError()
+        except (TypeError, ValueError):
+            raise unavailable("invalid_analysis_settings", "Invalid " + name + "; no provider request started.") from None
+        values[name] = value
+    return values
 
 
 def cost_settings():
@@ -158,7 +175,17 @@ Use query_nba_data to access the full Render archive and synchronized app data,
 including players outside the uploaded shortlist. For independent analysis, retrieve
 history and matchup/team evidence first, then retrieve projections and compare.
 Missing snapshot records or empty feeds mean unavailable, never zero or confirmed.
-Use get_players for the compact current shortlist. Narrow broad
+For broad pick/parlay requests, screen the entire supplied candidate comparison table
+across games and categories, not just high-minute stars or the first entries. Table order
+is not a ranking. Retrieve recent history and projections for a competitive shortlist,
+including alternatives outside previously recommended names when the evidence supports them.
+Previous assistant picks are not evidence; reassess them against today's data. Do not
+rotate players randomly or select weaker plays just to make the names different.
+When asked for alternatives, explicitly compare new candidates against earlier picks.
+Explain briefly which alternatives were actually compared and why they lost out.
+Never claim to have researched every player merely because their summary was supplied;
+distinguish supplied statistics, retrieved player records, and successful web research.
+Use get_players for detailed current candidate records. Narrow broad
 requests internally using the supplied database. Use native web_search when enabled
 to improve player-specific injury, availability, role and matchup information; reuse evidence.
 If research fails or has no useful sources, finish using the database evidence
@@ -223,7 +250,8 @@ def chat_status(model: str = Query(default="gpt-6-luna"), x_chat_token: str = He
     if model not in PRICES:
         raise HTTPException(422, "Unsupported chat model.")
     cost_settings()
-    limits = {"model_context_tokens": MODEL_CONTEXT_LIMITS[model]}
+    configured = analysis_settings()
+    limits = {"model_context_tokens": MODEL_CONTEXT_LIMITS[model], **configured}
     research_limits = search_settings()
     with ledger() as db:
         db.execute("SELECT 1")
@@ -253,7 +281,7 @@ from ai_data import DataAccess, DataQuery
 _data_properties = DataQuery.model_json_schema()["properties"]
 _data_properties = {k: {p: v for p, v in spec.items() if p not in {"default", "title"}}
                     for k, spec in _data_properties.items()}
-TOOLS.append(function("query_nba_data", "Batch up to four targeted queries for stored NBA players, full paginated history, team defense, matchups and separately app projections. Search players by name first. Null filters mean no filter. Use offset=0, limit=20 initially; next_offset retrieves more. History summaries cover all matches, not just the page. coverage lists unavailable sources. game_details discovers archived games and team box scores; play_by_play and substitutions return paginated observed events by game_id. injuries returns current roster reports; absent reports do not confirm health.",
+TOOLS.append(function("query_nba_data", "Batch up to four targeted queries for stored NBA players, full paginated history, team defense, matchups and separately app projections. For broad requests discover the slate with matchup and players queries; use name search for named-player requests. Null filters mean no filter. Use offset=0, limit=20 initially; next_offset retrieves more. History summaries cover all matches, not just the page. coverage lists unavailable sources. game_details discovers archived games and team box scores; play_by_play and substitutions return paginated observed events by game_id. injuries returns current roster reports; absent reports do not confirm health.",
                       {"queries": {"type": "array", "minItems": 1, "maxItems": 4,
                                    "items": {"type": "object", "properties": _data_properties,
                                              "required": list(_data_properties), "additionalProperties": False}}}, ["queries"]))
@@ -321,12 +349,18 @@ def run_analysis(a):
         row = {"trace_id": trace_id, "stage": stage, "elapsed_ms": int((time.monotonic()-started)*1000), **fields}
         diagnostics.append(row)
         log.warning("analysis=%s", compact(row))
+    limits = analysis_settings()
+    output_allowance = limits["NBA_CHAT_MAX_OUTPUT_TOKENS"]
+    model_calls = limits["NBA_CHAT_MAX_MODEL_CALLS"]
+    data_calls = limits["NBA_CHAT_MAX_DATA_TOOL_CALLS"]
+    researched_ids = set()
+    database_queries = 0
     context_limit = MODEL_CONTEXT_LIMITS[a.model]
     research_limits = search_settings()
     max_searches = min(a.max_searches, research_limits["NBA_CHAT_MAX_WEB_SEARCHES"])
     research_configured = max_searches > 0
     native_search_available = "not_tested"
-    event("start", model=a.model, output_allowance=LUNA_MAX_OUTPUT_TOKENS if a.model == "gpt-6-luna" else 2500,
+    event("start", model=a.model, output_allowance=output_allowance if a.model == "gpt-6-luna" else 2500,
           budget=a.budget, model_context_tokens=context_limit,
           max_searches=max_searches, web_enabled=a.web, research_configured=research_configured, native_search_available=native_search_available)
     settings = cost_settings()
@@ -348,11 +382,12 @@ def run_analysis(a):
                               "scope": "All server players and historical logs, paginated; app-only projections require sync. Ask coverage for missing feeds."}
     overview["directory"] = [{k: p.get(k) for k in ("id", "name", "team", "game", "latestLog", "samples")} for p in players]
     overview["candidates"] = []
-    for player in players[:24]:
-        summary = {k: v for k, v in player.items() if k != "logs"}
+    for player in players:
+        summary = {k: player.get(k) for k in ("id", "name", "team", "game", "minutes", "availability", "samples", "latestLog")}
         summary["stats"] = {k: v for k, v in player.get("stats", {}).items() if k in ("PTS", "REB", "AST", "3PM", "PRA")}
         overview["candidates"].append(summary)
-    overview["omittedCandidates"] = max(0, len(players)-24)
+    overview["omittedCandidates"] = 0
+    event("candidate_screen", uploaded_candidates=len(players), comparison_rows=len(overview["candidates"]), max_model_calls=model_calls, max_data_tool_calls=data_calls)
     conversation = [{"role": "user", "content": "APP EVIDENCE: " + compact(overview)}] + a.messages
     conversation.append({"role": "user", "content":
         "Live research is enabled; research the selected players, injuries, roles and matchups. Do not research sportsbook lines unless the user asks. Clearly distinguish app projections from researched facts." if a.web and max_searches else
@@ -372,16 +407,16 @@ def run_analysis(a):
         notes.append("Native web research is disabled by the search limit; live facts remain unverified.")
     text = ""
     stop_reason = "iteration_limit"
-    # Six model calls maximum. Each call's full output is charged/reserved.
-    for step in range(6):
+    # Each call is still admitted against the remaining dollar budget.
+    for step in range(model_calls):
         tools = TOOLS[:] + ([WEB_TOOL.copy()] if a.web and not web_allowance_exceeded and web_actions < max_searches else [])
-        if calls >= 6 or step == 5:
+        if calls >= data_calls or step == model_calls - 1:
             tools = []
             conversation.append({"role": "user", "content": "Tool limit reached. Conclude using available database statistics and projections; give supported conditional picks and label unresolved live checks."})
         body = {"model": a.model, "store": False, "service_tier": "default",
                 "prompt_cache_options": {"mode": "explicit"},
                 "instructions": INSTRUCTIONS, "input": conversation,
-                "max_output_tokens": LUNA_MAX_OUTPUT_TOKENS if a.model == "gpt-6-luna" else min(2500, 8000-output_total),
+                "max_output_tokens": output_allowance if a.model == "gpt-6-luna" else min(2500, 8000-output_total),
                 "parallel_tool_calls": False, "tools": tools,
                 "include": ["reasoning.encrypted_content", "web_search_call.action.sources"]}
         if any(t["type"] == "web_search" for t in tools):
@@ -548,9 +583,9 @@ def run_analysis(a):
         for item in functions:
             calls += 1
             tool_started = time.monotonic()
-            tool_reason = "tool_limit" if calls > 6 else "unsupported_tool"
+            tool_reason = "tool_limit" if calls > data_calls else "unsupported_tool"
             answer = {"error": "Tool limit reached or tool unavailable"}
-            if calls <= 6:
+            if calls <= data_calls:
                 try:
                     args = json.loads(item["arguments"])
                     if item["name"] == "query_nba_data":
@@ -558,6 +593,8 @@ def run_analysis(a):
                         if not isinstance(queries, list) or not 1 <= len(queries) <= 4:
                             raise ValueError("Invalid query batch")
                         answers = [data_access.query(query) for query in queries]
+                        database_queries += len(queries)
+                        researched_ids.update(str(q["player_id"]) for q, result in zip(queries, answers) if q.get("player_id") and "error" not in result and (result.get("rows") or any(result.get("server", {}).values())))
                         answer = {"results": answers} if "queries" in args else answers[0]
                         tool_reason = "data_retrieved" if "error" not in answer else "data_unavailable"
                     elif item["name"] == "get_players":
@@ -567,6 +604,7 @@ def run_analysis(a):
                                   "missingIDs": [i for i in ids if i not in catalog],
                                   "note": "Already provided records remain in earlier tool results; reuse them."}
                         retrieved_players.update(i for i in ids if i in catalog)
+                        researched_ids.update(i for i in ids if i in catalog)
                         tool_reason = "records_returned"
                 except Exception:
                     tool_reason = "invalid_arguments_or_tool_error"
@@ -586,11 +624,13 @@ def run_analysis(a):
         text += "\n\nNo live web evidence was retrieved in this analysis. Current injuries and player availability remain unverified by web research."
     else:
         text += "\n\nSources retrieved: " + max(source["retrieved_at"] for source in sources.values()) + "."
+    event("research_coverage", candidates_supplied=len(players), player_records_retrieved=len(researched_ids), database_queries=database_queries, successful_searches=successful_searches)
     event("finish", native_search_available=native_search_available, estimated_model_cost=model_cost_total,
           estimated_web_search_cost=web_cost_total, uncertain_cost_reservation=uncertain_cost, stop_reason=stop_reason, input_tokens=input_total, output_tokens=output_total,
           tool_calls=calls, searches=searches, successful_searches=successful_searches, estimated_spent=spent, budget=a.budget,
           remaining_budget=max(0, a.budget-spent))
-    return {"text": text, "notes": notes, "model": a.model, "input_tokens": input_total,
+    return {"text": text, "notes": notes, "model": a.model,
+            "research_coverage": {"candidates_supplied": len(players), "player_ids_retrieved": sorted(researched_ids), "database_queries": database_queries, "successful_searches": successful_searches}, "input_tokens": input_total,
             "output_tokens": output_total, "searches": searches, "successful_searches": successful_searches, "tool_calls": calls,
             "estimated_cost": round(spent, 6), "estimated_model_cost": round(model_cost_total, 6),
             "estimated_web_search_cost": round(web_cost_total, 6), "uncertain_cost_reservation": round(uncertain_cost, 6),

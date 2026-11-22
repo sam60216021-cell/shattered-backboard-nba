@@ -23,3 +23,9 @@ services:
         value: "2"
       - key: NBA_CHAT_SEARCH_INPUT_RESERVE
         value: "6000"
+      - key: NBA_CHAT_MAX_OUTPUT_TOKENS
+        value: "100000"
+      - key: NBA_CHAT_MAX_MODEL_CALLS
+        value: "12"
+      - key: NBA_CHAT_MAX_DATA_TOOL_CALLS
+        value: "16"

@@ -77,7 +77,7 @@ class ChatTests(unittest.TestCase):
                 {"input_tokens": 1200}, response()]) as api, self.assertLogs("nba.chat") as logs:
             result = chat.run_analysis(request())
         generations = [c.args[1] for c in api.call_args_list if c.args[0] == "responses"]
-        self.assertEqual([b["max_output_tokens"] for b in generations], [50000, 50000])
+        self.assertEqual([b["max_output_tokens"] for b in generations], [100000, 100000])
         self.assertEqual(result["output_tokens"], 20100)
         self.assertIn("reasoning_tokens=19000", str(logs.output))
         self.assertIn("status=completed", str(logs.output))
@@ -101,7 +101,7 @@ class ChatTests(unittest.TestCase):
         with patch.object(chat, "post_openai", return_value={"input_tokens": 1000}) as api:
             result = chat.run_analysis(request(budget=.01))
         self.assertEqual(api.call_count, 1)
-        self.assertIn("50,000", " ".join(result["notes"]))
+        self.assertIn("100,000", " ".join(result["notes"]))
         self.assertEqual(result["estimated_cost"], 0)
 
     def test_other_model_output_limit_is_unchanged(self):
@@ -124,7 +124,7 @@ class ChatTests(unittest.TestCase):
             result = chat.run_analysis(request(web=False, messages=[{"role": "user", "content": "What can you analyze?"}]))
         self.assertEqual(result["stop_reason"], "completed")
         self.assertFalse(result["incomplete"])
-        self.assertEqual(result["diagnostics"][3]["response_id"], "resp_safe123")
+        self.assertEqual(next(d for d in result["diagnostics"] if d["stage"] == "provider_response")["response_id"], "resp_safe123")
 
 
     def test_empty_completed_response_is_not_success(self):
@@ -160,7 +160,7 @@ class ChatTests(unittest.TestCase):
         self.assertEqual(result["input_tokens"], 44320)
         self.assertEqual(result["diagnostics"][0]["model_context_tokens"], 1050000)
         body = api.call_args.args[1]
-        self.assertEqual(body["max_output_tokens"], 50000)
+        self.assertEqual(body["max_output_tokens"], 100000)
         outputs = [i for i in body["input"] if i.get("type") == "function_call_output"]
         import json
         self.assertEqual(json.loads(outputs[1]["output"])["players"], [])
@@ -217,7 +217,7 @@ class ChatTests(unittest.TestCase):
         self.assertFalse(any(t["type"] == "web_search" for t in last["tools"]))
         self.assertTrue(any(i.get("type") == "function_call_output" for i in last["input"]))
         self.assertTrue(any(i.get("type") == "web_search_call" for i in last["input"]))
-        self.assertEqual(last["max_output_tokens"], 50000)
+        self.assertEqual(last["max_output_tokens"], 100000)
 
     def test_search_rejection_stops_without_retry_or_fake_count(self):
         failure = chat.ProviderFailure("OpenAI", "/v1/responses", 400, "unsupported_tool")
@@ -304,7 +304,7 @@ class ChatTests(unittest.TestCase):
         self.assertEqual(result["stop_reason"], "completed")
         self.assertEqual(api.call_count, 2)
         self.assertTrue(any(t["type"] == "web_search" for t in api.call_args.args[1]["tools"]))
-        self.assertEqual(api.call_args.args[1]["max_output_tokens"], 50000)
+        self.assertEqual(api.call_args.args[1]["max_output_tokens"], 100000)
 
     def test_cumulative_input_is_tracked_without_arbitrary_cutoff(self):
         fixtures = []
@@ -391,7 +391,7 @@ class ChatTests(unittest.TestCase):
         results = [i for i in sent[-1][1]["input"] if i.get("type") == "function_call_output"]
         self.assertEqual(len(results), 1)
         self.assertIn('"PTS":21', results[0]["output"])
-        self.assertEqual(sent[-1][1]["max_output_tokens"], 50000)
+        self.assertEqual(sent[-1][1]["max_output_tokens"], 100000)
 
     def test_general_player_research_does_not_require_sportsbook_lines(self):
         with patch.object(chat, "post_openai", side_effect=[{"input_tokens": 1000}, response()]) as api:
