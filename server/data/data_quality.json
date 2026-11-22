@@ -1,15 +1,15 @@
 {
   "counts": {
-    "archived_games": 226,
-    "current_season_logs": 5459,
-    "events": 113016,
+    "archived_games": 241,
+    "current_season_logs": 5766,
+    "events": 120220,
     "games_without_events": 0,
     "games_without_ten_starters": 0,
-    "logs": 24259,
+    "logs": 24566,
     "roster": 528
   },
   "issues": [],
-  "last_updated": "2026-11-20T04:14:09.679245+00:00",
+  "last_updated": "2026-11-22T06:54:34.706004+00:00",
   "limitations": [
     "No direct history may mean no appearances or unresolved provider IDs; do not invent or fuzzy-match records.",
     "Non-null legacy stats do not prove original source completeness; older imports may contain default zeros.",
@@ -181,7 +181,7 @@
     }
   ],
   "source": "Local published-feed audit",
-  "source_updated_at": "2026-11-20T04:13:32.891959+00:00",
+  "source_updated_at": "2026-11-22T06:53:53.238408+00:00",
   "unavailable_feeds": [
     "team_advanced",
     "team_position_splits"

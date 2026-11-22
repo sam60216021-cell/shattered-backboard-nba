@@ -1,10 +1,10 @@
 {
-  "as_of": "2026-11-20T04:13:32.891959+00:00",
+  "as_of": "2026-11-22T06:53:53.238408+00:00",
   "players": [
     {
       "espn_id": "4397183",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Aaron Wiggins",
       "player_id": "1630598",
       "pos": "G",
@@ -18,7 +18,7 @@
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Asa Newell",
       "player_id": "1642854",
       "pos": "F",
@@ -32,7 +32,7 @@
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "CJ McCollum",
       "player_id": "203468",
       "pos": "G",
@@ -41,7 +41,7 @@
     {
       "espn_id": "4280151",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Corey Kispert",
       "player_id": "1630557",
       "pos": "F",
@@ -50,7 +50,7 @@
     {
       "espn_id": "2578185",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Dorian Finney-Smith",
       "player_id": "1627827",
       "pos": "F",
@@ -59,7 +59,7 @@
     {
       "espn_id": "4869342",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Dyson Daniels",
       "player_id": "1630700",
       "pos": "G",
@@ -73,7 +73,7 @@
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Henri Veesaar",
       "player_id": "5105571",
       "pos": "C",
@@ -82,7 +82,7 @@
     {
       "espn_id": "4701230",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jalen Johnson",
       "player_id": "1630552",
       "pos": "F",
@@ -91,7 +91,7 @@
     {
       "espn_id": "4431714",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jalen Wilson",
       "player_id": "1630592",
       "pos": "F",
@@ -101,11 +101,11 @@
       "espn_id": "3146557",
       "injuries": [
         {
-          "reported_at": "2026-11-19T22:07Z",
+          "reported_at": "2026-11-21T22:12Z",
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jock Landale",
       "player_id": "1629111",
       "pos": "C",
@@ -115,11 +115,11 @@
       "espn_id": "5149077",
       "injuries": [
         {
-          "reported_at": "2026-11-19T22:05Z",
-          "status": "Day-To-Day"
+          "reported_at": "2026-11-21T22:16Z",
+          "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Kingston Flemings",
       "player_id": "5149077",
       "pos": "G",
@@ -128,7 +128,7 @@
     {
       "espn_id": "4397020",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Luguentz Dort",
       "player_id": "1629652",
       "pos": "G",
@@ -142,7 +142,7 @@
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Mouhamed Gueye",
       "player_id": "1631243",
       "pos": "F",
@@ -151,7 +151,7 @@
     {
       "espn_id": "4278039",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Nickeil Alexander-Walker",
       "player_id": "1629638",
       "pos": "G",
@@ -160,7 +160,7 @@
     {
       "espn_id": "4431680",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Onyeka Okongwu",
       "player_id": "1630168",
       "pos": "F",
@@ -169,7 +169,7 @@
     {
       "espn_id": "4684443",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Rafael Castro",
       "player_id": "4684443",
       "pos": "F",
@@ -178,7 +178,7 @@
     {
       "espn_id": "4431941",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "RayJ Dennis",
       "player_id": "1642484",
       "pos": "G",
@@ -187,7 +187,7 @@
     {
       "espn_id": "5106262",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Zuby Ejiofor",
       "player_id": "5106262",
       "pos": "F",
@@ -196,7 +196,7 @@
     {
       "espn_id": "5242502",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Ben Saraf",
       "player_id": "1642879",
       "pos": "G",
@@ -205,7 +205,7 @@
     {
       "espn_id": "5174655",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Chaney Johnson",
       "player_id": "1643052",
       "pos": "F",
@@ -214,7 +214,7 @@
     {
       "espn_id": "5107173",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Danny Wolf",
       "player_id": "1642874",
       "pos": "F",
@@ -223,7 +223,7 @@
     {
       "espn_id": "4432194",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Day'Ron Sharpe",
       "player_id": "1630549",
       "pos": "C",
@@ -232,7 +232,7 @@
     {
       "espn_id": "5037873",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Drake Powell",
       "player_id": "1642962",
       "pos": "G",
@@ -241,7 +241,7 @@
     {
       "espn_id": "5175643",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Egor Demin",
       "player_id": "5175643",
       "pos": "G",
@@ -251,11 +251,11 @@
       "espn_id": "4702670",
       "injuries": [
         {
-          "reported_at": "2026-11-19T21:18Z",
-          "status": "Out"
+          "reported_at": "2026-11-21T14:51Z",
+          "status": "Day-To-Day"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Grant Nelson",
       "player_id": "1641761",
       "pos": "F",
@@ -264,7 +264,7 @@
     {
       "espn_id": "4687718",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Josh Minott",
       "player_id": "1631169",
       "pos": "F",
@@ -273,7 +273,7 @@
     {
       "espn_id": "4870564",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Joshua Jefferson",
       "player_id": "4870564",
       "pos": "F",
@@ -282,7 +282,7 @@
     {
       "espn_id": "3064514",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Julius Randle",
       "player_id": "203944",
       "pos": "F",
@@ -291,7 +291,7 @@
     {
       "espn_id": "4702177",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Keon Ellis",
       "player_id": "1631165",
       "pos": "G",
@@ -300,7 +300,7 @@
     {
       "espn_id": "4278104",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Michael Porter Jr.",
       "player_id": "1629008",
       "pos": "F",
@@ -309,7 +309,7 @@
     {
       "espn_id": "5101761",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Mikel Brown Jr.",
       "player_id": "5101761",
       "pos": "G",
@@ -318,7 +318,7 @@
     {
       "espn_id": "3150844",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Moritz Wagner",
       "player_id": "1629021",
       "pos": "C",
@@ -327,7 +327,7 @@
     {
       "espn_id": "4712896",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Noah Clowney",
       "player_id": "1641730",
       "pos": "F",
@@ -335,8 +335,13 @@
     },
     {
       "espn_id": "5279130",
-      "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injuries": [
+        {
+          "reported_at": "2026-11-21T14:51Z",
+          "status": "Day-To-Day"
+        }
+      ],
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Nolan Traore",
       "player_id": "1642849",
       "pos": "G",
@@ -345,7 +350,7 @@
     {
       "espn_id": "3907823",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Terance Mann",
       "player_id": "1629611",
       "pos": "G",
@@ -354,7 +359,7 @@
     {
       "espn_id": "5105626",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Tyler Bilodeau",
       "player_id": "5105626",
       "pos": "F",
@@ -363,7 +368,7 @@
     {
       "espn_id": "4702745",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Amari Williams",
       "player_id": "1642873",
       "pos": "F",
@@ -372,7 +377,7 @@
     {
       "espn_id": "4593841",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Baylor Scheierman",
       "player_id": "1631248",
       "pos": "G",
@@ -381,7 +386,7 @@
     {
       "espn_id": "5142621",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Chris Cenac Jr.",
       "player_id": "5142621",
       "pos": "F",
@@ -389,8 +394,13 @@
     },
     {
       "espn_id": "3078576",
-      "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injuries": [
+        {
+          "reported_at": "2026-11-21T20:53Z",
+          "status": "Out"
+        }
+      ],
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Derrick White",
       "player_id": "1628401",
       "pos": "G",
@@ -399,7 +409,7 @@
     {
       "espn_id": "4433188",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Devin Carter",
       "player_id": "1642269",
       "pos": "G",
@@ -408,7 +418,7 @@
     {
       "espn_id": "5106283",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Dillon Mitchell",
       "player_id": "5106283",
       "pos": "F",
@@ -417,7 +427,7 @@
     {
       "espn_id": "5175647",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Hugo Gonzalez",
       "player_id": "5175647",
       "pos": "G",
@@ -425,8 +435,13 @@
     },
     {
       "espn_id": "4065648",
-      "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injuries": [
+        {
+          "reported_at": "2026-11-21T20:51Z",
+          "status": "Out"
+        }
+      ],
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jayson Tatum",
       "player_id": "1628369",
       "pos": "F",
@@ -435,7 +450,7 @@
     {
       "espn_id": "4683689",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jordan Walsh",
       "player_id": "1641775",
       "pos": "G",
@@ -444,7 +459,7 @@
     {
       "espn_id": "4277951",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Luka Garza",
       "player_id": "1630568",
       "pos": "C",
@@ -453,7 +468,7 @@
     {
       "espn_id": "3195",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Mike Conley",
       "player_id": "201144",
       "pos": "G",
@@ -461,8 +476,13 @@
     },
     {
       "espn_id": "4351852",
-      "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injuries": [
+        {
+          "reported_at": "2026-11-21T20:55Z",
+          "status": "Out"
+        }
+      ],
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Mitchell Robinson",
       "player_id": "1629011",
       "pos": "C",
@@ -471,7 +491,7 @@
     {
       "espn_id": "4397424",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Neemias Queta",
       "player_id": "1629674",
       "pos": "C",
@@ -480,7 +500,7 @@
     {
       "espn_id": "4251",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Paul George",
       "player_id": "202331",
       "pos": "F",
@@ -489,7 +509,7 @@
     {
       "espn_id": "4066354",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Payton Pritchard",
       "player_id": "1630202",
       "pos": "G",
@@ -498,7 +518,7 @@
     {
       "espn_id": "4397251",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Ron Harper Jr.",
       "player_id": "1631199",
       "pos": "G",
@@ -507,7 +527,7 @@
     {
       "espn_id": "4065804",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Sam Hauser",
       "player_id": "1630573",
       "pos": "F",
@@ -516,7 +536,7 @@
     {
       "espn_id": "4433287",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Brandon Miller",
       "player_id": "1641706",
       "pos": "F",
@@ -525,7 +545,7 @@
     {
       "espn_id": "5060701",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Christian Anderson",
       "player_id": "5060701",
       "pos": "G",
@@ -534,7 +554,7 @@
     {
       "espn_id": "4395651",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Coby White",
       "player_id": "1629632",
       "pos": "G",
@@ -548,7 +568,7 @@
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Dennis Schroder",
       "player_id": "3032979",
       "pos": "G",
@@ -558,11 +578,11 @@
       "espn_id": "4066218",
       "injuries": [
         {
-          "reported_at": "2026-11-19T22:21Z",
-          "status": "Out"
+          "reported_at": "2026-11-21T14:49Z",
+          "status": "Day-To-Day"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Grant Williams",
       "player_id": "1629684",
       "pos": "F",
@@ -572,11 +592,11 @@
       "espn_id": "3135045",
       "injuries": [
         {
-          "reported_at": "2026-11-19T22:02Z",
-          "status": "Out"
+          "reported_at": "2026-11-21T14:49Z",
+          "status": "Day-To-Day"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Grayson Allen",
       "player_id": "1628960",
       "pos": "G",
@@ -585,7 +605,7 @@
     {
       "espn_id": "5281370",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Hannes Steinbach",
       "player_id": "5281370",
       "pos": "F",
@@ -599,7 +619,7 @@
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Kon Knueppel",
       "player_id": "1642851",
       "pos": "G",
@@ -608,7 +628,7 @@
     {
       "espn_id": "4684269",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Kylan Boswell",
       "player_id": "4684269",
       "pos": "G",
@@ -617,7 +637,7 @@
     {
       "espn_id": "5239590",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Liam McNeeley",
       "player_id": "1642862",
       "pos": "G",
@@ -626,7 +646,7 @@
     {
       "espn_id": "5176517",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Michael Ajayi",
       "player_id": "5176517",
       "pos": "F",
@@ -635,7 +655,7 @@
     {
       "espn_id": "4433249",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Moussa Diabate",
       "player_id": "4433249",
       "pos": "F",
@@ -644,7 +664,7 @@
     {
       "espn_id": "4396971",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Naz Reid",
       "player_id": "1629675",
       "pos": "C",
@@ -653,7 +673,7 @@
     {
       "espn_id": "4701225",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "PJ Hall",
       "player_id": "1641790",
       "pos": "C",
@@ -662,7 +682,7 @@
     {
       "espn_id": "2583632",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Royce O'Neale",
       "player_id": "1626220",
       "pos": "F",
@@ -671,7 +691,7 @@
     {
       "espn_id": "4576060",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Ryan Kalkbrenner",
       "player_id": "1641750",
       "pos": "C",
@@ -680,7 +700,7 @@
     {
       "espn_id": "4602025",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Sion James",
       "player_id": "1642883",
       "pos": "G",
@@ -689,7 +709,7 @@
     {
       "espn_id": "5211176",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Tidjane Salaun",
       "player_id": "5211176",
       "pos": "F",
@@ -698,7 +718,7 @@
     {
       "espn_id": "2990984",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Buddy Hield",
       "player_id": "1627741",
       "pos": "G",
@@ -712,7 +732,7 @@
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Caleb Wilson",
       "player_id": "5095151",
       "pos": "F",
@@ -721,7 +741,7 @@
     {
       "espn_id": "4848625",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Dailyn Swain",
       "player_id": "4848625",
       "pos": "G",
@@ -730,7 +750,7 @@
     {
       "espn_id": "4432822",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Isaac Okoro",
       "player_id": "1630171",
       "pos": "F",
@@ -738,8 +758,13 @@
     },
     {
       "espn_id": "4397189",
-      "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injuries": [
+        {
+          "reported_at": "2026-11-21T14:54Z",
+          "status": "Day-To-Day"
+        }
+      ],
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jalen Smith",
       "player_id": "1630188",
       "pos": "F",
@@ -748,7 +773,7 @@
     {
       "espn_id": "4898010",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jaylin Sellers",
       "player_id": "4898010",
       "pos": "G",
@@ -757,7 +782,7 @@
     {
       "espn_id": "4683750",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jordan Hawkins",
       "player_id": "1641722",
       "pos": "G",
@@ -766,7 +791,7 @@
     {
       "espn_id": "4871145",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Josh Giddey",
       "player_id": "1630581",
       "pos": "G",
@@ -775,7 +800,7 @@
     {
       "espn_id": "5044385",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Leonard Miller",
       "player_id": "1631159",
       "pos": "F",
@@ -784,7 +809,7 @@
     {
       "espn_id": "4711294",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Matas Buzelis",
       "player_id": "1641824",
       "pos": "F",
@@ -793,7 +818,7 @@
     {
       "espn_id": "4278067",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Nic Claxton",
       "player_id": "1629651",
       "pos": "C",
@@ -801,13 +826,8 @@
     },
     {
       "espn_id": "5242496",
-      "injuries": [
-        {
-          "reported_at": "2026-11-19T22:12Z",
-          "status": "Day-To-Day"
-        }
-      ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injuries": [],
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Noa Essengue",
       "player_id": "1642855",
       "pos": "F",
@@ -815,8 +835,13 @@
     },
     {
       "espn_id": "2595516",
-      "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injuries": [
+        {
+          "reported_at": "2026-11-22T00:11Z",
+          "status": "Day-To-Day"
+        }
+      ],
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Norman Powell",
       "player_id": "1626181",
       "pos": "G",
@@ -825,7 +850,7 @@
     {
       "espn_id": "4593049",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Orlando Robinson",
       "player_id": "4593049",
       "pos": "C",
@@ -833,8 +858,13 @@
     },
     {
       "espn_id": "4431687",
-      "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injuries": [
+        {
+          "reported_at": "2026-11-22T06:06Z",
+          "status": "Day-To-Day"
+        }
+      ],
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Patrick Williams",
       "player_id": "1630172",
       "pos": "F",
@@ -848,7 +878,7 @@
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Tobe Awaka",
       "player_id": "5105555",
       "pos": "F",
@@ -857,7 +887,7 @@
     {
       "espn_id": "4395626",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Tre Jones",
       "player_id": "1630200",
       "pos": "G",
@@ -866,7 +896,7 @@
     {
       "espn_id": "4066650",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Zach Collins",
       "player_id": "1628380",
       "pos": "F",
@@ -875,7 +905,7 @@
     {
       "espn_id": "4701233",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Craig Porter Jr.",
       "player_id": "1641854",
       "pos": "G",
@@ -884,7 +914,7 @@
     {
       "espn_id": "3908809",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Donovan Mitchell",
       "player_id": "1628378",
       "pos": "G",
@@ -893,7 +923,7 @@
     {
       "espn_id": "5106261",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Ernest Udeh Jr.",
       "player_id": "5106261",
       "pos": "C",
@@ -907,7 +937,7 @@
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Evan Mobley",
       "player_id": "1630596",
       "pos": "C",
@@ -916,7 +946,7 @@
     {
       "espn_id": "3992",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "James Harden",
       "player_id": "201935",
       "pos": "G",
@@ -925,7 +955,7 @@
     {
       "espn_id": "4066328",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jarrett Allen",
       "player_id": "1628386",
       "pos": "C",
@@ -939,7 +969,7 @@
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jaylon Tyson",
       "player_id": "1642281",
       "pos": "G",
@@ -948,7 +978,7 @@
     {
       "espn_id": "4997530",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Khalifa Diop",
       "player_id": "4997530",
       "pos": "C",
@@ -957,7 +987,7 @@
     {
       "espn_id": "2995706",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Mario Hezonja",
       "player_id": "2995706",
       "pos": "F",
@@ -966,7 +996,7 @@
     {
       "espn_id": "5041951",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Meleek Thomas",
       "player_id": "5041951",
       "pos": "G",
@@ -980,7 +1010,7 @@
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Nae'Qwan Tomlin",
       "player_id": "5106268",
       "pos": "F",
@@ -989,7 +1019,7 @@
     {
       "espn_id": "4702134",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Norchad Omier",
       "player_id": "4702134",
       "pos": "C",
@@ -997,13 +1027,8 @@
     },
     {
       "espn_id": "4576087",
-      "injuries": [
-        {
-          "reported_at": "2026-11-19T21:50Z",
-          "status": "Day-To-Day"
-        }
-      ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injuries": [],
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Peyton Watson",
       "player_id": "1631212",
       "pos": "G",
@@ -1012,7 +1037,7 @@
     {
       "espn_id": "5177362",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Riley Minix",
       "player_id": "5177362",
       "pos": "F",
@@ -1021,7 +1046,7 @@
     {
       "espn_id": "4066757",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Sam Merrill",
       "player_id": "1630241",
       "pos": "G",
@@ -1030,7 +1055,7 @@
     {
       "espn_id": "3934723",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Thomas Bryant",
       "player_id": "1628418",
       "pos": "C",
@@ -1039,7 +1064,7 @@
     {
       "espn_id": "5023693",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Tyrese Proctor",
       "player_id": "1642878",
       "pos": "G",
@@ -1048,7 +1073,7 @@
     {
       "espn_id": "4702099",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Zack Austin",
       "player_id": "4702099",
       "pos": "G",
@@ -1057,7 +1082,7 @@
     {
       "espn_id": "3138160",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Caleb Martin",
       "player_id": "1628997",
       "pos": "F",
@@ -1066,7 +1091,7 @@
     {
       "espn_id": "5041939",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Cooper Flagg",
       "player_id": "1642843",
       "pos": "F",
@@ -1075,7 +1100,7 @@
     {
       "espn_id": "4278049",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Daniel Gafford",
       "player_id": "1629655",
       "pos": "F",
@@ -1085,11 +1110,11 @@
       "espn_id": "4683688",
       "injuries": [
         {
-          "reported_at": "2026-11-17T22:45Z",
+          "reported_at": "2026-11-20T19:31Z",
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Dereck Lively II",
       "player_id": "1641726",
       "pos": "C",
@@ -1098,7 +1123,7 @@
     {
       "espn_id": "5105806",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jett Howard",
       "player_id": "1641724",
       "pos": "G",
@@ -1107,7 +1132,7 @@
     {
       "espn_id": "6442",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Kyrie Irving",
       "player_id": "6442",
       "pos": "G",
@@ -1116,7 +1141,7 @@
     {
       "espn_id": "4432107",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Marcus Sasser",
       "player_id": "1631204",
       "pos": "G",
@@ -1125,7 +1150,7 @@
     {
       "espn_id": "4432582",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Max Christie",
       "player_id": "1631108",
       "pos": "G",
@@ -1134,7 +1159,7 @@
     {
       "espn_id": "4873153",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Morez Johnson Jr.",
       "player_id": "4873153",
       "pos": "F",
@@ -1143,7 +1168,7 @@
     {
       "espn_id": "4701208",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Moussa Cisse",
       "player_id": "1630619",
       "pos": "C",
@@ -1152,7 +1177,7 @@
     {
       "espn_id": "4278594",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Naji Marshall",
       "player_id": "1630230",
       "pos": "F",
@@ -1160,8 +1185,13 @@
     },
     {
       "espn_id": "4278078",
-      "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injuries": [
+        {
+          "reported_at": "2026-11-21T23:14Z",
+          "status": "Out"
+        }
+      ],
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "P.J. Washington",
       "player_id": "1629023",
       "pos": "F",
@@ -1170,7 +1200,7 @@
     {
       "espn_id": "4593125",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Santi Aldama",
       "player_id": "1630583",
       "pos": "F",
@@ -1184,7 +1214,7 @@
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Sergio de Larrea",
       "player_id": "5279129",
       "pos": "F",
@@ -1198,7 +1228,7 @@
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Tarik Biberovic",
       "player_id": "5148538",
       "pos": "F",
@@ -1208,11 +1238,11 @@
       "espn_id": "5106040",
       "injuries": [
         {
-          "reported_at": "2026-11-19T14:51Z",
-          "status": "Day-To-Day"
+          "reported_at": "2026-11-21T15:08Z",
+          "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Tobi Lawal",
       "player_id": "5106040",
       "pos": "F",
@@ -1221,7 +1251,7 @@
     {
       "espn_id": "4896372",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Walter Clayton Jr.",
       "player_id": "1642383",
       "pos": "G",
@@ -1230,7 +1260,7 @@
     {
       "espn_id": "5211175",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Zaccharie Risacher",
       "player_id": "1642258",
       "pos": "F",
@@ -1239,7 +1269,7 @@
     {
       "espn_id": "3064290",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Aaron Gordon",
       "player_id": "203932",
       "pos": "F",
@@ -1248,7 +1278,7 @@
     {
       "espn_id": "4065813",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Alpha Diallo",
       "player_id": "4065813",
       "pos": "F",
@@ -1257,7 +1287,7 @@
     {
       "espn_id": "4565698",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Bryce Hopkins",
       "player_id": "4565698",
       "pos": "F",
@@ -1266,7 +1296,7 @@
     {
       "espn_id": "5105592",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Cam Whitmore",
       "player_id": "1641715",
       "pos": "F",
@@ -1275,7 +1305,7 @@
     {
       "espn_id": "3138196",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Cameron Johnson",
       "player_id": "1629661",
       "pos": "F",
@@ -1284,7 +1314,7 @@
     {
       "espn_id": "4431767",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Christian Braun",
       "player_id": "1631128",
       "pos": "G",
@@ -1293,7 +1323,7 @@
     {
       "espn_id": "4433607",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "DaRon Holmes II",
       "player_id": "1641747",
       "pos": "F",
@@ -1302,7 +1332,7 @@
     {
       "espn_id": "3978",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "DeMar DeRozan",
       "player_id": "201942",
       "pos": "G",
@@ -1311,7 +1341,7 @@
     {
       "espn_id": "3936299",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jamal Murray",
       "player_id": "1627750",
       "pos": "G",
@@ -1325,7 +1355,7 @@
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Julian Strawther",
       "player_id": "1631124",
       "pos": "G",
@@ -1334,7 +1364,7 @@
     {
       "espn_id": "4277848",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Marvin Bagley III",
       "player_id": "1628963",
       "pos": "F",
@@ -1343,7 +1373,7 @@
     {
       "espn_id": "3112335",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Nikola Jokic",
       "player_id": "3112335",
       "pos": "C",
@@ -1352,7 +1382,7 @@
     {
       "espn_id": "4433629",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Ryan Nembhard",
       "player_id": "1642948",
       "pos": "G",
@@ -1361,7 +1391,7 @@
     {
       "espn_id": "4592427",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Spencer Jones",
       "player_id": "1642461",
       "pos": "F",
@@ -1370,7 +1400,7 @@
     {
       "espn_id": "4698719",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Trevon Brazile",
       "player_id": "4698719",
       "pos": "F",
@@ -1379,7 +1409,7 @@
     {
       "espn_id": "3135046",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Tyus Jones",
       "player_id": "1626145",
       "pos": "G",
@@ -1388,7 +1418,7 @@
     {
       "espn_id": "4431690",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Zeke Nnaji",
       "player_id": "1630192",
       "pos": "F",
@@ -1397,7 +1427,7 @@
     {
       "espn_id": "4684742",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Ausar Thompson",
       "player_id": "1641709",
       "pos": "G",
@@ -1407,11 +1437,11 @@
       "espn_id": "4432166",
       "injuries": [
         {
-          "reported_at": "2026-11-19T21:36Z",
+          "reported_at": "2026-11-21T22:23Z",
           "status": "Day-To-Day"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Cade Cunningham",
       "player_id": "1630595",
       "pos": "G",
@@ -1420,7 +1450,7 @@
     {
       "espn_id": "4700852",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Chaz Lanier",
       "player_id": "4700852",
       "pos": "G",
@@ -1429,7 +1459,7 @@
     {
       "espn_id": "5107199",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Daniss Jenkins",
       "player_id": "1642450",
       "pos": "G",
@@ -1443,7 +1473,7 @@
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Duncan Robinson",
       "player_id": "1629130",
       "pos": "F",
@@ -1453,11 +1483,11 @@
       "espn_id": "5258459",
       "injuries": [
         {
-          "reported_at": "2026-11-19T21:43Z",
+          "reported_at": "2026-11-21T22:34Z",
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Ebuka Okorie",
       "player_id": "5258459",
       "pos": "G",
@@ -1466,7 +1496,7 @@
     {
       "espn_id": "4397449",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Elijah Harkless",
       "player_id": "1641989",
       "pos": "G",
@@ -1475,7 +1505,7 @@
     {
       "espn_id": "5107818",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Isaac Jones",
       "player_id": "1642403",
       "pos": "C",
@@ -1484,7 +1514,7 @@
     {
       "espn_id": "4395702",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Isaiah Joe",
       "player_id": "1630198",
       "pos": "G",
@@ -1498,7 +1528,7 @@
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jalen Duren",
       "player_id": "1631105",
       "pos": "C",
@@ -1507,7 +1537,7 @@
     {
       "espn_id": "2596112",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Javonte Green",
       "player_id": "1629750",
       "pos": "G",
@@ -1516,7 +1546,7 @@
     {
       "espn_id": "3908845",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "John Collins",
       "player_id": "1628381",
       "pos": "F",
@@ -1525,7 +1555,7 @@
     {
       "espn_id": "4066372",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Kevin Huerter",
       "player_id": "1628989",
       "pos": "G",
@@ -1534,7 +1564,7 @@
     {
       "espn_id": "4278562",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Paul Reed",
       "player_id": "1630194",
       "pos": "F",
@@ -1544,11 +1574,11 @@
       "espn_id": "4683771",
       "injuries": [
         {
-          "reported_at": "2026-11-19T21:41Z",
+          "reported_at": "2026-11-21T23:05Z",
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Ronald Holland II",
       "player_id": "1641842",
       "pos": "F",
@@ -1558,11 +1588,11 @@
       "espn_id": "2990962",
       "injuries": [
         {
-          "reported_at": "2026-11-19T21:53Z",
+          "reported_at": "2026-11-20T23:02Z",
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Taurean Prince",
       "player_id": "1627752",
       "pos": "F",
@@ -1571,7 +1601,7 @@
     {
       "espn_id": "4397882",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Tolu Smith",
       "player_id": "1642449",
       "pos": "F",
@@ -1585,7 +1615,7 @@
           "status": "Day-To-Day"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Ugonna Onyenso",
       "player_id": "5037878",
       "pos": "C",
@@ -1594,7 +1624,7 @@
     {
       "espn_id": "3213",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Al Horford",
       "player_id": "201143",
       "pos": "C",
@@ -1603,7 +1633,7 @@
     {
       "espn_id": "4709138",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Brandin Podziemski",
       "player_id": "1641764",
       "pos": "G",
@@ -1613,11 +1643,11 @@
       "espn_id": "4397040",
       "injuries": [
         {
-          "reported_at": "2026-11-18T17:12Z",
+          "reported_at": "2026-11-22T06:10Z",
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Brandon Williams",
       "player_id": "1630314",
       "pos": "G",
@@ -1626,7 +1656,7 @@
     {
       "espn_id": "4397886",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Charles Bassey",
       "player_id": "1629646",
       "pos": "C",
@@ -1635,7 +1665,7 @@
     {
       "espn_id": "4066436",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "De'Anthony Melton",
       "player_id": "1629001",
       "pos": "G",
@@ -1643,13 +1673,8 @@
     },
     {
       "espn_id": "6589",
-      "injuries": [
-        {
-          "reported_at": "2026-11-20T03:53Z",
-          "status": "Day-To-Day"
-        }
-      ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injuries": [],
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Draymond Green",
       "player_id": "203110",
       "pos": "F",
@@ -1658,7 +1683,7 @@
     {
       "espn_id": "3134903",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Gary Payton II",
       "player_id": "1627780",
       "pos": "G",
@@ -1667,7 +1692,7 @@
     {
       "espn_id": "2990969",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Georges Niang",
       "player_id": "2990969",
       "pos": "F",
@@ -1676,7 +1701,7 @@
     {
       "espn_id": "4703396",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Graham Ike",
       "player_id": "4703396",
       "pos": "F",
@@ -1685,7 +1710,7 @@
     {
       "espn_id": "4997536",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Gui Santos",
       "player_id": "1630611",
       "pos": "F",
@@ -1699,7 +1724,7 @@
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jimmy Butler III",
       "player_id": "202710",
       "pos": "F",
@@ -1713,7 +1738,7 @@
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Kristaps Porzingis",
       "player_id": "3102531",
       "pos": "C",
@@ -1722,7 +1747,7 @@
     {
       "espn_id": "4433149",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "LJ Cryer",
       "player_id": "1643018",
       "pos": "G",
@@ -1731,7 +1756,7 @@
     {
       "espn_id": "4897449",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Malevy Leons",
       "player_id": "1642502",
       "pos": "F",
@@ -1745,7 +1770,7 @@
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Moses Moody",
       "player_id": "1630541",
       "pos": "G",
@@ -1759,7 +1784,7 @@
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Stephen Curry",
       "player_id": "201939",
       "pos": "G",
@@ -1768,7 +1793,7 @@
     {
       "espn_id": "4897262",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Will Richard",
       "player_id": "1642954",
       "pos": "G",
@@ -1777,7 +1802,7 @@
     {
       "espn_id": "5175737",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Yaxel Lendeborg",
       "player_id": "5175737",
       "pos": "F",
@@ -1785,13 +1810,8 @@
     },
     {
       "espn_id": "4871144",
-      "injuries": [
-        {
-          "reported_at": "2026-11-19T23:17Z",
-          "status": "Day-To-Day"
-        }
-      ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injuries": [],
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Alperen Sengun",
       "player_id": "1630578",
       "pos": "C",
@@ -1800,7 +1820,7 @@
     {
       "espn_id": "4684740",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Amen Thompson",
       "player_id": "1641708",
       "pos": "G",
@@ -1809,7 +1829,7 @@
     {
       "espn_id": "3037789",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Bogdan Bogdanovic",
       "player_id": "3037789",
       "pos": "G",
@@ -1818,7 +1838,7 @@
     {
       "espn_id": "5105837",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Bruce Thornton",
       "player_id": "5105837",
       "pos": "G",
@@ -1832,7 +1852,7 @@
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Clint Capela",
       "player_id": "203991",
       "pos": "C",
@@ -1841,7 +1861,7 @@
     {
       "espn_id": "2991230",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Fred VanVleet",
       "player_id": "2991230",
       "pos": "G",
@@ -1850,7 +1870,7 @@
     {
       "espn_id": "4592857",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Isaiah Crawford",
       "player_id": "1642384",
       "pos": "F",
@@ -1859,7 +1879,7 @@
     {
       "espn_id": "4432639",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jabari Smith Jr.",
       "player_id": "1631095",
       "pos": "F",
@@ -1868,7 +1888,7 @@
     {
       "espn_id": "3136777",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jae'Sean Tate",
       "player_id": "1630256",
       "pos": "F",
@@ -1877,7 +1897,7 @@
     {
       "espn_id": "5105553",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Julian Phillips",
       "player_id": "1641763",
       "pos": "F",
@@ -1886,7 +1906,7 @@
     {
       "espn_id": "3202",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Kevin Durant",
       "player_id": "201142",
       "pos": "F",
@@ -1895,7 +1915,7 @@
     {
       "espn_id": "2990992",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Marcus Smart",
       "player_id": "203935",
       "pos": "G",
@@ -1904,7 +1924,7 @@
     {
       "espn_id": "4432827",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Oscar Tshiebwe",
       "player_id": "1631131",
       "pos": "C",
@@ -1913,7 +1933,7 @@
     {
       "espn_id": "4683860",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Quadir Copeland",
       "player_id": "4683860",
       "pos": "G",
@@ -1922,7 +1942,7 @@
     {
       "espn_id": "4711272",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Reed Sheppard",
       "player_id": "1642263",
       "pos": "G",
@@ -1930,13 +1950,8 @@
     },
     {
       "espn_id": "2991235",
-      "injuries": [
-        {
-          "reported_at": "2026-11-19T23:22Z",
-          "status": "Day-To-Day"
-        }
-      ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injuries": [],
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Steven Adams",
       "player_id": "203500",
       "pos": "C",
@@ -1945,7 +1960,7 @@
     {
       "espn_id": "4433192",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Tari Eason",
       "player_id": "1631106",
       "pos": "F",
@@ -1954,7 +1969,7 @@
     {
       "espn_id": "4396909",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Aaron Nesmith",
       "player_id": "1630174",
       "pos": "G",
@@ -1962,13 +1977,8 @@
     },
     {
       "espn_id": "4395712",
-      "injuries": [
-        {
-          "reported_at": "2026-11-19T22:07Z",
-          "status": "Day-To-Day"
-        }
-      ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injuries": [],
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Andrew Nembhard",
       "player_id": "1629614",
       "pos": "G",
@@ -1982,7 +1992,7 @@
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Ben Sheppard",
       "player_id": "1641767",
       "pos": "G",
@@ -1990,13 +2000,8 @@
     },
     {
       "espn_id": "5105854",
-      "injuries": [
-        {
-          "reported_at": "2026-11-19T22:05Z",
-          "status": "Day-To-Day"
-        }
-      ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injuries": [],
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Braden Smith",
       "player_id": "5105854",
       "pos": "G",
@@ -2005,7 +2010,7 @@
     {
       "espn_id": "4017837",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Ivica Zubac",
       "player_id": "1627826",
       "pos": "C",
@@ -2014,7 +2019,7 @@
     {
       "espn_id": "4398207",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jalen Slawson",
       "player_id": "1641771",
       "pos": "F",
@@ -2023,7 +2028,7 @@
     {
       "espn_id": "5106060",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jarace Walker",
       "player_id": "1641716",
       "pos": "F",
@@ -2032,7 +2037,7 @@
     {
       "espn_id": "4065731",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jay Huff",
       "player_id": "1630643",
       "pos": "C",
@@ -2046,7 +2051,7 @@
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Johnny Furphy",
       "player_id": "1642277",
       "pos": "G",
@@ -2055,7 +2060,7 @@
     {
       "espn_id": "3133603",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Kelly Oubre Jr.",
       "player_id": "1626162",
       "pos": "G",
@@ -2064,7 +2069,7 @@
     {
       "espn_id": "4431752",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Kobe Brown",
       "player_id": "1641738",
       "pos": "G",
@@ -2073,7 +2078,7 @@
     {
       "espn_id": "2580365",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Larry Nance Jr.",
       "player_id": "1626204",
       "pos": "F",
@@ -2082,7 +2087,7 @@
     {
       "espn_id": "4278355",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Obi Toppin",
       "player_id": "1630167",
       "pos": "F",
@@ -2090,8 +2095,13 @@
     },
     {
       "espn_id": "3149673",
-      "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injuries": [
+        {
+          "reported_at": "2026-11-21T22:19Z",
+          "status": "Day-To-Day"
+        }
+      ],
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Pascal Siakam",
       "player_id": "1627783",
       "pos": "F",
@@ -2100,7 +2110,7 @@
     {
       "espn_id": "4592829",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Quenton Jackson",
       "player_id": "1631245",
       "pos": "G",
@@ -2110,11 +2120,11 @@
       "espn_id": "2530530",
       "injuries": [
         {
-          "reported_at": "2026-11-19T22:14Z",
-          "status": "Day-To-Day"
+          "reported_at": "2026-11-21T22:29Z",
+          "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "T.J. McConnell",
       "player_id": "204456",
       "pos": "G",
@@ -2124,11 +2134,11 @@
       "espn_id": "4396993",
       "injuries": [
         {
-          "reported_at": "2026-11-17T18:46Z",
+          "reported_at": "2026-11-20T20:41Z",
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Tyrese Haliburton",
       "player_id": "4396993",
       "pos": "G",
@@ -2137,7 +2147,7 @@
     {
       "espn_id": "5075626",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Baba Miller",
       "player_id": "5075626",
       "pos": "F",
@@ -2146,7 +2156,7 @@
     {
       "espn_id": "4683935",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Blake Wesley",
       "player_id": "4683935",
       "pos": "G",
@@ -2160,7 +2170,7 @@
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Bradley Beal",
       "player_id": "203078",
       "pos": "G",
@@ -2170,11 +2180,11 @@
       "espn_id": "3913176",
       "injuries": [
         {
-          "reported_at": "2026-11-18T23:11Z",
+          "reported_at": "2026-11-20T20:20Z",
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Brandon Ingram",
       "player_id": "1627742",
       "pos": "F",
@@ -2183,7 +2193,7 @@
     {
       "espn_id": "3448",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Brook Lopez",
       "player_id": "201572",
       "pos": "C",
@@ -2192,7 +2202,7 @@
     {
       "espn_id": "4845363",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Cam Christie",
       "player_id": "1642353",
       "pos": "G",
@@ -2201,7 +2211,7 @@
     {
       "espn_id": "4396907",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Darius Garland",
       "player_id": "1629636",
       "pos": "G",
@@ -2210,7 +2220,7 @@
     {
       "espn_id": "3936099",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Derrick Jones Jr.",
       "player_id": "1627884",
       "pos": "F",
@@ -2219,7 +2229,7 @@
     {
       "espn_id": "5106258",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Gradey Dick",
       "player_id": "1641711",
       "pos": "G",
@@ -2228,7 +2238,7 @@
     {
       "espn_id": "4432170",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Isaiah Jackson",
       "player_id": "1630543",
       "pos": "F",
@@ -2237,7 +2247,7 @@
     {
       "espn_id": "4398390",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jalen Pickett",
       "player_id": "1629618",
       "pos": "G",
@@ -2251,7 +2261,7 @@
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jordan Miller",
       "player_id": "1641757",
       "pos": "G",
@@ -2260,7 +2270,7 @@
     {
       "espn_id": "5254165",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Keaton Wagler",
       "player_id": "5254165",
       "pos": "G",
@@ -2269,7 +2279,7 @@
     {
       "espn_id": "4702352",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Kobe Sanders",
       "player_id": "1642920",
       "pos": "G",
@@ -2278,7 +2288,7 @@
     {
       "espn_id": "2991139",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Kris Dunn",
       "player_id": "1627739",
       "pos": "G",
@@ -2287,7 +2297,7 @@
     {
       "espn_id": "4065778",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Max Strus",
       "player_id": "1629622",
       "pos": "G",
@@ -2296,7 +2306,7 @@
     {
       "espn_id": "5105832",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Nick Martinelli",
       "player_id": "5105832",
       "pos": "F",
@@ -2305,7 +2315,7 @@
     {
       "espn_id": "4066648",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Rui Hachimura",
       "player_id": "1629060",
       "pos": "F",
@@ -2314,7 +2324,7 @@
     {
       "espn_id": "5108024",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Yanic Konan Niederhauser",
       "player_id": "5108024",
       "pos": "C",
@@ -2323,7 +2333,7 @@
     {
       "espn_id": "5114350",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "AK Okereke",
       "player_id": "5114350",
       "pos": "F",
@@ -2332,7 +2342,7 @@
     {
       "espn_id": "5060631",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Adou Thiero",
       "player_id": "1642876",
       "pos": "F",
@@ -2341,7 +2351,7 @@
     {
       "espn_id": "4433599",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Arthur Kaluma",
       "player_id": "4433599",
       "pos": "F",
@@ -2351,11 +2361,11 @@
       "espn_id": "4066457",
       "injuries": [
         {
-          "reported_at": "2026-11-20T01:05Z",
+          "reported_at": "2026-11-21T01:26Z",
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Austin Reaves",
       "player_id": "1630559",
       "pos": "G",
@@ -2364,7 +2374,7 @@
     {
       "espn_id": "4683774",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Bronny James",
       "player_id": "1642355",
       "pos": "G",
@@ -2373,7 +2383,7 @@
     {
       "espn_id": "5113969",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Cameron Carr",
       "player_id": "5113969",
       "pos": "G",
@@ -2382,7 +2392,7 @@
     {
       "espn_id": "5105817",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Carson Cooper",
       "player_id": "5105817",
       "pos": "C",
@@ -2391,7 +2401,7 @@
     {
       "espn_id": "4702972",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Chris Manon",
       "player_id": "4702972",
       "pos": "G",
@@ -2400,7 +2410,7 @@
     {
       "espn_id": "4277811",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Collin Sexton",
       "player_id": "1629012",
       "pos": "G",
@@ -2409,7 +2419,7 @@
     {
       "espn_id": "4868423",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jaden Hardy",
       "player_id": "1630702",
       "pos": "G",
@@ -2418,7 +2428,7 @@
     {
       "espn_id": "4592691",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jake LaRavia",
       "player_id": "1631222",
       "pos": "F",
@@ -2427,7 +2437,7 @@
     {
       "espn_id": "4278077",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jarred Vanderbilt",
       "player_id": "1629020",
       "pos": "F",
@@ -2436,7 +2446,7 @@
     {
       "espn_id": "3155535",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Kevon Looney",
       "player_id": "1626172",
       "pos": "F",
@@ -2445,7 +2455,7 @@
     {
       "espn_id": "3945274",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Luka Doncic",
       "player_id": "3945274",
       "pos": "G",
@@ -2454,7 +2464,7 @@
     {
       "espn_id": "3907498",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Matisse Thybulle",
       "player_id": "1629680",
       "pos": "G",
@@ -2463,7 +2473,7 @@
     {
       "espn_id": "4397014",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Quentin Grimes",
       "player_id": "1629656",
       "pos": "G",
@@ -2472,7 +2482,7 @@
     {
       "espn_id": "4278580",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Sandro Mamukelashvili",
       "player_id": "1630572",
       "pos": "F",
@@ -2481,7 +2491,7 @@
     {
       "espn_id": "4433136",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Walker Kessler",
       "player_id": "1631117",
       "pos": "C",
@@ -2490,7 +2500,7 @@
     {
       "espn_id": "4433137",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Ziaire Williams",
       "player_id": "1630533",
       "pos": "F",
@@ -2499,7 +2509,7 @@
     {
       "espn_id": "4433083",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Cam Spencer",
       "player_id": "1642285",
       "pos": "G",
@@ -2507,8 +2517,13 @@
     },
     {
       "espn_id": "5041935",
-      "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injuries": [
+        {
+          "reported_at": "2026-11-20T23:12Z",
+          "status": "Out"
+        }
+      ],
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Cameron Boozer",
       "player_id": "5041935",
       "pos": "F",
@@ -2517,7 +2532,7 @@
     {
       "espn_id": "4903027",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Cedric Coward",
       "player_id": "1642907",
       "pos": "F",
@@ -2531,7 +2546,7 @@
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "GG Jackson",
       "player_id": "1641713",
       "pos": "F",
@@ -2540,7 +2555,7 @@
     {
       "espn_id": "4432810",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Isaiah Stewart",
       "player_id": "1630191",
       "pos": "C",
@@ -2549,7 +2564,7 @@
     {
       "espn_id": "4683934",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jahmai Mashack",
       "player_id": "1642942",
       "pos": "G",
@@ -2557,8 +2572,13 @@
     },
     {
       "espn_id": "4781746",
-      "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injuries": [
+        {
+          "reported_at": "2026-11-20T23:14Z",
+          "status": "Out"
+        }
+      ],
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Javon Small",
       "player_id": "1642914",
       "pos": "G",
@@ -2567,7 +2587,7 @@
     {
       "espn_id": "5112087",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jaylen Wells",
       "player_id": "1642377",
       "pos": "F",
@@ -2577,11 +2597,11 @@
       "espn_id": "2991070",
       "injuries": [
         {
-          "reported_at": "2026-11-20T02:08Z",
-          "status": "Day-To-Day"
+          "reported_at": "2026-11-21T08:08Z",
+          "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jerami Grant",
       "player_id": "203924",
       "pos": "F",
@@ -2590,7 +2610,7 @@
     {
       "espn_id": "5231919",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Karim Lopez",
       "player_id": "5231919",
       "pos": "F",
@@ -2599,7 +2619,7 @@
     {
       "espn_id": "4594326",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Kris Murray",
       "player_id": "1631200",
       "pos": "F",
@@ -2608,7 +2628,7 @@
     {
       "espn_id": "4595400",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Olivier-Maxence Prosper",
       "player_id": "1641765",
       "pos": "F",
@@ -2617,7 +2637,7 @@
     {
       "espn_id": "4593016",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Quinten Post",
       "player_id": "1642366",
       "pos": "C",
@@ -2631,7 +2651,7 @@
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Richie Saunders",
       "player_id": "5105462",
       "pos": "G",
@@ -2645,7 +2665,7 @@
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Scotty Pippen Jr.",
       "player_id": "1630590",
       "pos": "G",
@@ -2654,7 +2674,7 @@
     {
       "espn_id": "4684806",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Taylor Hendricks",
       "player_id": "1641707",
       "pos": "F",
@@ -2662,13 +2682,8 @@
     },
     {
       "espn_id": "4065733",
-      "injuries": [
-        {
-          "reported_at": "2026-11-19T19:07Z",
-          "status": "Out"
-        }
-      ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injuries": [],
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Ty Jerome",
       "player_id": "1629660",
       "pos": "G",
@@ -2676,13 +2691,8 @@
     },
     {
       "espn_id": "4600663",
-      "injuries": [
-        {
-          "reported_at": "2026-11-20T03:53Z",
-          "status": "Day-To-Day"
-        }
-      ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injuries": [],
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Zach Edey",
       "player_id": "1641744",
       "pos": "C",
@@ -2691,7 +2701,7 @@
     {
       "espn_id": "3059319",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Andrew Wiggins",
       "player_id": "203952",
       "pos": "F",
@@ -2700,7 +2710,7 @@
     {
       "espn_id": "4066261",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Bam Adebayo",
       "player_id": "1628389",
       "pos": "C",
@@ -2709,7 +2719,7 @@
     {
       "espn_id": "3064482",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Bobby Portis",
       "player_id": "1626171",
       "pos": "F",
@@ -2718,7 +2728,7 @@
     {
       "espn_id": "4278053",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Davion Mitchell",
       "player_id": "1630558",
       "pos": "G",
@@ -2727,7 +2737,7 @@
     {
       "espn_id": "4066993",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Dru Smith",
       "player_id": "1630696",
       "pos": "G",
@@ -2735,8 +2745,13 @@
     },
     {
       "espn_id": "3032977",
-      "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injuries": [
+        {
+          "reported_at": "2026-11-21T20:33Z",
+          "status": "Day-To-Day"
+        }
+      ],
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Giannis Antetokounmpo",
       "player_id": "203507",
       "pos": "F",
@@ -2745,7 +2760,7 @@
     {
       "espn_id": "4431786",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Keshad Johnson",
       "player_id": "1642352",
       "pos": "F",
@@ -2754,7 +2769,7 @@
     {
       "espn_id": "6475",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Klay Thompson",
       "player_id": "202691",
       "pos": "G",
@@ -2764,11 +2779,11 @@
       "espn_id": "4431772",
       "injuries": [
         {
-          "reported_at": "2026-11-19T14:45Z",
+          "reported_at": "2026-11-21T20:35Z",
           "status": "Day-To-Day"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Myron Gardner",
       "player_id": "1642066",
       "pos": "F",
@@ -2777,7 +2792,7 @@
     {
       "espn_id": "4278076",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Nick Richards",
       "player_id": "1630208",
       "pos": "C",
@@ -2786,7 +2801,7 @@
     {
       "espn_id": "4997528",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Nikola Jovic",
       "player_id": "4997528",
       "pos": "F",
@@ -2795,7 +2810,7 @@
     {
       "espn_id": "4601025",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Pelle Larsson",
       "player_id": "1641796",
       "pos": "G",
@@ -2804,7 +2819,7 @@
     {
       "espn_id": "5107157",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Ryan Conwell",
       "player_id": "5107157",
       "pos": "G",
@@ -2813,7 +2828,7 @@
     {
       "espn_id": "3899664",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Simone Fontecchio",
       "player_id": "1631323",
       "pos": "F",
@@ -2822,7 +2837,7 @@
     {
       "espn_id": "2528210",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Tim Hardaway Jr.",
       "player_id": "203501",
       "pos": "G",
@@ -2831,7 +2846,7 @@
     {
       "espn_id": "4837356",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Tre Donaldson",
       "player_id": "4837356",
       "pos": "G",
@@ -2840,7 +2855,7 @@
     {
       "espn_id": "4700818",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Vladislav Goldin",
       "player_id": "1642884",
       "pos": "C",
@@ -2849,7 +2864,7 @@
     {
       "espn_id": "4397475",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "AJ Green",
       "player_id": "1631260",
       "pos": "G",
@@ -2858,7 +2873,7 @@
     {
       "espn_id": "5214989",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Bogoljub Markovic",
       "player_id": "5214989",
       "pos": "F",
@@ -2867,7 +2882,7 @@
     {
       "espn_id": "5082206",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Brayden Burries",
       "player_id": "5082206",
       "pos": "G",
@@ -2876,7 +2891,7 @@
     {
       "espn_id": "2991043",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Caris LeVert",
       "player_id": "1627747",
       "pos": "G",
@@ -2885,7 +2900,7 @@
     {
       "espn_id": "4397114",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Cormac Ryan",
       "player_id": "1642504",
       "pos": "G",
@@ -2894,7 +2909,7 @@
     {
       "espn_id": "4277843",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Gary Trent Jr.",
       "player_id": "1629018",
       "pos": "G",
@@ -2903,7 +2918,7 @@
     {
       "espn_id": "4432848",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jaime Jaquez Jr.",
       "player_id": "1631170",
       "pos": "F",
@@ -2912,7 +2927,7 @@
     {
       "espn_id": "4277922",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jericho Sims",
       "player_id": "1630579",
       "pos": "C",
@@ -2921,7 +2936,7 @@
     {
       "espn_id": "4697268",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Kam Jones",
       "player_id": "1642880",
       "pos": "G",
@@ -2930,7 +2945,7 @@
     {
       "espn_id": "5214640",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Kasparas Jakucionis",
       "player_id": "5214640",
       "pos": "G",
@@ -2939,7 +2954,7 @@
     {
       "espn_id": "5105623",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Kel'el Ware",
       "player_id": "1642276",
       "pos": "C",
@@ -2947,13 +2962,8 @@
     },
     {
       "espn_id": "3134907",
-      "injuries": [
-        {
-          "reported_at": "2026-11-20T03:55Z",
-          "status": "Day-To-Day"
-        }
-      ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injuries": [],
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Kyle Kuzma",
       "player_id": "1628398",
       "pos": "F",
@@ -2961,13 +2971,8 @@
     },
     {
       "espn_id": "3133628",
-      "injuries": [
-        {
-          "reported_at": "2026-11-20T03:55Z",
-          "status": "Day-To-Day"
-        }
-      ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injuries": [],
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Myles Turner",
       "player_id": "1626167",
       "pos": "C",
@@ -2976,7 +2981,7 @@
     {
       "espn_id": "5164559",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Nate Ament",
       "player_id": "5164559",
       "pos": "F",
@@ -2990,7 +2995,7 @@
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Ousmane Dieng",
       "player_id": "1631172",
       "pos": "F",
@@ -2999,7 +3004,7 @@
     {
       "espn_id": "4397233",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Pete Nance",
       "player_id": "1631250",
       "pos": "F",
@@ -3008,7 +3013,7 @@
     {
       "espn_id": "4591725",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Ryan Rollins",
       "player_id": "1631157",
       "pos": "G",
@@ -3017,7 +3022,7 @@
     {
       "espn_id": "4395725",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Tyler Herro",
       "player_id": "1629639",
       "pos": "G",
@@ -3031,7 +3036,7 @@
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Anthony Edwards",
       "player_id": "1630162",
       "pos": "G",
@@ -3040,7 +3045,7 @@
     {
       "espn_id": "4397002",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Ayo Dosunmu",
       "player_id": "1630245",
       "pos": "G",
@@ -3049,7 +3054,7 @@
     {
       "espn_id": "4592492",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Bones Hyland",
       "player_id": "1630538",
       "pos": "G",
@@ -3058,7 +3063,7 @@
     {
       "espn_id": "4895758",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Cody Williams",
       "player_id": "1642262",
       "pos": "F",
@@ -3072,7 +3077,7 @@
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Donte DiVincenzo",
       "player_id": "1628978",
       "pos": "G",
@@ -3081,7 +3086,7 @@
     {
       "espn_id": "5061585",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Isaiah Evans",
       "player_id": "5061585",
       "pos": "F",
@@ -3090,7 +3095,7 @@
     {
       "espn_id": "4431671",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jaden McDaniels",
       "player_id": "1630183",
       "pos": "F",
@@ -3104,7 +3109,7 @@
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jaylen Clark",
       "player_id": "1641740",
       "pos": "G",
@@ -3113,7 +3118,7 @@
     {
       "espn_id": "5279133",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Joan Beringer",
       "player_id": "1642866",
       "pos": "F",
@@ -3122,7 +3127,7 @@
     {
       "espn_id": "4433569",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Johni Broome",
       "player_id": "4433569",
       "pos": "F",
@@ -3131,7 +3136,7 @@
     {
       "espn_id": "4433247",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jonathan Kuminga",
       "player_id": "1630228",
       "pos": "F",
@@ -3140,7 +3145,7 @@
     {
       "espn_id": "4432816",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "LaMelo Ball",
       "player_id": "1630163",
       "pos": "G",
@@ -3149,7 +3154,7 @@
     {
       "espn_id": "5157587",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Rocco Zikarsky",
       "player_id": "1642911",
       "pos": "C",
@@ -3158,7 +3163,7 @@
     {
       "espn_id": "3032976",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Rudy Gobert",
       "player_id": "203497",
       "pos": "C",
@@ -3167,7 +3172,7 @@
     {
       "espn_id": "4432847",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Terrence Shannon Jr.",
       "player_id": "1630545",
       "pos": "G",
@@ -3176,7 +3181,7 @@
     {
       "espn_id": "3136196",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Trey Lyles",
       "player_id": "3136196",
       "pos": "F",
@@ -3185,7 +3190,7 @@
     {
       "espn_id": "4592979",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Zyon Pullin",
       "player_id": "1642389",
       "pos": "G",
@@ -3194,7 +3199,7 @@
     {
       "espn_id": "5170947",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "AJ Johnson",
       "player_id": "1642358",
       "pos": "G",
@@ -3208,7 +3213,7 @@
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Bennedict Mathurin",
       "player_id": "1631097",
       "pos": "G",
@@ -3222,7 +3227,7 @@
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Bryce McGowens",
       "player_id": "1631121",
       "pos": "G",
@@ -3231,7 +3236,7 @@
     {
       "espn_id": "3442",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "DeAndre Jordan",
       "player_id": "201599",
       "pos": "C",
@@ -3245,7 +3250,7 @@
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Dejounte Murray",
       "player_id": "1627749",
       "pos": "G",
@@ -3254,7 +3259,7 @@
     {
       "espn_id": "4869780",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Derik Queen",
       "player_id": "1642852",
       "pos": "C",
@@ -3263,7 +3268,7 @@
     {
       "espn_id": "4277813",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Herbert Jones",
       "player_id": "1630529",
       "pos": "F",
@@ -3272,7 +3277,7 @@
     {
       "espn_id": "4703115",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jaron Pierre Jr.",
       "player_id": "4703115",
       "pos": "G",
@@ -3281,7 +3286,7 @@
     {
       "espn_id": "5144091",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jeremiah Fears",
       "player_id": "1642847",
       "pos": "G",
@@ -3290,7 +3295,7 @@
     {
       "espn_id": "4277956",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jordan Poole",
       "player_id": "1629673",
       "pos": "G",
@@ -3299,7 +3304,7 @@
     {
       "espn_id": "4683742",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Julian Reese",
       "player_id": "1642882",
       "pos": "F",
@@ -3308,7 +3313,7 @@
     {
       "espn_id": "4997538",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Karlo Matkovic",
       "player_id": "4997538",
       "pos": "F",
@@ -3317,7 +3322,7 @@
     {
       "espn_id": "4712862",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Malik Dia",
       "player_id": "4712862",
       "pos": "F",
@@ -3326,7 +3331,7 @@
     {
       "espn_id": "4397136",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Saddiq Bey",
       "player_id": "1630180",
       "pos": "F",
@@ -3336,11 +3341,11 @@
       "espn_id": "4431675",
       "injuries": [
         {
-          "reported_at": "2026-11-19T21:09Z",
+          "reported_at": "2026-11-21T18:21Z",
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Trendon Watford",
       "player_id": "1630570",
       "pos": "F",
@@ -3350,11 +3355,11 @@
       "espn_id": "4397688",
       "injuries": [
         {
-          "reported_at": "2026-11-19T21:05Z",
+          "reported_at": "2026-11-21T18:22Z",
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Trey Murphy III",
       "player_id": "1630530",
       "pos": "F",
@@ -3363,7 +3368,7 @@
     {
       "espn_id": "5061589",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Yves Missi",
       "player_id": "1642274",
       "pos": "C",
@@ -3371,8 +3376,13 @@
     },
     {
       "espn_id": "4395628",
-      "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injuries": [
+        {
+          "reported_at": "2026-11-22T00:39Z",
+          "status": "Out"
+        }
+      ],
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Zion Williamson",
       "player_id": "1629627",
       "pos": "F",
@@ -3381,7 +3391,7 @@
     {
       "espn_id": "6585",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Andre Drummond",
       "player_id": "203083",
       "pos": "C",
@@ -3390,7 +3400,7 @@
     {
       "espn_id": "4897943",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Dalton Knecht",
       "player_id": "4897943",
       "pos": "F",
@@ -3399,7 +3409,7 @@
     {
       "espn_id": "4683730",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jaden Akins",
       "player_id": "4683730",
       "pos": "G",
@@ -3408,7 +3418,7 @@
     {
       "espn_id": "3934672",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jalen Brunson",
       "player_id": "1628973",
       "pos": "G",
@@ -3417,7 +3427,7 @@
     {
       "espn_id": "4432808",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "James Wiseman",
       "player_id": "1630164",
       "pos": "C",
@@ -3425,8 +3435,13 @@
     },
     {
       "espn_id": "2528426",
-      "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injuries": [
+        {
+          "reported_at": "2026-11-22T03:05Z",
+          "status": "Day-To-Day"
+        }
+      ],
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jordan Clarkson",
       "player_id": "203903",
       "pos": "G",
@@ -3435,7 +3450,7 @@
     {
       "espn_id": "4277869",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jose Alvarado",
       "player_id": "1630631",
       "pos": "G",
@@ -3444,7 +3459,7 @@
     {
       "espn_id": "3062679",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Josh Hart",
       "player_id": "1628404",
       "pos": "G",
@@ -3452,8 +3467,13 @@
     },
     {
       "espn_id": "3136195",
-      "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injuries": [
+        {
+          "reported_at": "2026-11-22T03:05Z",
+          "status": "Day-To-Day"
+        }
+      ],
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Karl-Anthony Towns",
       "player_id": "1626157",
       "pos": "C",
@@ -3462,7 +3482,7 @@
     {
       "espn_id": "3914044",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Landry Shamet",
       "player_id": "1629013",
       "pos": "G",
@@ -3471,7 +3491,7 @@
     {
       "espn_id": "3147657",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Mikal Bridges",
       "player_id": "1628969",
       "pos": "G",
@@ -3480,7 +3500,7 @@
     {
       "espn_id": "4431823",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Miles McBride",
       "player_id": "1630540",
       "pos": "G",
@@ -3489,7 +3509,7 @@
     {
       "espn_id": "5289900",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Mohamed Diawara",
       "player_id": "1642885",
       "pos": "F",
@@ -3497,8 +3517,13 @@
     },
     {
       "espn_id": "3934719",
-      "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injuries": [
+        {
+          "reported_at": "2026-11-22T03:04Z",
+          "status": "Day-To-Day"
+        }
+      ],
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "OG Anunoby",
       "player_id": "1628384",
       "pos": "F",
@@ -3507,7 +3532,7 @@
     {
       "espn_id": "5211983",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Pacome Dadiet",
       "player_id": "5211983",
       "pos": "F",
@@ -3516,7 +3541,7 @@
     {
       "espn_id": "4433225",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Tyler Kolek",
       "player_id": "1642278",
       "pos": "G",
@@ -3525,7 +3550,7 @@
     {
       "espn_id": "4838721",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Tyler Nickel",
       "player_id": "4838721",
       "pos": "F",
@@ -3534,7 +3559,7 @@
     {
       "espn_id": "5174983",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Aday Mara",
       "player_id": "5174983",
       "pos": "C",
@@ -3543,7 +3568,7 @@
     {
       "espn_id": "4900671",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Ajay Mitchell",
       "player_id": "1642349",
       "pos": "G",
@@ -3553,11 +3578,11 @@
       "espn_id": "2991350",
       "injuries": [
         {
-          "reported_at": "2026-11-19T23:21Z",
-          "status": "Day-To-Day"
+          "reported_at": "2026-11-21T22:29Z",
+          "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Alex Caruso",
       "player_id": "1627936",
       "pos": "G",
@@ -3566,7 +3591,7 @@
     {
       "espn_id": "5241364",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Bennett Stirtz",
       "player_id": "5241364",
       "pos": "G",
@@ -3575,7 +3600,7 @@
     {
       "espn_id": "4684208",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Brooks Barnhizer",
       "player_id": "1642964",
       "pos": "F",
@@ -3589,7 +3614,7 @@
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Cason Wallace",
       "player_id": "1641717",
       "pos": "G",
@@ -3603,7 +3628,7 @@
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Chet Holmgren",
       "player_id": "1631096",
       "pos": "C",
@@ -3612,7 +3637,7 @@
     {
       "espn_id": "4222252",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Isaiah Hartenstein",
       "player_id": "1628392",
       "pos": "C",
@@ -3626,7 +3651,7 @@
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jalen Williams",
       "player_id": "1631114",
       "pos": "G",
@@ -3635,7 +3660,7 @@
     {
       "espn_id": "4683778",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jared McCain",
       "player_id": "1642272",
       "pos": "G",
@@ -3643,8 +3668,13 @@
     },
     {
       "espn_id": "4432823",
-      "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injuries": [
+        {
+          "reported_at": "2026-11-21T22:34Z",
+          "status": "Out"
+        }
+      ],
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jaylin Williams",
       "player_id": "1631119",
       "pos": "F",
@@ -3653,7 +3683,7 @@
     {
       "espn_id": "5105800",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Josh Dix",
       "player_id": "5105800",
       "pos": "G",
@@ -3662,7 +3692,7 @@
     {
       "espn_id": "3133626",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Kenrich Williams",
       "player_id": "1629026",
       "pos": "G",
@@ -3671,7 +3701,7 @@
     {
       "espn_id": "4432185",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Micah Peavy",
       "player_id": "4432185",
       "pos": "G",
@@ -3679,8 +3709,13 @@
     },
     {
       "espn_id": "5159925",
-      "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injuries": [
+        {
+          "reported_at": "2026-11-21T22:39Z",
+          "status": "Out"
+        }
+      ],
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Nikola Topic",
       "player_id": "5159925",
       "pos": "G",
@@ -3689,7 +3724,7 @@
     {
       "espn_id": "4702384",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Nique Clifford",
       "player_id": "1642363",
       "pos": "G",
@@ -3697,8 +3732,13 @@
     },
     {
       "espn_id": "4278073",
-      "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injuries": [
+        {
+          "reported_at": "2026-11-21T22:45Z",
+          "status": "Day-To-Day"
+        }
+      ],
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Shai Gilgeous-Alexander",
       "player_id": "1628983",
       "pos": "G",
@@ -3712,7 +3752,7 @@
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Thomas Sorber",
       "player_id": "5061603",
       "pos": "C",
@@ -3721,7 +3761,7 @@
     {
       "espn_id": "4593034",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Alex Morales",
       "player_id": "1631457",
       "pos": "G",
@@ -3730,7 +3770,7 @@
     {
       "espn_id": "4712849",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Anthony Black",
       "player_id": "1641710",
       "pos": "G",
@@ -3739,7 +3779,7 @@
     {
       "espn_id": "4397204",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Colin Castleton",
       "player_id": "1630658",
       "pos": "C",
@@ -3748,7 +3788,7 @@
     {
       "espn_id": "4066320",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Desmond Bane",
       "player_id": "1630217",
       "pos": "G",
@@ -3757,7 +3797,7 @@
     {
       "espn_id": "4566434",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Franz Wagner",
       "player_id": "1630532",
       "pos": "F",
@@ -3766,7 +3806,7 @@
     {
       "espn_id": "4348700",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Goga Bitadze",
       "player_id": "1629048",
       "pos": "C",
@@ -3780,7 +3820,7 @@
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Izaiyah Nelson",
       "player_id": "5107251",
       "pos": "F",
@@ -3789,7 +3829,7 @@
     {
       "espn_id": "4432165",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jalen Suggs",
       "player_id": "1630591",
       "pos": "G",
@@ -3798,7 +3838,7 @@
     {
       "espn_id": "4278572",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jamal Cain",
       "player_id": "1631288",
       "pos": "F",
@@ -3807,7 +3847,7 @@
     {
       "espn_id": "5239561",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jase Richardson",
       "player_id": "1642859",
       "pos": "G",
@@ -3816,7 +3856,7 @@
     {
       "espn_id": "3133635",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jevon Carter",
       "player_id": "1628975",
       "pos": "G",
@@ -3826,11 +3866,11 @@
       "espn_id": "4065654",
       "injuries": [
         {
-          "reported_at": "2026-11-15T18:22Z",
+          "reported_at": "2026-11-21T21:09Z",
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jonathan Isaac",
       "player_id": "1628371",
       "pos": "F",
@@ -3839,7 +3879,7 @@
     {
       "espn_id": "6478",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Nikola Vucevic",
       "player_id": "6478",
       "pos": "C",
@@ -3853,7 +3893,7 @@
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Noah Penda",
       "player_id": "1642869",
       "pos": "F",
@@ -3867,7 +3907,7 @@
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Paolo Banchero",
       "player_id": "1631094",
       "pos": "F",
@@ -3876,7 +3916,7 @@
     {
       "espn_id": "4702382",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Tristan da Silva",
       "player_id": "1641783",
       "pos": "F",
@@ -3885,7 +3925,7 @@
     {
       "espn_id": "4277847",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Wendell Carter Jr.",
       "player_id": "1628976",
       "pos": "C",
@@ -3895,11 +3935,11 @@
       "espn_id": "5105637",
       "injuries": [
         {
-          "reported_at": "2026-11-12T16:36Z",
+          "reported_at": "2026-11-20T17:33Z",
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Adem Bona",
       "player_id": "1641737",
       "pos": "C",
@@ -3908,7 +3948,7 @@
     {
       "espn_id": "4351851",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Anfernee Simons",
       "player_id": "1629014",
       "pos": "G",
@@ -3922,7 +3962,7 @@
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Ariel Hukporti",
       "player_id": "1630574",
       "pos": "C",
@@ -3931,7 +3971,7 @@
     {
       "espn_id": "4433144",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Caleb Love",
       "player_id": "1631126",
       "pos": "G",
@@ -3941,11 +3981,11 @@
       "espn_id": "3912848",
       "injuries": [
         {
-          "reported_at": "2026-11-19T14:47Z",
-          "status": "Day-To-Day"
+          "reported_at": "2026-11-20T22:11Z",
+          "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Dean Wade",
       "player_id": "1629731",
       "pos": "F",
@@ -3953,13 +3993,8 @@
     },
     {
       "espn_id": "4870562",
-      "injuries": [
-        {
-          "reported_at": "2026-11-17T22:12Z",
-          "status": "Out"
-        }
-      ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injuries": [],
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Dominick Barlow",
       "player_id": "1631230",
       "pos": "F",
@@ -3968,7 +4003,7 @@
     {
       "espn_id": "4432446",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jabari Walker",
       "player_id": "1631133",
       "pos": "F",
@@ -3978,11 +4013,11 @@
       "espn_id": "3917376",
       "injuries": [
         {
-          "reported_at": "2026-11-18T22:21Z",
+          "reported_at": "2026-11-20T17:26Z",
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jaylen Brown",
       "player_id": "1627759",
       "pos": "G",
@@ -3991,7 +4026,7 @@
     {
       "espn_id": "3059318",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Joel Embiid",
       "player_id": "203954",
       "pos": "C",
@@ -4000,7 +4035,7 @@
     {
       "espn_id": "4711297",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Justin Edwards",
       "player_id": "1642348",
       "pos": "F",
@@ -4009,7 +4044,7 @@
     {
       "espn_id": "2581018",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Kentavious Caldwell-Pope",
       "player_id": "203484",
       "pos": "G",
@@ -4018,7 +4053,7 @@
     {
       "espn_id": "4873090",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Labaron Philon Jr.",
       "player_id": "4873090",
       "pos": "G",
@@ -4027,7 +4062,7 @@
     {
       "espn_id": "1966",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "LeBron James",
       "player_id": "2544",
       "pos": "F",
@@ -4036,7 +4071,7 @@
     {
       "espn_id": "5099752",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Rayan Rupert",
       "player_id": "1641712",
       "pos": "G",
@@ -4045,7 +4080,7 @@
     {
       "espn_id": "3904625",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Tacko Fall",
       "player_id": "3904625",
       "pos": "C",
@@ -4053,13 +4088,8 @@
     },
     {
       "espn_id": "4431678",
-      "injuries": [
-        {
-          "reported_at": "2026-11-19T14:46Z",
-          "status": "Day-To-Day"
-        }
-      ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injuries": [],
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Tyrese Maxey",
       "player_id": "1630178",
       "pos": "G",
@@ -4068,7 +4098,7 @@
     {
       "espn_id": "5124612",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "VJ Edgecombe",
       "player_id": "1642845",
       "pos": "G",
@@ -4077,7 +4107,7 @@
     {
       "espn_id": "4278585",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Collin Gillespie",
       "player_id": "1631221",
       "pos": "G",
@@ -4086,7 +4116,7 @@
     {
       "espn_id": "3136193",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Devin Booker",
       "player_id": "1626164",
       "pos": "G",
@@ -4095,7 +4125,7 @@
     {
       "espn_id": "3155526",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Dillon Brooks",
       "player_id": "1628415",
       "pos": "F",
@@ -4104,7 +4134,7 @@
     {
       "espn_id": "4431695",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Drew Timme",
       "player_id": "1631166",
       "pos": "F",
@@ -4113,7 +4143,7 @@
     {
       "espn_id": "4066268",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Duop Reath",
       "player_id": "1641871",
       "pos": "C",
@@ -4122,7 +4152,7 @@
     {
       "espn_id": "4437244",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jalen Green",
       "player_id": "1630224",
       "pos": "G",
@@ -4131,7 +4161,7 @@
     {
       "espn_id": "4280245",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jamaree Bouyea",
       "player_id": "1631123",
       "pos": "G",
@@ -4140,7 +4170,7 @@
     {
       "espn_id": "4278402",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jordan Goodwin",
       "player_id": "1630692",
       "pos": "G",
@@ -4149,7 +4179,7 @@
     {
       "espn_id": "5203685",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Khaman Maluach",
       "player_id": "1642863",
       "pos": "C",
@@ -4158,7 +4188,7 @@
     {
       "espn_id": "5041953",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Koa Peat",
       "player_id": "5041953",
       "pos": "F",
@@ -4167,7 +4197,7 @@
     {
       "espn_id": "3913174",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Luke Kennard",
       "player_id": "1628379",
       "pos": "G",
@@ -4181,7 +4211,7 @@
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Mark Williams",
       "player_id": "1631109",
       "pos": "C",
@@ -4190,7 +4220,7 @@
     {
       "espn_id": "4066383",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Miles Bridges",
       "player_id": "1628970",
       "pos": "F",
@@ -4199,7 +4229,7 @@
     {
       "espn_id": "4601023",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Oso Ighodaro",
       "player_id": "1642345",
       "pos": "F",
@@ -4208,7 +4238,7 @@
     {
       "espn_id": "4592714",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Pat Spencer",
       "player_id": "1630311",
       "pos": "G",
@@ -4217,7 +4247,7 @@
     {
       "espn_id": "5105977",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Rasheer Fleming",
       "player_id": "1642853",
       "pos": "F",
@@ -4225,8 +4255,13 @@
     },
     {
       "espn_id": "4888725",
-      "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injuries": [
+        {
+          "reported_at": "2026-11-21T14:55Z",
+          "status": "Day-To-Day"
+        }
+      ],
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Ryan Dunn",
       "player_id": "1642346",
       "pos": "F",
@@ -4235,7 +4270,7 @@
     {
       "espn_id": "4592435",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Branden Carlson",
       "player_id": "1642382",
       "pos": "C",
@@ -4245,11 +4280,11 @@
       "espn_id": "4706557",
       "injuries": [
         {
-          "reported_at": "2026-11-19T15:06Z",
+          "reported_at": "2026-11-20T22:18Z",
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Chris Youngblood",
       "player_id": "1642959",
       "pos": "G",
@@ -4258,7 +4293,7 @@
     {
       "espn_id": "6606",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Damian Lillard",
       "player_id": "6606",
       "pos": "G",
@@ -4266,13 +4301,8 @@
     },
     {
       "espn_id": "4683021",
-      "injuries": [
-        {
-          "reported_at": "2026-11-20T03:55Z",
-          "status": "Day-To-Day"
-        }
-      ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injuries": [],
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Deni Avdija",
       "player_id": "1630166",
       "pos": "F",
@@ -4281,7 +4311,7 @@
     {
       "espn_id": "5105565",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Donovan Clingan",
       "player_id": "1642270",
       "pos": "C",
@@ -4295,7 +4325,7 @@
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Ja Morant",
       "player_id": "1629630",
       "pos": "G",
@@ -4304,7 +4334,7 @@
     {
       "espn_id": "4703889",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jayson Kent",
       "player_id": "1643257",
       "pos": "G",
@@ -4313,7 +4343,7 @@
     {
       "espn_id": "4593043",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "John Tonje",
       "player_id": "1642910",
       "pos": "F",
@@ -4322,7 +4352,7 @@
     {
       "espn_id": "3995",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jrue Holiday",
       "player_id": "201950",
       "pos": "G",
@@ -4331,7 +4361,7 @@
     {
       "espn_id": "4066399",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Micah Potter",
       "player_id": "1630695",
       "pos": "C",
@@ -4339,13 +4369,8 @@
     },
     {
       "espn_id": "4066211",
-      "injuries": [
-        {
-          "reported_at": "2026-11-20T03:55Z",
-          "status": "Day-To-Day"
-        }
-      ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injuries": [],
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Robert Williams III",
       "player_id": "1629057",
       "pos": "C",
@@ -4354,7 +4379,7 @@
     {
       "espn_id": "4683678",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Scoot Henderson",
       "player_id": "1630703",
       "pos": "G",
@@ -4368,7 +4393,7 @@
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Shaedon Sharpe",
       "player_id": "1631101",
       "pos": "G",
@@ -4377,7 +4402,7 @@
     {
       "espn_id": "5081727",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Sidy Cissoko",
       "player_id": "1631321",
       "pos": "G",
@@ -4386,7 +4411,7 @@
     {
       "espn_id": "4431736",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Toumani Camara",
       "player_id": "1641739",
       "pos": "F",
@@ -4400,7 +4425,7 @@
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Vit Krejci",
       "player_id": "4578893",
       "pos": "G",
@@ -4409,7 +4434,7 @@
     {
       "espn_id": "5217746",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Yang Hansen",
       "player_id": "1642905",
       "pos": "C",
@@ -4418,7 +4443,7 @@
     {
       "espn_id": "4917149",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Alex Karaban",
       "player_id": "4917149",
       "pos": "F",
@@ -4432,7 +4457,7 @@
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Ben Simmons",
       "player_id": "3907387",
       "pos": "G",
@@ -4441,7 +4466,7 @@
     {
       "espn_id": "4279318",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Daeqwon Plowden",
       "player_id": "1631342",
       "pos": "G",
@@ -4450,7 +4475,7 @@
     {
       "espn_id": "5142620",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Darius Acuff Jr.",
       "player_id": "5142620",
       "pos": "G",
@@ -4458,13 +4483,8 @@
     },
     {
       "espn_id": "4065732",
-      "injuries": [
-        {
-          "reported_at": "2026-11-20T01:21Z",
-          "status": "Day-To-Day"
-        }
-      ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injuries": [],
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "De'Andre Hunter",
       "player_id": "1629631",
       "pos": "F",
@@ -4473,7 +4493,7 @@
     {
       "espn_id": "3155942",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Domantas Sabonis",
       "player_id": "1627734",
       "pos": "F",
@@ -4482,7 +4502,7 @@
     {
       "espn_id": "4433174",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Dylan Cardwell",
       "player_id": "1642928",
       "pos": "C",
@@ -4491,7 +4511,7 @@
     {
       "espn_id": "5106058",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Emanuel Sharp",
       "player_id": "5106058",
       "pos": "G",
@@ -4500,7 +4520,7 @@
     {
       "espn_id": "5107897",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jonathan Mogbo",
       "player_id": "1642367",
       "pos": "F",
@@ -4509,7 +4529,7 @@
     {
       "espn_id": "4594327",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Keegan Murray",
       "player_id": "1631099",
       "pos": "F",
@@ -4518,7 +4538,7 @@
     {
       "espn_id": "4395650",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Leaky Black",
       "player_id": "1641778",
       "pos": "F",
@@ -4527,7 +4547,7 @@
     {
       "espn_id": "4066262",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Malik Monk",
       "player_id": "1628370",
       "pos": "G",
@@ -4536,7 +4556,7 @@
     {
       "espn_id": "2488653",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Mason Plumlee",
       "player_id": "2488653",
       "pos": "C",
@@ -4550,7 +4570,7 @@
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Maxime Raynaud",
       "player_id": "1642875",
       "pos": "C",
@@ -4558,13 +4578,8 @@
     },
     {
       "espn_id": "4431679",
-      "injuries": [
-        {
-          "reported_at": "2026-11-20T01:22Z",
-          "status": "Day-To-Day"
-        }
-      ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injuries": [],
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Precious Achiuwa",
       "player_id": "1630173",
       "pos": "F",
@@ -4573,7 +4588,7 @@
     {
       "espn_id": "4709131",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Sean Pedulla",
       "player_id": "4709131",
       "pos": "G",
@@ -4582,7 +4597,7 @@
     {
       "espn_id": "3064440",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Zach LaVine",
       "player_id": "203897",
       "pos": "G",
@@ -4591,7 +4606,7 @@
     {
       "espn_id": "5061568",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Carter Bryant",
       "player_id": "1642868",
       "pos": "F",
@@ -4600,7 +4615,7 @@
     {
       "espn_id": "4713010",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "David Jones Garcia",
       "player_id": "1642357",
       "pos": "F",
@@ -4609,7 +4624,7 @@
     {
       "espn_id": "4066259",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "De'Aaron Fox",
       "player_id": "1628368",
       "pos": "G",
@@ -4618,7 +4633,7 @@
     {
       "espn_id": "4395630",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Devin Vassell",
       "player_id": "1630170",
       "pos": "G",
@@ -4632,7 +4647,7 @@
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Dylan Harper",
       "player_id": "1642844",
       "pos": "G",
@@ -4641,7 +4656,7 @@
     {
       "espn_id": "6578",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Harrison Barnes",
       "player_id": "203084",
       "pos": "F",
@@ -4650,7 +4665,7 @@
     {
       "espn_id": "5107968",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Ja'Kobi Gillespie",
       "player_id": "5107968",
       "pos": "G",
@@ -4664,7 +4679,7 @@
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jayden Quaintance",
       "player_id": "5101845",
       "pos": "F",
@@ -4673,7 +4688,7 @@
     {
       "espn_id": "3134916",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jordan McLaughlin",
       "player_id": "1629162",
       "pos": "G",
@@ -4682,7 +4697,7 @@
     {
       "espn_id": "4592479",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Julian Champagnie",
       "player_id": "1630577",
       "pos": "F",
@@ -4691,7 +4706,7 @@
     {
       "espn_id": "4395723",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Keldon Johnson",
       "player_id": "1629640",
       "pos": "F",
@@ -4700,7 +4715,7 @@
     {
       "espn_id": "3064560",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Luke Kornet",
       "player_id": "1628436",
       "pos": "C",
@@ -4709,7 +4724,7 @@
     {
       "espn_id": "5105337",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Maliq Brown",
       "player_id": "5105337",
       "pos": "F",
@@ -4718,7 +4733,7 @@
     {
       "espn_id": "4845367",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Stephon Castle",
       "player_id": "1642264",
       "pos": "G",
@@ -4727,7 +4742,7 @@
     {
       "espn_id": "5105809",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Tarris Reed Jr.",
       "player_id": "5105809",
       "pos": "C",
@@ -4741,7 +4756,7 @@
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Tobias Harris",
       "player_id": "202699",
       "pos": "F",
@@ -4750,7 +4765,7 @@
     {
       "espn_id": "5104157",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Victor Wembanyama",
       "player_id": "1641705",
       "pos": "F",
@@ -4759,7 +4774,7 @@
     {
       "espn_id": "4702656",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Alijah Martin",
       "player_id": "1642918",
       "pos": "G",
@@ -4768,7 +4783,7 @@
     {
       "espn_id": "5149115",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Allen Graves",
       "player_id": "5149115",
       "pos": "F",
@@ -4778,11 +4793,11 @@
       "espn_id": "5093267",
       "injuries": [
         {
-          "reported_at": "2026-11-19T21:41Z",
-          "status": "Out"
+          "reported_at": "2026-11-21T14:52Z",
+          "status": "Day-To-Day"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Collin Murray-Boyles",
       "player_id": "1642867",
       "pos": "F",
@@ -4791,7 +4806,7 @@
     {
       "espn_id": "4395724",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Immanuel Quickley",
       "player_id": "1630193",
       "pos": "G",
@@ -4800,7 +4815,7 @@
     {
       "espn_id": "4684272",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Ja'Kobe Walter",
       "player_id": "1642266",
       "pos": "G",
@@ -4809,7 +4824,7 @@
     {
       "espn_id": "4432737",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jaden Bradley",
       "player_id": "4432737",
       "pos": "G",
@@ -4818,7 +4833,7 @@
     {
       "espn_id": "3134908",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jakob Poeltl",
       "player_id": "1627751",
       "pos": "C",
@@ -4827,7 +4842,7 @@
     {
       "espn_id": "4432241",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jamal Shead",
       "player_id": "1642347",
       "pos": "G",
@@ -4836,7 +4851,7 @@
     {
       "espn_id": "4431893",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jamison Battle",
       "player_id": "1642419",
       "pos": "F",
@@ -4846,11 +4861,11 @@
       "espn_id": "6450",
       "injuries": [
         {
-          "reported_at": "2026-11-17T22:25Z",
+          "reported_at": "2026-11-20T20:42Z",
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Kawhi Leonard",
       "player_id": "202695",
       "pos": "F",
@@ -4859,7 +4874,7 @@
     {
       "espn_id": "4411057",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Kevin McCullar Jr.",
       "player_id": "4411057",
       "pos": "G",
@@ -4868,7 +4883,7 @@
     {
       "espn_id": "2993874",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Kyle Anderson",
       "player_id": "203937",
       "pos": "F",
@@ -4877,7 +4892,7 @@
     {
       "espn_id": "4397784",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Malachi Smith",
       "player_id": "1641869",
       "pos": "G",
@@ -4891,7 +4906,7 @@
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Nate Bittle",
       "player_id": "4432586",
       "pos": "C",
@@ -4905,7 +4920,7 @@
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "RJ Barrett",
       "player_id": "1629628",
       "pos": "F",
@@ -4914,7 +4929,7 @@
     {
       "espn_id": "4433134",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Scottie Barnes",
       "player_id": "1630567",
       "pos": "F",
@@ -4923,7 +4938,7 @@
     {
       "espn_id": "4431684",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Trayce Jackson-Davis",
       "player_id": "1631218",
       "pos": "F",
@@ -4932,7 +4947,7 @@
     {
       "espn_id": "4873138",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Ace Bailey",
       "player_id": "1642846",
       "pos": "G",
@@ -4941,7 +4956,7 @@
     {
       "espn_id": "5105839",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Brice Sensabaugh",
       "player_id": "1641729",
       "pos": "F",
@@ -4950,7 +4965,7 @@
     {
       "espn_id": "5041955",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Darryn Peterson",
       "player_id": "5041955",
       "pos": "G",
@@ -4959,7 +4974,7 @@
     {
       "espn_id": "4433618",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Harrison Ingram",
       "player_id": "1631127",
       "pos": "F",
@@ -4968,7 +4983,7 @@
     {
       "espn_id": "4683766",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Isaiah Collier",
       "player_id": "1642268",
       "pos": "G",
@@ -4982,7 +4997,7 @@
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jaren Jackson Jr.",
       "player_id": "1628991",
       "pos": "F",
@@ -4991,7 +5006,7 @@
     {
       "espn_id": "4397077",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jaxson Hayes",
       "player_id": "1629637",
       "pos": "C",
@@ -5000,7 +5015,7 @@
     {
       "espn_id": "4684682",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jonas Aidoo",
       "player_id": "4684682",
       "pos": "C",
@@ -5009,7 +5024,7 @@
     {
       "espn_id": "4432811",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Josh Green",
       "player_id": "1630182",
       "pos": "G",
@@ -5018,7 +5033,7 @@
     {
       "espn_id": "4065663",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Josh Okogie",
       "player_id": "1629006",
       "pos": "G",
@@ -5028,11 +5043,11 @@
       "espn_id": "3102530",
       "injuries": [
         {
-          "reported_at": "2026-11-20T00:05Z",
+          "reported_at": "2026-11-20T22:40Z",
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jusuf Nurkic",
       "player_id": "3102530",
       "pos": "C",
@@ -5041,7 +5056,7 @@
     {
       "espn_id": "4433627",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Keyonte George",
       "player_id": "1641718",
       "pos": "G",
@@ -5050,7 +5065,7 @@
     {
       "espn_id": "4683736",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Kobe Bufkin",
       "player_id": "4683736",
       "pos": "G",
@@ -5059,7 +5074,7 @@
     {
       "espn_id": "4684793",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Kyle Filipowski",
       "player_id": "1642271",
       "pos": "F",
@@ -5073,7 +5088,7 @@
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Lauri Markkanen",
       "player_id": "1628374",
       "pos": "F",
@@ -5082,7 +5097,7 @@
     {
       "espn_id": "4277919",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Mo Bamba",
       "player_id": "1628964",
       "pos": "C",
@@ -5091,7 +5106,7 @@
     {
       "espn_id": "3133602",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Svi Mykhailiuk",
       "player_id": "1629004",
       "pos": "G",
@@ -5100,7 +5115,7 @@
     {
       "espn_id": "4065673",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Tony Bradley",
       "player_id": "1628396",
       "pos": "C",
@@ -5109,7 +5124,7 @@
     {
       "espn_id": "5142718",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "AJ Dybantsa",
       "player_id": "5142718",
       "pos": "F",
@@ -5118,7 +5133,7 @@
     {
       "espn_id": "5160992",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Alex Sarr",
       "player_id": "1642259",
       "pos": "C",
@@ -5127,7 +5142,7 @@
     {
       "espn_id": "6583",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Anthony Davis",
       "player_id": "203076",
       "pos": "F",
@@ -5136,7 +5151,7 @@
     {
       "espn_id": "2581184",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Anthony Gill",
       "player_id": "1630264",
       "pos": "F",
@@ -5145,7 +5160,7 @@
     {
       "espn_id": "5104155",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Bilal Coulibaly",
       "player_id": "1641731",
       "pos": "G",
@@ -5154,7 +5169,7 @@
     {
       "espn_id": "4845374",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Bub Carrington",
       "player_id": "1642267",
       "pos": "G",
@@ -5163,7 +5178,7 @@
     {
       "espn_id": "4278129",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Deandre Ayton",
       "player_id": "1629028",
       "pos": "C",
@@ -5171,13 +5186,8 @@
     },
     {
       "espn_id": "5105841",
-      "injuries": [
-        {
-          "reported_at": "2026-11-17T16:38Z",
-          "status": "Day-To-Day"
-        }
-      ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injuries": [],
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Felix Okpara",
       "player_id": "5105841",
       "pos": "F",
@@ -5191,7 +5201,7 @@
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Jamir Watkins",
       "player_id": "1642364",
       "pos": "G",
@@ -5205,7 +5215,7 @@
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Justin Champagnie",
       "player_id": "1630551",
       "pos": "F",
@@ -5214,7 +5224,7 @@
     {
       "espn_id": "6609",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Khris Middleton",
       "player_id": "203114",
       "pos": "F",
@@ -5223,7 +5233,7 @@
     {
       "espn_id": "5174563",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Kyshawn George",
       "player_id": "1642273",
       "pos": "F",
@@ -5237,7 +5247,7 @@
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Reece Beekman",
       "player_id": "4432187",
       "pos": "G",
@@ -5246,7 +5256,7 @@
     {
       "espn_id": "4277905",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Trae Young",
       "player_id": "1629027",
       "pos": "G",
@@ -5255,7 +5265,7 @@
     {
       "espn_id": "5238230",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Tre Johnson",
       "player_id": "1642848",
       "pos": "G",
@@ -5264,7 +5274,7 @@
     {
       "espn_id": "4432819",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Tre Mann",
       "player_id": "1630544",
       "pos": "G",
@@ -5278,7 +5288,7 @@
           "status": "Out"
         }
       ],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Tristan Vukcevic",
       "player_id": "1641774",
       "pos": "F",
@@ -5287,7 +5297,7 @@
     {
       "espn_id": "5144126",
       "injuries": [],
-      "injury_checked_at": "2026-11-20T04:13:32.891959+00:00",
+      "injury_checked_at": "2026-11-22T06:53:53.238408+00:00",
       "name": "Will Riley",
       "player_id": "1642860",
       "pos": "G",

@@ -2,42 +2,42 @@
   "feeds": {
     "data_quality": {
       "bytes": 3866,
-      "sha256": "bcbbdb036b1af6f86ef9af26ab8880c0fa7dd48567f369c048b551fb022b1d8a"
+      "sha256": "c3fb065ea23a75ac4bb1e14bbbff55301fd6ab3679479b73cbedce3face05f1a"
     },
     "game_details": {
-      "bytes": 37017575,
-      "sha256": "fd145e0d7690167f9f8778cd1641c8d8904d393d2c19465cf02a99cd5c4b769e"
+      "bytes": 39368769,
+      "sha256": "eed1c6922a9b25f3c026bc27de3b921c35f9cc6a0d443fb623867e6f9e2d2bf4"
     },
     "lineups": {
-      "bytes": 10335,
-      "sha256": "64ff7f9496e88267082bcedcd23daa8a7dd71d999f419233b260e2fd1a4a2d68"
+      "bytes": 15392,
+      "sha256": "ffec3e1d5e00fc72c0fc348f854690da9d1014e6a747b7afa1a4be64d6eaf8d3"
     },
     "player_advanced": {
-      "bytes": 119537,
-      "sha256": "d33018d2e952960c9771516a3a4eae6b327439608e70143b6ec67e23b010eb4c"
+      "bytes": 119807,
+      "sha256": "c1e55852ef049e737ebe631b3dfac71e10ca87ad4164697c27e81f653c6f3d6a"
     },
     "player_logs": {
-      "bytes": 10085473,
-      "sha256": "9c08bd18c9057192b11009ee0c29ad604b683e8dd3d5f083cc07702232cd9982"
+      "bytes": 10237886,
+      "sha256": "7c6ebc8fa93896692a1278cfc8f4b4f5b17badaceba9a8bd94c4bb7ffcb497c5"
     },
     "roster": {
-      "bytes": 129727,
-      "sha256": "ee7474a9dcac99a62e3d6cad00ec7462099d4d87590b8ed41a7129b22052a5bc"
+      "bytes": 129876,
+      "sha256": "2aa31405eaee92a01d4f0cf0a83dd165974b2a70c76ebf3377355ebd9acbf50d"
     },
     "schedule": {
-      "bytes": 9651,
-      "sha256": "a5a9719781e34f6f91f11397fa7f76d7cda6dfab44f85104d8bc350d23de6615"
+      "bytes": 9383,
+      "sha256": "e95f05bd58edef55742b0cfcbaaa9caa281c117bf3b6db5652c91a97e65d603c"
     },
     "standings": {
-      "bytes": 13375,
-      "sha256": "e5708b8d2416abc065eefe984811c5aec7a4d5f984fd3afb9fa96a625657d44d"
+      "bytes": 13411,
+      "sha256": "17dd6ef6a1941ef5ec3cd6a415c6f78a3a41b2bd705fb44a55b97a593033263a"
     },
     "stats": {
-      "bytes": 179371,
-      "sha256": "022d2691a0ff40c73c5b942aa9a23d468305703ee5f32e871b9f886edb992055"
+      "bytes": 179712,
+      "sha256": "fef61721e60c87664ab30e4d69095099ad19d56a6c85e187fa67409dffd542a2"
     }
   },
-  "generated_at": "2026-11-20T04:13:32.891959+00:00",
+  "generated_at": "2026-11-22T06:53:53.238408+00:00",
   "schema_version": 3,
   "season": 2027,
   "source": "desktop-nba-updater"
