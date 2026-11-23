@@ -161,6 +161,9 @@ exact numerical target, OVER or UNDER direction, last-10 and last-5 hit rates
 and supporting reasoning and uncertainty. Use evaluate_player_target to calculate
 hit rates from existing logs; retrieve projections separately. A rate is historical,
 not a calibrated probability. Do not invent missing targets, projections or statistics.
+Batch independent target evaluations together (up to 16 per tool call), rather
+than requesting one model round per player. Batch independent database queries
+with query_nba_data (up to four per call). Reuse retrieved evidence for comparisons.
 Clearly label unavailable fields; a player with incomplete supporting data may be
 reported as research-only, not a fully supported recommendation. Seek alternatives
 before concluding that fewer supported candidates are available. Return up to the
@@ -303,11 +306,13 @@ TOOLS.append(function("query_nba_data", "Batch up to four targeted queries for s
                                    "items": {"type": "object", "properties": _data_properties,
                                              "required": list(_data_properties), "additionalProperties": False}}}, ["queries"]))
 from research_targets import STAT_FIELDS, evaluate_target
-TOOLS.append(function("evaluate_player_target", "Calculate last-10 and last-5 hit rates for one exact research target using existing game logs. Missing/conflicting observations stay unknown. Retrieve the actual app projection separately. Evaluate alternatives if support is insufficient.",
-                      {"player_id": {"type": "string"}, "stat": {"type": "string", "enum": list(STAT_FIELDS)},
+_target_properties = {"player_id": {"type": "string"}, "stat": {"type": "string", "enum": list(STAT_FIELDS)},
                        "target": {"type": "number", "minimum": 0},
-                       "direction": {"type": "string", "enum": ["OVER", "UNDER"]}},
-                      ["player_id", "stat", "target", "direction"]))
+                       "direction": {"type": "string", "enum": ["OVER", "UNDER"]}}
+TOOLS.append(function("evaluate_player_target", "Batch up to 16 independent research targets. Calculate last-10 and last-5 hit rates using existing game logs. Missing/conflicting observations stay unknown. Retrieve actual app projections separately. Evaluate alternatives if support is insufficient.",
+                      {"targets": {"type": "array", "minItems": 1, "maxItems": 16,
+                                   "items": {"type": "object", "properties": _target_properties,
+                                             "required": list(_target_properties), "additionalProperties": False}}}, ["targets"]))
 TOOL_NAMES = {"get_players", "query_nba_data", "evaluate_player_target"}
 WEB_TOOL = {"type": "web_search", "search_context_size": "low", "external_web_access": True,
             "return_token_budget": "default"}
@@ -455,6 +460,7 @@ def run_analysis(a):
             if not isinstance(value, int) or isinstance(value, bool) or value < 0:
                 raise ValueError("Invalid token count")
             return value
+        preflight_started = time.monotonic()
         try:
             count = count_input()
         except Exception as error:
@@ -467,6 +473,8 @@ def run_analysis(a):
                     native_search_available = "rejected"
             event("preflight", step=step + 1, reason=stop_reason)
             break
+        finally:
+            event("preflight_timing", step=step + 1, duration_ms=int((time.monotonic()-preflight_started)*1000))
         web_allowed = any(t["type"] == "web_search" for t in body["tools"])
         search_input_reserve = research_limits["NBA_CHAT_SEARCH_INPUT_RESERVE"] if web_allowed else 0
         admission_input = count + search_input_reserve
@@ -492,6 +500,7 @@ def run_analysis(a):
             notes.append(f"Budget cannot cover the next model call with its {body['max_output_tokens']:,}-token output allowance. Analysis is incomplete; no automatic retry.")
             break
         event("generation_start", step=step + 1, output_allowance=body["max_output_tokens"], reservation=reservation)
+        generation_started = time.monotonic()
         try:
             result = post_openai("responses", body)
         except ProviderFailure as error:
@@ -512,6 +521,8 @@ def run_analysis(a):
             response_diagnostic("interrupted", reason, estimated_cost=reservation, cost_basis="reservation")
             notes.append("Provider request " + ("timed out" if reason == "timeout" else "failed") + "; its reserved cost remains counted. No automatic retry.")
             break
+        finally:
+            event("generation_timing", step=step + 1, duration_ms=int((time.monotonic()-generation_started)*1000))
         usage = result.get("usage")
         status = result.get("status")
         status = status if status in {"completed", "incomplete", "failed", "cancelled", "queued", "in_progress"} else "unknown"
@@ -626,11 +637,23 @@ def run_analysis(a):
                         answer = {"results": answers} if "queries" in args else answers[0]
                         tool_reason = "data_retrieved" if "error" not in answer else "data_unavailable"
                     elif item["name"] == "evaluate_player_target":
-                        answer = evaluate_target(data_access, **args)
-                        database_queries += 1
-                        if "error" not in answer and answer["last_10"]["games_available"]:
-                            researched_ids.add(str(args["player_id"]))
-                        tool_reason = "target_evaluated" if "error" not in answer else "data_unavailable"
+                        # Accept the previous single-target shape for in-flight callers.
+                        targets = args.get("targets", [args])
+                        if not isinstance(targets, list) or not 1 <= len(targets) <= 16:
+                            raise ValueError("Invalid target batch")
+                        answers = []
+                        for target in targets:
+                            try:
+                                evaluated = evaluate_target(data_access, **target)
+                            except (TypeError, ValueError):
+                                evaluated = {"error": "Invalid target arguments; no result may be inferred."}
+                            answers.append(evaluated)
+                            database_queries += 1
+                            if "error" not in evaluated and evaluated["last_10"]["games_available"]:
+                                researched_ids.add(str(target["player_id"]))
+                        answer = {"results": answers} if "targets" in args else answers[0]
+                        failed = sum("error" in result for result in answers)
+                        tool_reason = "data_unavailable" if failed == len(answers) else "partial_target_results" if failed else "target_evaluated"
                     elif item["name"] == "get_players":
                         ids = list(dict.fromkeys(args.get("ids", [])[:4]))
                         answer = {"players": [catalog[i] for i in ids if i in catalog and i not in retrieved_players],

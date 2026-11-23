@@ -92,6 +92,39 @@ class ResearchTargetTests(unittest.TestCase):
         self.assertIn("unknown, never automatically injured or healthy", chat.INSTRUCTIONS)
         self.assertIn("not carry earlier task-specific", chat.INSTRUCTIONS)
 
+    def test_three_twelve_and_sixteen_players_use_one_target_round(self):
+        for count in (3, 12, 16):
+            targets = [dict(player_id=str(i), stat="PTS", target=5, direction="OVER") for i in range(count)]
+            call = {"type": "function_call", "name": "evaluate_player_target", "call_id": "batch",
+                    "arguments": json.dumps({"targets": targets})}
+            with patch.object(ai_data, "feed", return_value={"logs_by_player": {str(i): self.rows for i in range(count)}}), \
+                    patch.object(chat, "post_openai", side_effect=[{"input_tokens": 1000}, response([call]),
+                              {"input_tokens": 1400}, response()]) as api:
+                result = chat.run_analysis(request())
+            self.assertEqual(api.call_count, 4)  # Two preflights and two model calls, independent of pool size.
+            self.assertEqual(result["tool_calls"], 1)
+            self.assertEqual(len(result["research_coverage"]["player_ids_retrieved"]), count)
+            output = next(m for m in api.call_args.args[1]["input"] if m.get("type") == "function_call_output")
+            answers = json.loads(output["output"])["results"]
+            self.assertEqual(len(answers), count)
+            self.assertTrue(all(a["last_10"]["hit_rate"] == .5 for a in answers))
+            for stage in ("preflight_timing", "generation_timing"):
+                timings = [d for d in result["diagnostics"] if d["stage"] == stage]
+                self.assertEqual(len(timings), 2)
+                self.assertTrue(all(d["duration_ms"] >= 0 for d in timings))
+
+    def test_bad_target_does_not_discard_valid_batch_members(self):
+        call = {"type": "function_call", "name": "evaluate_player_target", "call_id": "batch",
+                "arguments": json.dumps({"targets": [{"player_id": "p"},
+                    dict(player_id="p", stat="REB", target=5, direction="OVER")]})}
+        with patch.object(chat, "post_openai", side_effect=[{"input_tokens": 1000}, response([call]),
+                          {"input_tokens": 1400}, response()]) as api:
+            chat.run_analysis(request())
+        output = next(m for m in api.call_args.args[1]["input"] if m.get("type") == "function_call_output")
+        answers = json.loads(output["output"])["results"]
+        self.assertIn("error", answers[0])
+        self.assertEqual(answers[1]["last_10"]["hit_rate"], .5)
+
 
 if __name__ == "__main__":
     unittest.main()
