@@ -97,7 +97,7 @@ def index_head():
 @app.get("/health")
 def health():
     return {"status": "ok", "manifest": (DATA / "manifest.json").exists(),
-            "chat_revision": "batched-player-research-v1", "chat_storage": "ephemeral"}
+            "chat_revision": "balanced-candidate-research-v1", "chat_storage": "ephemeral"}
 
 
 @app.head("/health", status_code=200)

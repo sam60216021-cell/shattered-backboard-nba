@@ -189,12 +189,21 @@ For broad player research requests, screen the entire supplied candidate compari
 across games and categories, not just high-minute stars or the first entries. Table order
 is not a ranking. Retrieve recent history and projections for a competitive shortlist,
 including alternatives outside previously recommended names when the evidence supports them.
+Minutes measure opportunity and risk, not recommendation quality by themselves.
+For each requested category compare target-specific support, recent form, variability,
+role and matchup across the pool, including lower-minute players when supported.
+Do not substitute the highest projection, biggest name or first table row for that
+comparison. Evaluate competing candidates together with the batched target tool.
+Describe the actual alternatives evaluated and the statistical reasons for choosing
+the final candidates. If only a narrow subset was checked, disclose that scope.
 Previous assistant picks are not evidence; reassess them against today's data. Do not
 rotate players randomly or select weaker plays just to make the names different.
 When asked for alternatives, explicitly compare new candidates against earlier picks.
 Explain briefly which alternatives were actually compared and why they lost out.
 Never claim to have researched every player merely because their summary was supplied;
 distinguish supplied statistics, retrieved player records, and successful web research.
+When omittedCandidates is nonzero, use team-filtered players discovery and retrieve
+relevant history and projections beyond the uploaded table before claiming slate-wide coverage.
 Use get_players for detailed current candidate records. Narrow broad
 requests internally using the supplied database. Use native web_search when enabled
 to improve player-specific injury, availability, role and matchup information; reuse evidence.
@@ -219,6 +228,20 @@ Answer explanatory or statistical questions directly without inventing a selecti
 
 def compact(value):
     return json.dumps(value, separators=(",", ":"), sort_keys=True, allow_nan=False)
+
+
+def candidate_presentation(players, current_question):
+    """Neutral presentation, not a prediction ranking; also handles older clients."""
+    groups = {}
+    question = current_question.casefold()
+    for player in players:
+        groups.setdefault(str(player.get("game", "")), []).append(player)
+    def key(player):
+        name = str(player.get("name") or "").casefold()
+        return (not bool(name and name in question), name, str(player.get("id", "")))
+    ordered = [sorted(groups[game], key=key) for game in sorted(groups)]
+    return [group[index] for index in range(max(map(len, ordered), default=0))
+            for group in ordered if index < len(group)]
 
 class Analysis(BaseModel):
     analysis_id: str = Field(min_length=16, max_length=80)
@@ -382,6 +405,7 @@ def run_analysis(a):
     model_calls = limits["NBA_CHAT_MAX_MODEL_CALLS"]
     data_calls = limits["NBA_CHAT_MAX_DATA_TOOL_CALLS"]
     researched_ids = set()
+    evaluated_targets = []
     database_queries = 0
     context_limit = MODEL_CONTEXT_LIMITS[a.model]
     research_limits = search_settings()
@@ -401,6 +425,7 @@ def run_analysis(a):
     if any(m.get("role") not in ("user", "assistant") or not isinstance(m.get("content"), str)
            or len(m["content"]) > 12000 for m in a.messages):
         raise HTTPException(422, "Invalid conversation.")
+    players = candidate_presentation(players, a.messages[-1]["content"] if a.messages else "")
     catalog = {p["id"]: p for p in players}
     log.warning("stage=context players=%d games=%d bytes=%d model=%s", len(players),
                 len(a.context.get("games", [])), len(compact(a.context).encode()), a.model)
@@ -412,9 +437,12 @@ def run_analysis(a):
     overview["candidates"] = []
     for player in players:
         summary = {k: player.get(k) for k in ("id", "name", "team", "game", "minutes", "availability", "samples", "latestLog")}
-        summary["stats"] = {k: v for k, v in player.get("stats", {}).items() if k in ("PTS", "REB", "AST", "3PM", "PRA")}
+        summary["stats"] = {k: v for k, v in player.get("stats", {}).items() if k in STAT_FIELDS}
         overview["candidates"].append(summary)
-    overview["omittedCandidates"] = 0
+    coverage = a.context.get("coverage", {})
+    omitted = coverage.get("playersOmitted", 0) if isinstance(coverage, dict) else 0
+    overview["omittedCandidates"] = omitted if type(omitted) is int and omitted >= 0 else None
+    overview["candidateOrder"] = "Named players first within each game, otherwise alphabetical, interleaved across games. Presentation only, not quality ranking. Omitted players remain discoverable with query_nba_data."
     event("candidate_screen", uploaded_candidates=len(players), comparison_rows=len(overview["candidates"]), max_model_calls=model_calls, max_data_tool_calls=data_calls)
     if not a.messages or a.messages[-1]["role"] != "user" or not a.messages[-1]["content"].strip():
         raise HTTPException(422, "A current user question is required.")
@@ -651,6 +679,9 @@ def run_analysis(a):
                             database_queries += 1
                             if "error" not in evaluated and evaluated["last_10"]["games_available"]:
                                 researched_ids.add(str(target["player_id"]))
+                            if "error" not in evaluated:
+                                evaluated_targets.append({k: evaluated[k] for k in
+                                                          ("player_id", "stat", "target", "direction", "last_10", "last_5")})
                         answer = {"results": answers} if "targets" in args else answers[0]
                         failed = sum("error" in result for result in answers)
                         tool_reason = "data_unavailable" if failed == len(answers) else "partial_target_results" if failed else "target_evaluated"
@@ -681,13 +712,15 @@ def run_analysis(a):
         text += "\n\nNo live web evidence was retrieved in this analysis. Current injuries and player availability remain unverified by web research."
     else:
         text += "\n\nSources retrieved: " + max(source["retrieved_at"] for source in sources.values()) + "."
-    event("research_coverage", candidates_supplied=len(players), player_records_retrieved=len(researched_ids), database_queries=database_queries, successful_searches=successful_searches)
+    event("research_coverage", candidates_supplied=len(players), player_records_retrieved=len(researched_ids), database_queries=database_queries, successful_searches=successful_searches,
+          targets_evaluated=len(evaluated_targets), target_players_evaluated=len({t["player_id"] for t in evaluated_targets}))
     event("finish", native_search_available=native_search_available, estimated_model_cost=model_cost_total,
           estimated_web_search_cost=web_cost_total, uncertain_cost_reservation=uncertain_cost, stop_reason=stop_reason, input_tokens=input_total, output_tokens=output_total,
           tool_calls=calls, searches=searches, successful_searches=successful_searches, estimated_spent=spent, budget=a.budget,
           remaining_budget=max(0, a.budget-spent))
     return {"text": text, "notes": notes, "model": a.model,
-            "research_coverage": {"candidates_supplied": len(players), "player_ids_retrieved": sorted(researched_ids), "database_queries": database_queries, "successful_searches": successful_searches}, "input_tokens": input_total,
+            "research_coverage": {"candidates_supplied": len(players), "player_ids_retrieved": sorted(researched_ids), "database_queries": database_queries, "successful_searches": successful_searches,
+                                  "evaluated_targets": evaluated_targets, "candidates_omitted_by_client": overview["omittedCandidates"]}, "input_tokens": input_total,
             "output_tokens": output_total, "searches": searches, "successful_searches": successful_searches, "tool_calls": calls,
             "estimated_cost": round(spent, 6), "estimated_model_cost": round(model_cost_total, 6),
             "estimated_web_search_cost": round(web_cost_total, 6), "uncertain_cost_reservation": round(uncertain_cost, 6),
