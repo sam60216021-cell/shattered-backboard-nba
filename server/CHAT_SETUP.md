@@ -162,3 +162,32 @@ Existing 90-second provider timeout and 600-second iOS request timeout still
 apply. Increasing tokens does not guarantee completion, diverse picks, or a
 hard provider-billing cap; exact stop reasons remain in diagnostics.
 Official limit: https://developers.openai.com/api/docs/models/gpt-6-luna
+
+## Conversation isolation repair
+
+The iOS app already generates a fresh analysis UUID per send and resets local
+history for New chat. It sends the last eight user/assistant messages, including
+previous diagnostic text. The server previously replayed all of those as active
+conversation messages and appended unconditional player-research/pick directions.
+It now preserves prior messages in an explicitly labeled reference transcript,
+puts the actual current user question last, and scopes task-specific constraints
+to the current question or an explicit continuation. Tool availability and
+end-of-research guidance no longer create an unrelated pick-generation objective.
+Current top-level instructions are still supplied on every Responses API call.
+
+A separate reproducible idempotency bug returned an old answer if an analysis ID
+was reused with different input. Exact replays now require a fingerprint of the
+request, current instructions and effective settings. Mismatches and legacy
+cache entries without fingerprints return 409 `analysis_id_conflict`, without a
+paid call. Identical repeats still return the cached answer; unresolved identical
+requests still cannot start duplicate work. Only a hash is stored in the existing
+temporary accounting database, not conversation text. No sports database changes.
+
+Tests cover consecutive unrelated questions, references to earlier players,
+web-toggle changes, fresh per-turn tool state, instructions on continuation calls,
+changed-input ID conflicts, exact duplicate replay, and safe legacy-cache handling.
+These are mocked request-contract checks, not a live model-behavior evaluation.
+No evidence was found of cross-turn provider conversation IDs or retained tool
+validation state: `store=false`, no `conversation`/`previous_response_id`, and
+per-analysis counters remain local. OpenAI state semantics:
+https://developers.openai.com/api/docs/guides/conversation-state

@@ -399,7 +399,8 @@ class ChatTests(unittest.TestCase):
         body = api.call_args.args[1]
         self.assertIn("Do not search\nfor or verify sportsbooks by default", body["instructions"])
         self.assertIn("Only compare betting lines or odds when", body["instructions"])
-        self.assertIn("Do not research sportsbook lines unless the user asks", body["input"][-1]["content"])
+        self.assertIn("Do not search\nfor or verify sportsbooks by default", body["instructions"])
+        self.assertEqual(body["input"][-1]["content"], "Build three legs")
         self.assertNotIn("sportsbook lines and odds remain unverified", result["text"])
 
     def test_upstream_error_does_not_leak_keys_or_messages(self):

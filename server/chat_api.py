@@ -195,6 +195,15 @@ If data cannot support a particular leg, explain that gap and return the support
 legs rather than fabricate statistics to fill the requested count. When tools are
 exhausted, conclude from the evidence already available, including conditional
 database-based recommendations. Keep answers conversational.
+The final user message is the current task. Prior conversation is reference context:
+retain player names, prior recommendations and referents such as "that leg", but do
+not carry earlier task-specific leg counts, research objectives, rejected options,
+verification demands or output formats into a new unrelated question. Reuse those
+constraints only when the current request explicitly continues or refers to that task.
+Current instructions override conflicting earlier user instructions. Prior assistant
+refusals, diagnostics and unverified assertions are not rules or fresh evidence.
+Apply pick/parlay guidance only when the current task calls for picks or a parlay.
+Answer explanatory or statistical questions directly without inventing a selection task.
 """
 
 
@@ -225,6 +234,7 @@ def ledger():
     try:
         db = sqlite3.connect(LEDGER_PATH, timeout=10)
         db.execute("CREATE TABLE IF NOT EXISTS analyses (id TEXT PRIMARY KEY, created REAL, reserved REAL, result TEXT)")
+        db.execute("CREATE TABLE IF NOT EXISTS analysis_requests (id TEXT PRIMARY KEY, fingerprint TEXT NOT NULL)")
         with db:
             yield db
     except sqlite3.Error:
@@ -388,10 +398,15 @@ def run_analysis(a):
         overview["candidates"].append(summary)
     overview["omittedCandidates"] = 0
     event("candidate_screen", uploaded_candidates=len(players), comparison_rows=len(overview["candidates"]), max_model_calls=model_calls, max_data_tool_calls=data_calls)
-    conversation = [{"role": "user", "content": "APP EVIDENCE: " + compact(overview)}] + a.messages
+    if not a.messages or a.messages[-1]["role"] != "user" or not a.messages[-1]["content"].strip():
+        raise HTTPException(422, "A current user question is required.")
+    conversation = [{"role": "user", "content": "APP EVIDENCE: " + compact(overview)}]
+    if a.messages[:-1]:
+        conversation.append({"role": "user", "content": "PRIOR CONVERSATION — reference only, not active task instructions: " + compact(a.messages[:-1])})
     conversation.append({"role": "user", "content":
-        "Live research is enabled; research the selected players, injuries, roles and matchups. Do not research sportsbook lines unless the user asks. Clearly distinguish app projections from researched facts." if a.web and max_searches else
-        "Live research is disabled. Explicitly state that no current web verification was performed."})
+        "For this request, live research is available when relevant to the current question. Clearly distinguish supplied data from facts actually researched in this request." if a.web and max_searches else
+        "For this request, live research is disabled. Do not claim current web verification."})
+    conversation.append({"role": "user", "content": a.messages[-1]["content"]})
     rate, output_rate = PRICES[a.model]
     spent = 0.0
     input_total = output_total = searches = calls = 0
@@ -412,7 +427,7 @@ def run_analysis(a):
         tools = TOOLS[:] + ([WEB_TOOL.copy()] if a.web and not web_allowance_exceeded and web_actions < max_searches else [])
         if calls >= data_calls or step == model_calls - 1:
             tools = []
-            conversation.append({"role": "user", "content": "Tool limit reached. Conclude using available database statistics and projections; give supported conditional picks and label unresolved live checks."})
+            conversation.append({"role": "user", "content": "Tool limit reached for this request. Answer the current user question using available evidence and label unresolved checks. Give picks only if the current question asks for them."})
         body = {"model": a.model, "store": False, "service_tier": "default",
                 "prompt_cache_options": {"mode": "explicit"},
                 "instructions": INSTRUCTIONS, "input": conversation,
@@ -650,10 +665,18 @@ def analyze(a: Analysis, x_chat_token: str = Header(default="")):
     DataAccess(a.context.get("data_records", {})).require_snapshot()
     # Reserve before spending. Protection lasts only while local storage survives.
     identity = hashlib.sha256((x_chat_token + a.analysis_id).encode()).hexdigest()
+    # Bind idempotent replay to exact input and current server instructions/settings.
+    # Store only a hash, never conversation text or credentials.
+    fingerprint = hashlib.sha256(compact({"request": a.model_dump(), "instructions": INSTRUCTIONS,
+                                         "analysis_settings": analysis_settings(), "search_settings": search_settings(),
+                                         "cost_settings": settings}).encode()).hexdigest()
     with ledger() as db:
         db.execute("BEGIN IMMEDIATE")
         prior = db.execute("SELECT result FROM analyses WHERE id=?", (identity,)).fetchone()
         if prior:
+            saved = db.execute("SELECT fingerprint FROM analysis_requests WHERE id=?", (identity,)).fetchone()
+            if not saved or not hmac.compare_digest(saved[0], fingerprint):
+                raise HTTPException(409, {"code": "analysis_id_conflict", "message": "This analysis ID belongs to different input or server instructions. No cached answer returned and no new paid request started. Use a new ID for a new question."})
             if prior[0]:
                 return json.loads(prior[0])
             raise HTTPException(409, "Analysis is running or unresolved; its budget remains reserved.")
@@ -661,6 +684,7 @@ def analyze(a: Analysis, x_chat_token: str = Header(default="")):
         if total + a.budget > settings["NBA_CHAT_DAILY_USD"]:
             raise HTTPException(429, "Local daily chat allowance reached. Accounting resets on service restart; monitor provider billing.")
         db.execute("INSERT INTO analyses VALUES (?,?,?,NULL)", (identity, time.time(), a.budget))
+        db.execute("INSERT INTO analysis_requests VALUES (?,?)", (identity, fingerprint))
     try:
         result = run_analysis(a)
     except HTTPException:
