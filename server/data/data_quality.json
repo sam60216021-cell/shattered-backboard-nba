@@ -1,15 +1,15 @@
 {
   "counts": {
-    "archived_games": 241,
-    "current_season_logs": 5766,
-    "events": 120220,
+    "archived_games": 258,
+    "current_season_logs": 6142,
+    "events": 128495,
     "games_without_events": 0,
     "games_without_ten_starters": 0,
-    "logs": 25147,
-    "roster": 528
+    "logs": 25523,
+    "roster": 529
   },
   "issues": [],
-  "last_updated": "2026-11-22T18:15:47.144719+00:00",
+  "last_updated": "2026-11-24T06:01:48.603393+00:00",
   "limitations": [
     "No direct history may mean no appearances or unresolved provider IDs; do not invent or fuzzy-match records.",
     "Non-null legacy stats do not prove original source completeness; older imports may contain default zeros.",
@@ -110,14 +110,10 @@
     {
       "name": "Nate Bittle",
       "player_id": "4432586"
-    },
-    {
-      "name": "Jonas Aidoo",
-      "player_id": "4684682"
     }
   ],
   "source": "Local published-feed audit",
-  "source_updated_at": "2026-11-22T18:14:48.539182+00:00",
+  "source_updated_at": "2026-11-24T06:01:16.811206+00:00",
   "unavailable_feeds": [
     "team_advanced",
     "team_position_splits"

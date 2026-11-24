@@ -187,9 +187,11 @@ class ChatTests(unittest.TestCase):
             if enabled:
                 self.assertTrue(native[0]["external_web_access"])
                 self.assertEqual(body["max_tool_calls"], 1)
+                self.assertEqual(body["tool_choice"], {"type": "web_search"})
                 self.assertIn("web_search_call.action.sources", body["include"])
             else:
                 self.assertNotIn("max_tool_calls", body)
+                self.assertNotIn("tool_choice", body)
 
     def test_native_search_citations_usage_and_broad_continuation(self):
         import copy

@@ -1,15 +1,15 @@
 {
-  "last_updated": "2026-11-22T18:14:48.539182+00:00",
+  "last_updated": "2026-11-24T06:01:16.811206+00:00",
   "limitations": "Not official NBA ratings. Position observations use source-listed box-score positions and per-player-game averages, not actual defensive assignments; limited to rows with observed positions. Not used to replace app prediction inputs.",
   "method": "Possessions estimated as mean of both teams: FGA - OREB + 0.44*FTA + total turnovers. Ratings are points per 100 estimated possessions across collected games only.",
   "season": 2027,
   "teams": [
     {
-      "end_date": "2026-11-20",
-      "estimated_defensive_rating": 108.3092186854072,
-      "estimated_offensive_rating": 110.84863875273136,
-      "games": 16,
-      "opponent_points_per_game": 114.625,
+      "end_date": "2026-11-22",
+      "estimated_defensive_rating": 107.6101736474889,
+      "estimated_offensive_rating": 110.56374133434386,
+      "games": 17,
+      "opponent_points_per_game": 113.58823529411765,
       "opponent_position_observations": [
         {
           "end_date": "2026-11-20",
@@ -25,28 +25,28 @@
           "start_date": "2026-11-18"
         },
         {
-          "end_date": "2026-11-20",
+          "end_date": "2026-11-22",
           "per_player_game_means": {
-            "ast": 1.4,
-            "mp_seconds": 1356.0,
-            "pts": 11.2,
-            "reb": 5.4,
-            "three_p": 1.8
+            "ast": 1.125,
+            "mp_seconds": 1282.5,
+            "pts": 11.5,
+            "reb": 5.25,
+            "three_p": 1.625
           },
-          "player_games": 5,
+          "player_games": 8,
           "position": "F",
           "start_date": "2026-11-18"
         },
         {
-          "end_date": "2026-11-20",
+          "end_date": "2026-11-22",
           "per_player_game_means": {
-            "ast": 2.3333333333333335,
-            "mp_seconds": 1280.0,
-            "pts": 9.916666666666666,
-            "reb": 2.1666666666666665,
-            "three_p": 0.75
+            "ast": 3.111111111111111,
+            "mp_seconds": 1463.3333333333333,
+            "pts": 10.0,
+            "reb": 3.0,
+            "three_p": 0.8888888888888888
           },
-          "player_games": 12,
+          "player_games": 18,
           "position": "G",
           "start_date": "2026-11-18"
         }
@@ -55,48 +55,48 @@
       "team": "ATL"
     },
     {
-      "end_date": "2026-11-20",
-      "estimated_defensive_rating": 115.95975897028777,
-      "estimated_offensive_rating": 108.21609380897226,
-      "games": 15,
-      "opponent_points_per_game": 118.8,
+      "end_date": "2026-11-23",
+      "estimated_defensive_rating": 117.35141992778377,
+      "estimated_offensive_rating": 108.50736801014934,
+      "games": 16,
+      "opponent_points_per_game": 120.25,
       "opponent_position_observations": [
         {
-          "end_date": "2026-11-20",
+          "end_date": "2026-11-23",
           "per_player_game_means": {
-            "ast": 1.2,
-            "mp_seconds": 1524.0,
-            "pts": 15.6,
-            "reb": 5.8,
-            "three_p": 1.0
+            "ast": 1.5,
+            "mp_seconds": 1540.0,
+            "pts": 14.166666666666666,
+            "reb": 5.833333333333333,
+            "three_p": 0.8333333333333334
           },
-          "player_games": 5,
+          "player_games": 6,
           "position": "C",
           "start_date": "2026-11-16"
         },
         {
-          "end_date": "2026-11-20",
+          "end_date": "2026-11-23",
           "per_player_game_means": {
-            "ast": 2.1818181818181817,
-            "mp_seconds": 1254.5454545454545,
-            "pts": 11.454545454545455,
-            "reb": 4.0,
-            "three_p": 1.6363636363636365
+            "ast": 2.0,
+            "mp_seconds": 1130.0,
+            "pts": 10.333333333333334,
+            "reb": 3.7222222222222223,
+            "three_p": 1.2777777777777777
           },
-          "player_games": 11,
+          "player_games": 18,
           "position": "F",
           "start_date": "2026-11-16"
         },
         {
-          "end_date": "2026-11-20",
+          "end_date": "2026-11-23",
           "per_player_game_means": {
-            "ast": 3.9285714285714284,
-            "mp_seconds": 1547.142857142857,
-            "pts": 12.928571428571429,
-            "reb": 4.357142857142857,
-            "three_p": 2.142857142857143
+            "ast": 3.9473684210526314,
+            "mp_seconds": 1462.1052631578948,
+            "pts": 13.473684210526315,
+            "reb": 3.736842105263158,
+            "three_p": 2.210526315789474
           },
-          "player_games": 14,
+          "player_games": 19,
           "position": "G",
           "start_date": "2026-11-16"
         }
@@ -105,48 +105,48 @@
       "team": "BKN"
     },
     {
-      "end_date": "2026-11-21",
-      "estimated_defensive_rating": 103.80840797712185,
-      "estimated_offensive_rating": 113.63493203320861,
-      "games": 16,
-      "opponent_points_per_game": 103.0,
+      "end_date": "2026-11-22",
+      "estimated_defensive_rating": 103.55647287607822,
+      "estimated_offensive_rating": 112.80258652572806,
+      "games": 17,
+      "opponent_points_per_game": 102.11764705882354,
       "opponent_position_observations": [
         {
-          "end_date": "2026-11-21",
+          "end_date": "2026-11-22",
           "per_player_game_means": {
-            "ast": 2.75,
-            "mp_seconds": 1395.0,
-            "pts": 11.0,
-            "reb": 4.5,
-            "three_p": 1.0
+            "ast": 2.6666666666666665,
+            "mp_seconds": 1370.0,
+            "pts": 10.666666666666666,
+            "reb": 5.0,
+            "three_p": 0.8333333333333334
           },
-          "player_games": 4,
+          "player_games": 6,
           "position": "C",
           "start_date": "2026-11-16"
         },
         {
-          "end_date": "2026-11-21",
+          "end_date": "2026-11-22",
           "per_player_game_means": {
-            "ast": 1.6923076923076923,
-            "mp_seconds": 1463.076923076923,
-            "pts": 9.23076923076923,
-            "reb": 6.538461538461538,
-            "three_p": 0.38461538461538464
+            "ast": 1.8235294117647058,
+            "mp_seconds": 1443.5294117647059,
+            "pts": 9.058823529411764,
+            "reb": 6.176470588235294,
+            "three_p": 0.7058823529411765
           },
-          "player_games": 13,
+          "player_games": 17,
           "position": "F",
           "start_date": "2026-11-16"
         },
         {
-          "end_date": "2026-11-21",
+          "end_date": "2026-11-22",
           "per_player_game_means": {
-            "ast": 2.75,
-            "mp_seconds": 1560.0,
-            "pts": 12.75,
-            "reb": 3.4166666666666665,
-            "three_p": 1.5
+            "ast": 2.7058823529411766,
+            "mp_seconds": 1475.2941176470588,
+            "pts": 11.0,
+            "reb": 3.176470588235294,
+            "three_p": 1.411764705882353
           },
-          "player_games": 12,
+          "player_games": 17,
           "position": "G",
           "start_date": "2026-11-16"
         }
@@ -155,48 +155,48 @@
       "team": "BOS"
     },
     {
-      "end_date": "2026-11-20",
-      "estimated_defensive_rating": 111.68025881242839,
-      "estimated_offensive_rating": 101.03120576936038,
-      "games": 15,
-      "opponent_points_per_game": 110.46666666666667,
+      "end_date": "2026-11-23",
+      "estimated_defensive_rating": 112.19610918566116,
+      "estimated_offensive_rating": 101.82397733309722,
+      "games": 16,
+      "opponent_points_per_game": 110.875,
       "opponent_position_observations": [
         {
-          "end_date": "2026-11-17",
+          "end_date": "2026-11-23",
           "per_player_game_means": {
-            "ast": 2.0,
-            "mp_seconds": 1080.0,
-            "pts": 3.0,
-            "reb": 4.0,
-            "three_p": 0.0
+            "ast": 0.75,
+            "mp_seconds": 975.0,
+            "pts": 5.5,
+            "reb": 4.75,
+            "three_p": 0.25
           },
-          "player_games": 1,
+          "player_games": 4,
           "position": "C",
           "start_date": "2026-11-17"
         },
         {
-          "end_date": "2026-11-20",
+          "end_date": "2026-11-23",
           "per_player_game_means": {
-            "ast": 1.4545454545454546,
-            "mp_seconds": 1145.4545454545455,
-            "pts": 6.2727272727272725,
-            "reb": 3.8181818181818183,
-            "three_p": 0.5454545454545454
+            "ast": 1.3125,
+            "mp_seconds": 1256.25,
+            "pts": 6.9375,
+            "reb": 3.9375,
+            "three_p": 0.625
           },
-          "player_games": 11,
+          "player_games": 16,
           "position": "F",
           "start_date": "2026-11-17"
         },
         {
-          "end_date": "2026-11-20",
+          "end_date": "2026-11-23",
           "per_player_game_means": {
-            "ast": 3.4444444444444446,
-            "mp_seconds": 1846.6666666666667,
-            "pts": 17.444444444444443,
-            "reb": 4.555555555555555,
-            "three_p": 2.7777777777777777
+            "ast": 3.6666666666666665,
+            "mp_seconds": 1730.0,
+            "pts": 17.75,
+            "reb": 4.083333333333333,
+            "three_p": 2.9166666666666665
           },
-          "player_games": 9,
+          "player_games": 12,
           "position": "G",
           "start_date": "2026-11-17"
         }
@@ -205,48 +205,48 @@
       "team": "CHA"
     },
     {
-      "end_date": "2026-11-20",
-      "estimated_defensive_rating": 115.08184430838436,
-      "estimated_offensive_rating": 107.52217918280645,
-      "games": 15,
-      "opponent_points_per_game": 122.8,
+      "end_date": "2026-11-23",
+      "estimated_defensive_rating": 115.79713180259924,
+      "estimated_offensive_rating": 109.5691090069335,
+      "games": 17,
+      "opponent_points_per_game": 123.58823529411765,
       "opponent_position_observations": [
         {
-          "end_date": "2026-11-20",
+          "end_date": "2026-11-23",
           "per_player_game_means": {
-            "ast": 2.0,
-            "mp_seconds": 1148.5714285714287,
-            "pts": 6.571428571428571,
-            "reb": 5.571428571428571,
-            "three_p": 0.42857142857142855
+            "ast": 2.4545454545454546,
+            "mp_seconds": 1205.4545454545455,
+            "pts": 9.181818181818182,
+            "reb": 6.090909090909091,
+            "three_p": 0.36363636363636365
           },
-          "player_games": 7,
+          "player_games": 11,
           "position": "C",
           "start_date": "2026-11-16"
         },
         {
-          "end_date": "2026-11-20",
+          "end_date": "2026-11-23",
           "per_player_game_means": {
-            "ast": 2.5454545454545454,
-            "mp_seconds": 1390.909090909091,
-            "pts": 10.727272727272727,
-            "reb": 4.363636363636363,
-            "three_p": 0.9090909090909091
+            "ast": 2.235294117647059,
+            "mp_seconds": 1348.235294117647,
+            "pts": 9.764705882352942,
+            "reb": 4.0588235294117645,
+            "three_p": 1.0
           },
-          "player_games": 11,
+          "player_games": 17,
           "position": "F",
           "start_date": "2026-11-16"
         },
         {
-          "end_date": "2026-11-20",
+          "end_date": "2026-11-23",
           "per_player_game_means": {
-            "ast": 2.5,
-            "mp_seconds": 1245.0,
-            "pts": 10.4375,
-            "reb": 2.4375,
-            "three_p": 1.3125
+            "ast": 2.6296296296296298,
+            "mp_seconds": 1384.4444444444443,
+            "pts": 11.962962962962964,
+            "reb": 3.0,
+            "three_p": 1.4074074074074074
           },
-          "player_games": 16,
+          "player_games": 27,
           "position": "G",
           "start_date": "2026-11-16"
         }
@@ -255,48 +255,48 @@
       "team": "CHI"
     },
     {
-      "end_date": "2026-11-20",
-      "estimated_defensive_rating": 113.13768513439386,
-      "estimated_offensive_rating": 115.42329493508869,
-      "games": 17,
-      "opponent_points_per_game": 116.47058823529412,
+      "end_date": "2026-11-23",
+      "estimated_defensive_rating": 113.63022066534765,
+      "estimated_offensive_rating": 115.0357324338058,
+      "games": 18,
+      "opponent_points_per_game": 116.77777777777777,
       "opponent_position_observations": [
         {
-          "end_date": "2026-11-20",
+          "end_date": "2026-11-23",
           "per_player_game_means": {
-            "ast": 0.8,
-            "mp_seconds": 864.0,
-            "pts": 8.6,
-            "reb": 3.2,
-            "three_p": 0.2
+            "ast": 0.6666666666666666,
+            "mp_seconds": 950.0,
+            "pts": 8.166666666666666,
+            "reb": 3.6666666666666665,
+            "three_p": 0.16666666666666666
           },
-          "player_games": 5,
+          "player_games": 6,
           "position": "C",
           "start_date": "2026-11-16"
         },
         {
-          "end_date": "2026-11-20",
+          "end_date": "2026-11-23",
           "per_player_game_means": {
-            "ast": 1.6666666666666667,
-            "mp_seconds": 1203.3333333333333,
-            "pts": 10.555555555555555,
-            "reb": 3.3333333333333335,
-            "three_p": 1.3333333333333333
+            "ast": 1.6956521739130435,
+            "mp_seconds": 1207.8260869565217,
+            "pts": 10.478260869565217,
+            "reb": 3.608695652173913,
+            "three_p": 1.4782608695652173
           },
-          "player_games": 18,
+          "player_games": 23,
           "position": "F",
           "start_date": "2026-11-16"
         },
         {
-          "end_date": "2026-11-20",
+          "end_date": "2026-11-23",
           "per_player_game_means": {
-            "ast": 4.066666666666666,
-            "mp_seconds": 1144.0,
-            "pts": 8.333333333333334,
-            "reb": 3.0,
-            "three_p": 1.1333333333333333
+            "ast": 4.35,
+            "mp_seconds": 1206.0,
+            "pts": 9.5,
+            "reb": 2.95,
+            "three_p": 1.35
           },
-          "player_games": 15,
+          "player_games": 20,
           "position": "G",
           "start_date": "2026-11-16"
         }
@@ -305,48 +305,48 @@
       "team": "CLE"
     },
     {
-      "end_date": "2026-11-21",
-      "estimated_defensive_rating": 110.53188088622224,
-      "estimated_offensive_rating": 110.34745616839206,
-      "games": 16,
-      "opponent_points_per_game": 112.375,
+      "end_date": "2026-11-22",
+      "estimated_defensive_rating": 110.65327098476781,
+      "estimated_offensive_rating": 110.59539793508958,
+      "games": 17,
+      "opponent_points_per_game": 112.47058823529412,
       "opponent_position_observations": [
         {
-          "end_date": "2026-11-21",
+          "end_date": "2026-11-22",
           "per_player_game_means": {
-            "ast": 0.3333333333333333,
-            "mp_seconds": 1260.0,
-            "pts": 12.333333333333334,
-            "reb": 6.666666666666667,
-            "three_p": 0.3333333333333333
+            "ast": 0.5,
+            "mp_seconds": 1110.0,
+            "pts": 8.666666666666666,
+            "reb": 6.333333333333333,
+            "three_p": 0.16666666666666666
           },
-          "player_games": 3,
+          "player_games": 6,
           "position": "C",
           "start_date": "2026-11-18"
         },
         {
-          "end_date": "2026-11-21",
+          "end_date": "2026-11-22",
           "per_player_game_means": {
-            "ast": 1.8,
-            "mp_seconds": 1008.0,
-            "pts": 6.1,
-            "reb": 3.1,
-            "three_p": 0.8
+            "ast": 1.9166666666666667,
+            "mp_seconds": 970.0,
+            "pts": 6.083333333333333,
+            "reb": 3.1666666666666665,
+            "three_p": 0.8333333333333334
           },
-          "player_games": 10,
+          "player_games": 12,
           "position": "F",
           "start_date": "2026-11-18"
         },
         {
-          "end_date": "2026-11-21",
+          "end_date": "2026-11-22",
           "per_player_game_means": {
-            "ast": 2.5,
-            "mp_seconds": 1235.0,
-            "pts": 8.0,
-            "reb": 3.25,
-            "three_p": 1.25
+            "ast": 2.8421052631578947,
+            "mp_seconds": 1304.2105263157894,
+            "pts": 9.631578947368421,
+            "reb": 3.3684210526315788,
+            "three_p": 1.631578947368421
           },
-          "player_games": 12,
+          "player_games": 19,
           "position": "G",
           "start_date": "2026-11-18"
         }
@@ -355,11 +355,11 @@
       "team": "DAL"
     },
     {
-      "end_date": "2026-11-20",
-      "estimated_defensive_rating": 112.52807870567828,
-      "estimated_offensive_rating": 114.02087065313201,
-      "games": 14,
-      "opponent_points_per_game": 113.07142857142857,
+      "end_date": "2026-11-22",
+      "estimated_defensive_rating": 113.62739682790182,
+      "estimated_offensive_rating": 115.40282490333779,
+      "games": 15,
+      "opponent_points_per_game": 115.2,
       "opponent_position_observations": [
         {
           "end_date": "2026-11-20",
@@ -375,28 +375,28 @@
           "start_date": "2026-11-16"
         },
         {
-          "end_date": "2026-11-20",
+          "end_date": "2026-11-22",
           "per_player_game_means": {
-            "ast": 1.9166666666666667,
-            "mp_seconds": 1430.0,
-            "pts": 11.416666666666666,
-            "reb": 4.916666666666667,
-            "three_p": 1.5
+            "ast": 1.6111111111111112,
+            "mp_seconds": 1480.0,
+            "pts": 11.722222222222221,
+            "reb": 4.222222222222222,
+            "three_p": 1.7777777777777777
           },
-          "player_games": 12,
+          "player_games": 18,
           "position": "F",
           "start_date": "2026-11-16"
         },
         {
-          "end_date": "2026-11-20",
+          "end_date": "2026-11-22",
           "per_player_game_means": {
-            "ast": 2.533333333333333,
-            "mp_seconds": 1304.0,
-            "pts": 9.866666666666667,
-            "reb": 2.8666666666666667,
-            "three_p": 1.1333333333333333
+            "ast": 3.736842105263158,
+            "mp_seconds": 1367.3684210526317,
+            "pts": 11.526315789473685,
+            "reb": 3.526315789473684,
+            "three_p": 1.4736842105263157
           },
-          "player_games": 15,
+          "player_games": 19,
           "position": "G",
           "start_date": "2026-11-16"
         }
@@ -405,11 +405,11 @@
       "team": "DEN"
     },
     {
-      "end_date": "2026-11-20",
-      "estimated_defensive_rating": 107.53113785096053,
-      "estimated_offensive_rating": 113.27052987122651,
-      "games": 15,
-      "opponent_points_per_game": 108.66666666666667,
+      "end_date": "2026-11-22",
+      "estimated_defensive_rating": 107.42247894222562,
+      "estimated_offensive_rating": 112.18444260287697,
+      "games": 16,
+      "opponent_points_per_game": 108.5625,
       "opponent_position_observations": [
         {
           "end_date": "2026-11-20",
@@ -425,28 +425,28 @@
           "start_date": "2026-11-17"
         },
         {
-          "end_date": "2026-11-20",
+          "end_date": "2026-11-22",
           "per_player_game_means": {
-            "ast": 2.0,
-            "mp_seconds": 1444.6153846153845,
-            "pts": 11.76923076923077,
-            "reb": 5.3076923076923075,
-            "three_p": 1.0769230769230769
+            "ast": 1.8823529411764706,
+            "mp_seconds": 1447.0588235294117,
+            "pts": 11.352941176470589,
+            "reb": 5.705882352941177,
+            "three_p": 1.1176470588235294
           },
-          "player_games": 13,
+          "player_games": 17,
           "position": "F",
           "start_date": "2026-11-17"
         },
         {
-          "end_date": "2026-11-20",
+          "end_date": "2026-11-22",
           "per_player_game_means": {
-            "ast": 3.6666666666666665,
-            "mp_seconds": 1580.0,
-            "pts": 10.083333333333334,
-            "reb": 2.4166666666666665,
-            "three_p": 1.25
+            "ast": 3.588235294117647,
+            "mp_seconds": 1623.5294117647059,
+            "pts": 11.058823529411764,
+            "reb": 3.7058823529411766,
+            "three_p": 1.4705882352941178
           },
-          "player_games": 12,
+          "player_games": 17,
           "position": "G",
           "start_date": "2026-11-17"
         }
@@ -455,48 +455,48 @@
       "team": "DET"
     },
     {
-      "end_date": "2026-11-19",
-      "estimated_defensive_rating": 111.76137900509009,
-      "estimated_offensive_rating": 110.83925541593918,
-      "games": 16,
-      "opponent_points_per_game": 113.625,
+      "end_date": "2026-11-22",
+      "estimated_defensive_rating": 111.04504756575263,
+      "estimated_offensive_rating": 110.22896847603056,
+      "games": 17,
+      "opponent_points_per_game": 112.05882352941177,
       "opponent_position_observations": [
         {
-          "end_date": "2026-11-19",
+          "end_date": "2026-11-22",
           "per_player_game_means": {
-            "ast": 0.4,
-            "mp_seconds": 912.0,
-            "pts": 7.2,
-            "reb": 6.0,
-            "three_p": 0.8
+            "ast": 0.8571428571428571,
+            "mp_seconds": 1054.2857142857142,
+            "pts": 7.428571428571429,
+            "reb": 6.428571428571429,
+            "three_p": 0.5714285714285714
           },
-          "player_games": 5,
+          "player_games": 7,
           "position": "C",
           "start_date": "2026-11-16"
         },
         {
-          "end_date": "2026-11-19",
+          "end_date": "2026-11-22",
           "per_player_game_means": {
-            "ast": 1.7272727272727273,
-            "mp_seconds": 1129.090909090909,
-            "pts": 10.363636363636363,
-            "reb": 3.272727272727273,
-            "three_p": 1.4545454545454546
+            "ast": 1.84,
+            "mp_seconds": 1149.6,
+            "pts": 10.32,
+            "reb": 3.4,
+            "three_p": 1.48
           },
-          "player_games": 22,
+          "player_games": 25,
           "position": "F",
           "start_date": "2026-11-16"
         },
         {
-          "end_date": "2026-11-19",
+          "end_date": "2026-11-22",
           "per_player_game_means": {
-            "ast": 4.818181818181818,
-            "mp_seconds": 1260.0,
-            "pts": 8.454545454545455,
-            "reb": 3.4545454545454546,
-            "three_p": 1.0
+            "ast": 3.7222222222222223,
+            "mp_seconds": 1196.6666666666667,
+            "pts": 7.444444444444445,
+            "reb": 2.8333333333333335,
+            "three_p": 1.1111111111111112
           },
-          "player_games": 11,
+          "player_games": 18,
           "position": "G",
           "start_date": "2026-11-16"
         }
@@ -505,48 +505,48 @@
       "team": "GSW"
     },
     {
-      "end_date": "2026-11-20",
-      "estimated_defensive_rating": 110.72110061485547,
-      "estimated_offensive_rating": 118.37734693396781,
-      "games": 17,
-      "opponent_points_per_game": 110.58823529411765,
+      "end_date": "2026-11-23",
+      "estimated_defensive_rating": 110.39886039886039,
+      "estimated_offensive_rating": 118.30039173789173,
+      "games": 18,
+      "opponent_points_per_game": 110.22222222222223,
       "opponent_position_observations": [
         {
-          "end_date": "2026-11-20",
+          "end_date": "2026-11-23",
           "per_player_game_means": {
-            "ast": 3.4,
-            "mp_seconds": 1152.0,
-            "pts": 7.8,
-            "reb": 2.8,
-            "three_p": 0.4
+            "ast": 2.7142857142857144,
+            "mp_seconds": 1071.4285714285713,
+            "pts": 6.285714285714286,
+            "reb": 2.7142857142857144,
+            "three_p": 0.42857142857142855
           },
-          "player_games": 5,
+          "player_games": 7,
           "position": "C",
           "start_date": "2026-11-16"
         },
         {
-          "end_date": "2026-11-20",
+          "end_date": "2026-11-23",
           "per_player_game_means": {
-            "ast": 1.75,
-            "mp_seconds": 1196.25,
-            "pts": 10.625,
+            "ast": 1.9047619047619047,
+            "mp_seconds": 1191.4285714285713,
+            "pts": 10.380952380952381,
             "reb": 4.0,
-            "three_p": 1.3125
+            "three_p": 1.1428571428571428
           },
-          "player_games": 16,
+          "player_games": 21,
           "position": "F",
           "start_date": "2026-11-16"
         },
         {
-          "end_date": "2026-11-20",
+          "end_date": "2026-11-23",
           "per_player_game_means": {
-            "ast": 3.2142857142857144,
-            "mp_seconds": 1298.5714285714287,
-            "pts": 11.142857142857142,
-            "reb": 2.357142857142857,
-            "three_p": 1.2857142857142858
+            "ast": 3.210526315789474,
+            "mp_seconds": 1310.5263157894738,
+            "pts": 10.894736842105264,
+            "reb": 2.1052631578947367,
+            "three_p": 1.3157894736842106
           },
-          "player_games": 14,
+          "player_games": 19,
           "position": "G",
           "start_date": "2026-11-16"
         }
@@ -555,48 +555,48 @@
       "team": "HOU"
     },
     {
-      "end_date": "2026-11-20",
-      "estimated_defensive_rating": 112.34317500030362,
-      "estimated_offensive_rating": 108.82106464894274,
-      "games": 16,
-      "opponent_points_per_game": 115.625,
+      "end_date": "2026-11-23",
+      "estimated_defensive_rating": 112.36621784912825,
+      "estimated_offensive_rating": 109.12955290868288,
+      "games": 18,
+      "opponent_points_per_game": 115.72222222222223,
       "opponent_position_observations": [
         {
-          "end_date": "2026-11-20",
+          "end_date": "2026-11-23",
           "per_player_game_means": {
-            "ast": 1.6666666666666667,
-            "mp_seconds": 940.0,
-            "pts": 5.333333333333333,
-            "reb": 5.166666666666667,
-            "three_p": 0.5
+            "ast": 2.111111111111111,
+            "mp_seconds": 1146.6666666666667,
+            "pts": 9.11111111111111,
+            "reb": 7.0,
+            "three_p": 0.7777777777777778
           },
-          "player_games": 6,
+          "player_games": 9,
           "position": "C",
           "start_date": "2026-11-18"
         },
         {
-          "end_date": "2026-11-20",
+          "end_date": "2026-11-23",
           "per_player_game_means": {
-            "ast": 2.0,
-            "mp_seconds": 1060.0,
-            "pts": 9.833333333333334,
-            "reb": 3.3333333333333335,
-            "three_p": 1.6666666666666667
+            "ast": 1.3333333333333333,
+            "mp_seconds": 933.3333333333334,
+            "pts": 7.888888888888889,
+            "reb": 3.111111111111111,
+            "three_p": 1.2222222222222223
           },
-          "player_games": 6,
+          "player_games": 9,
           "position": "F",
           "start_date": "2026-11-18"
         },
         {
-          "end_date": "2026-11-20",
+          "end_date": "2026-11-23",
           "per_player_game_means": {
-            "ast": 2.8333333333333335,
-            "mp_seconds": 1400.0,
-            "pts": 13.0,
-            "reb": 3.0,
-            "three_p": 2.0833333333333335
+            "ast": 2.923076923076923,
+            "mp_seconds": 1493.076923076923,
+            "pts": 12.576923076923077,
+            "reb": 3.6538461538461537,
+            "three_p": 1.8461538461538463
           },
-          "player_games": 12,
+          "player_games": 26,
           "position": "G",
           "start_date": "2026-11-18"
         }
@@ -605,48 +605,48 @@
       "team": "IND"
     },
     {
-      "end_date": "2026-11-21",
-      "estimated_defensive_rating": 114.99048264712783,
-      "estimated_offensive_rating": 108.66730984850459,
-      "games": 15,
-      "opponent_points_per_game": 117.6,
+      "end_date": "2026-11-23",
+      "estimated_defensive_rating": 115.11143766838107,
+      "estimated_offensive_rating": 108.43742346313984,
+      "games": 16,
+      "opponent_points_per_game": 117.5,
       "opponent_position_observations": [
         {
-          "end_date": "2026-11-19",
+          "end_date": "2026-11-23",
           "per_player_game_means": {
-            "ast": 2.3333333333333335,
-            "mp_seconds": 1260.0,
-            "pts": 7.333333333333333,
-            "reb": 5.666666666666667,
-            "three_p": 0.3333333333333333
+            "ast": 2.8,
+            "mp_seconds": 1320.0,
+            "pts": 9.2,
+            "reb": 6.2,
+            "three_p": 0.4
           },
-          "player_games": 3,
+          "player_games": 5,
           "position": "C",
           "start_date": "2026-11-17"
         },
         {
-          "end_date": "2026-11-21",
+          "end_date": "2026-11-23",
           "per_player_game_means": {
-            "ast": 2.3846153846153846,
-            "mp_seconds": 1426.1538461538462,
-            "pts": 13.076923076923077,
-            "reb": 5.538461538461538,
-            "three_p": 1.6153846153846154
+            "ast": 2.5625,
+            "mp_seconds": 1470.0,
+            "pts": 14.0625,
+            "reb": 5.6875,
+            "three_p": 1.75
           },
-          "player_games": 13,
+          "player_games": 16,
           "position": "F",
           "start_date": "2026-11-17"
         },
         {
-          "end_date": "2026-11-21",
+          "end_date": "2026-11-23",
           "per_player_game_means": {
-            "ast": 4.384615384615385,
-            "mp_seconds": 1610.7692307692307,
-            "pts": 13.384615384615385,
-            "reb": 3.5384615384615383,
-            "three_p": 1.6923076923076923
+            "ast": 4.222222222222222,
+            "mp_seconds": 1530.0,
+            "pts": 11.722222222222221,
+            "reb": 3.2777777777777777,
+            "three_p": 1.4444444444444444
           },
-          "player_games": 13,
+          "player_games": 18,
           "position": "G",
           "start_date": "2026-11-17"
         }
@@ -655,48 +655,48 @@
       "team": "LAC"
     },
     {
-      "end_date": "2026-11-20",
-      "estimated_defensive_rating": 110.77271842548176,
-      "estimated_offensive_rating": 116.78364113074045,
-      "games": 17,
-      "opponent_points_per_game": 113.82352941176471,
+      "end_date": "2026-11-23",
+      "estimated_defensive_rating": 109.9943620435424,
+      "estimated_offensive_rating": 116.49969641772923,
+      "games": 18,
+      "opponent_points_per_game": 112.72222222222223,
       "opponent_position_observations": [
         {
-          "end_date": "2026-11-20",
+          "end_date": "2026-11-23",
           "per_player_game_means": {
-            "ast": 1.4,
-            "mp_seconds": 1368.0,
-            "pts": 8.2,
-            "reb": 8.2,
-            "three_p": 0.8
+            "ast": 1.2857142857142858,
+            "mp_seconds": 1234.2857142857142,
+            "pts": 6.714285714285714,
+            "reb": 7.0,
+            "three_p": 0.5714285714285714
           },
-          "player_games": 5,
+          "player_games": 7,
           "position": "C",
           "start_date": "2026-11-17"
         },
         {
-          "end_date": "2026-11-20",
+          "end_date": "2026-11-23",
           "per_player_game_means": {
-            "ast": 1.5454545454545454,
-            "mp_seconds": 1598.1818181818182,
-            "pts": 11.636363636363637,
-            "reb": 5.909090909090909,
-            "three_p": 1.7272727272727273
+            "ast": 1.5714285714285714,
+            "mp_seconds": 1435.7142857142858,
+            "pts": 11.071428571428571,
+            "reb": 5.785714285714286,
+            "three_p": 1.4285714285714286
           },
-          "player_games": 11,
+          "player_games": 14,
           "position": "F",
           "start_date": "2026-11-17"
         },
         {
-          "end_date": "2026-11-20",
+          "end_date": "2026-11-23",
           "per_player_game_means": {
-            "ast": 4.071428571428571,
-            "mp_seconds": 1452.857142857143,
-            "pts": 11.285714285714286,
-            "reb": 2.4285714285714284,
-            "three_p": 1.5714285714285714
+            "ast": 3.1363636363636362,
+            "mp_seconds": 1380.0,
+            "pts": 9.954545454545455,
+            "reb": 2.5454545454545454,
+            "three_p": 1.2272727272727273
           },
-          "player_games": 14,
+          "player_games": 22,
           "position": "G",
           "start_date": "2026-11-17"
         }
@@ -705,48 +705,48 @@
       "team": "LAL"
     },
     {
-      "end_date": "2026-11-21",
-      "estimated_defensive_rating": 108.89928396565792,
-      "estimated_offensive_rating": 117.74914662038684,
-      "games": 17,
-      "opponent_points_per_game": 111.47058823529412,
+      "end_date": "2026-11-23",
+      "estimated_defensive_rating": 109.16412712233345,
+      "estimated_offensive_rating": 117.87113626469305,
+      "games": 18,
+      "opponent_points_per_game": 111.44444444444444,
       "opponent_position_observations": [
         {
-          "end_date": "2026-11-21",
+          "end_date": "2026-11-23",
           "per_player_game_means": {
-            "ast": 1.375,
-            "mp_seconds": 1282.5,
-            "pts": 7.75,
-            "reb": 6.25,
-            "three_p": 0.25
+            "ast": 1.4,
+            "mp_seconds": 1308.0,
+            "pts": 8.6,
+            "reb": 5.8,
+            "three_p": 0.5
           },
-          "player_games": 8,
+          "player_games": 10,
           "position": "C",
           "start_date": "2026-11-16"
         },
         {
-          "end_date": "2026-11-21",
+          "end_date": "2026-11-23",
           "per_player_game_means": {
-            "ast": 1.8,
-            "mp_seconds": 1332.0,
-            "pts": 10.8,
-            "reb": 3.7333333333333334,
-            "three_p": 0.8666666666666667
+            "ast": 1.85,
+            "mp_seconds": 1311.0,
+            "pts": 9.75,
+            "reb": 3.8,
+            "three_p": 0.85
           },
-          "player_games": 15,
+          "player_games": 20,
           "position": "F",
           "start_date": "2026-11-16"
         },
         {
-          "end_date": "2026-11-21",
+          "end_date": "2026-11-23",
           "per_player_game_means": {
-            "ast": 2.8095238095238093,
-            "mp_seconds": 1308.5714285714287,
-            "pts": 10.428571428571429,
-            "reb": 2.3333333333333335,
-            "three_p": 1.2380952380952381
+            "ast": 2.72,
+            "mp_seconds": 1315.2,
+            "pts": 10.92,
+            "reb": 2.4,
+            "three_p": 1.56
           },
-          "player_games": 21,
+          "player_games": 25,
           "position": "G",
           "start_date": "2026-11-16"
         }
@@ -755,48 +755,48 @@
       "team": "MEM"
     },
     {
-      "end_date": "2026-11-18",
-      "estimated_defensive_rating": 113.91137973416456,
-      "estimated_offensive_rating": 114.54492467150696,
-      "games": 15,
-      "opponent_points_per_game": 119.86666666666666,
+      "end_date": "2026-11-22",
+      "estimated_defensive_rating": 113.80283703147892,
+      "estimated_offensive_rating": 114.99386619978324,
+      "games": 16,
+      "opponent_points_per_game": 119.4375,
       "opponent_position_observations": [
         {
-          "end_date": "2026-11-18",
+          "end_date": "2026-11-22",
           "per_player_game_means": {
-            "ast": 1.8,
-            "mp_seconds": 1104.0,
-            "pts": 9.6,
-            "reb": 5.4,
-            "three_p": 0.4
+            "ast": 2.1666666666666665,
+            "mp_seconds": 1150.0,
+            "pts": 8.333333333333334,
+            "reb": 5.833333333333333,
+            "three_p": 0.3333333333333333
           },
-          "player_games": 5,
+          "player_games": 6,
           "position": "C",
           "start_date": "2026-11-16"
         },
         {
-          "end_date": "2026-11-18",
+          "end_date": "2026-11-22",
           "per_player_game_means": {
-            "ast": 2.375,
-            "mp_seconds": 1432.5,
-            "pts": 12.25,
-            "reb": 5.375,
-            "three_p": 0.875
+            "ast": 2.3333333333333335,
+            "mp_seconds": 1400.0,
+            "pts": 11.777777777777779,
+            "reb": 5.222222222222222,
+            "three_p": 0.7777777777777778
           },
-          "player_games": 8,
+          "player_games": 9,
           "position": "F",
           "start_date": "2026-11-16"
         },
         {
-          "end_date": "2026-11-18",
+          "end_date": "2026-11-22",
           "per_player_game_means": {
-            "ast": 2.2,
-            "mp_seconds": 1176.0,
-            "pts": 9.4,
-            "reb": 2.3,
-            "three_p": 1.5
+            "ast": 2.3529411764705883,
+            "mp_seconds": 1390.5882352941176,
+            "pts": 11.588235294117647,
+            "reb": 2.8823529411764706,
+            "three_p": 1.8235294117647058
           },
-          "player_games": 10,
+          "player_games": 17,
           "position": "G",
           "start_date": "2026-11-16"
         }
@@ -805,48 +805,48 @@
       "team": "MIA"
     },
     {
-      "end_date": "2026-11-21",
-      "estimated_defensive_rating": 118.65437111462849,
-      "estimated_offensive_rating": 106.61115316679283,
-      "games": 17,
-      "opponent_points_per_game": 121.70588235294117,
+      "end_date": "2026-11-23",
+      "estimated_defensive_rating": 118.13541136050809,
+      "estimated_offensive_rating": 107.02634744816673,
+      "games": 18,
+      "opponent_points_per_game": 121.11111111111111,
       "opponent_position_observations": [
         {
-          "end_date": "2026-11-21",
+          "end_date": "2026-11-23",
           "per_player_game_means": {
-            "ast": 2.3333333333333335,
-            "mp_seconds": 1130.0,
-            "pts": 10.166666666666666,
-            "reb": 6.0,
-            "three_p": 0.5
+            "ast": 2.4285714285714284,
+            "mp_seconds": 1208.5714285714287,
+            "pts": 10.857142857142858,
+            "reb": 6.571428571428571,
+            "three_p": 0.42857142857142855
           },
-          "player_games": 6,
+          "player_games": 7,
           "position": "C",
           "start_date": "2026-11-18"
         },
         {
-          "end_date": "2026-11-21",
+          "end_date": "2026-11-23",
           "per_player_game_means": {
-            "ast": 3.1,
-            "mp_seconds": 1296.0,
-            "pts": 11.7,
-            "reb": 5.1,
-            "three_p": 1.0
+            "ast": 2.6666666666666665,
+            "mp_seconds": 1308.0,
+            "pts": 11.6,
+            "reb": 4.8,
+            "three_p": 1.1333333333333333
           },
-          "player_games": 10,
+          "player_games": 15,
           "position": "F",
           "start_date": "2026-11-18"
         },
         {
-          "end_date": "2026-11-21",
+          "end_date": "2026-11-23",
           "per_player_game_means": {
-            "ast": 2.533333333333333,
-            "mp_seconds": 1564.0,
-            "pts": 14.333333333333334,
-            "reb": 2.466666666666667,
-            "three_p": 2.3333333333333335
+            "ast": 2.736842105263158,
+            "mp_seconds": 1556.842105263158,
+            "pts": 13.368421052631579,
+            "reb": 2.6315789473684212,
+            "three_p": 2.210526315789474
           },
-          "player_games": 15,
+          "player_games": 19,
           "position": "G",
           "start_date": "2026-11-18"
         }
@@ -855,48 +855,48 @@
       "team": "MIL"
     },
     {
-      "end_date": "2026-11-21",
-      "estimated_defensive_rating": 101.64057437156792,
-      "estimated_offensive_rating": 111.02015757699785,
-      "games": 17,
-      "opponent_points_per_game": 105.17647058823529,
+      "end_date": "2026-11-23",
+      "estimated_defensive_rating": 102.26003265446421,
+      "estimated_offensive_rating": 112.51826072011687,
+      "games": 18,
+      "opponent_points_per_game": 105.77777777777777,
       "opponent_position_observations": [
         {
-          "end_date": "2026-11-21",
+          "end_date": "2026-11-23",
           "per_player_game_means": {
-            "ast": 1.6923076923076923,
-            "mp_seconds": 1015.3846153846154,
-            "pts": 6.6923076923076925,
-            "reb": 5.153846153846154,
-            "three_p": 0.23076923076923078
+            "ast": 2.0,
+            "mp_seconds": 1040.0,
+            "pts": 6.933333333333334,
+            "reb": 4.8,
+            "three_p": 0.3333333333333333
           },
-          "player_games": 13,
+          "player_games": 15,
           "position": "C",
           "start_date": "2026-11-16"
         },
         {
-          "end_date": "2026-11-21",
+          "end_date": "2026-11-23",
           "per_player_game_means": {
-            "ast": 1.4,
-            "mp_seconds": 1494.0,
-            "pts": 11.2,
-            "reb": 4.8,
-            "three_p": 1.2
+            "ast": 1.6875,
+            "mp_seconds": 1410.0,
+            "pts": 11.125,
+            "reb": 4.125,
+            "three_p": 1.25
           },
-          "player_games": 10,
+          "player_games": 16,
           "position": "F",
           "start_date": "2026-11-16"
         },
         {
-          "end_date": "2026-11-21",
+          "end_date": "2026-11-23",
           "per_player_game_means": {
             "ast": 2.75,
-            "mp_seconds": 1467.0,
-            "pts": 10.05,
-            "reb": 2.8,
-            "three_p": 1.8
+            "mp_seconds": 1405.0,
+            "pts": 9.75,
+            "reb": 2.6666666666666665,
+            "three_p": 1.8333333333333333
           },
-          "player_games": 20,
+          "player_games": 24,
           "position": "G",
           "start_date": "2026-11-16"
         }
@@ -905,48 +905,48 @@
       "team": "MIN"
     },
     {
-      "end_date": "2026-11-21",
-      "estimated_defensive_rating": 117.2049412114898,
-      "estimated_offensive_rating": 109.33812429570726,
-      "games": 18,
-      "opponent_points_per_game": 122.5,
+      "end_date": "2026-11-23",
+      "estimated_defensive_rating": 116.75142177955645,
+      "estimated_offensive_rating": 109.12847671491187,
+      "games": 19,
+      "opponent_points_per_game": 122.52631578947368,
       "opponent_position_observations": [
         {
-          "end_date": "2026-11-21",
+          "end_date": "2026-11-23",
           "per_player_game_means": {
-            "ast": 1.0,
-            "mp_seconds": 1030.0,
-            "pts": 5.166666666666667,
+            "ast": 0.8571428571428571,
+            "mp_seconds": 1020.0,
+            "pts": 5.571428571428571,
             "reb": 6.0,
             "three_p": 0.0
           },
-          "player_games": 6,
+          "player_games": 7,
           "position": "C",
           "start_date": "2026-11-16"
         },
         {
-          "end_date": "2026-11-21",
+          "end_date": "2026-11-23",
           "per_player_game_means": {
-            "ast": 1.6875,
-            "mp_seconds": 1095.0,
-            "pts": 10.625,
-            "reb": 5.1875,
+            "ast": 2.0,
+            "mp_seconds": 1200.0,
+            "pts": 10.5,
+            "reb": 5.25,
             "three_p": 1.25
           },
-          "player_games": 16,
+          "player_games": 20,
           "position": "F",
           "start_date": "2026-11-16"
         },
         {
-          "end_date": "2026-11-21",
+          "end_date": "2026-11-23",
           "per_player_game_means": {
-            "ast": 3.1739130434782608,
-            "mp_seconds": 1479.1304347826087,
-            "pts": 11.08695652173913,
-            "reb": 2.869565217391304,
-            "three_p": 1.7826086956521738
+            "ast": 3.142857142857143,
+            "mp_seconds": 1517.142857142857,
+            "pts": 11.785714285714286,
+            "reb": 2.857142857142857,
+            "three_p": 1.8214285714285714
           },
-          "player_games": 23,
+          "player_games": 28,
           "position": "G",
           "start_date": "2026-11-16"
         }
@@ -955,48 +955,48 @@
       "team": "NOP"
     },
     {
-      "end_date": "2026-11-21",
-      "estimated_defensive_rating": 105.29878290187865,
-      "estimated_offensive_rating": 111.04583594079259,
-      "games": 16,
-      "opponent_points_per_game": 103.0625,
+      "end_date": "2026-11-22",
+      "estimated_defensive_rating": 104.98797573611228,
+      "estimated_offensive_rating": 110.79072995058687,
+      "games": 17,
+      "opponent_points_per_game": 103.23529411764706,
       "opponent_position_observations": [
         {
-          "end_date": "2026-11-21",
+          "end_date": "2026-11-22",
           "per_player_game_means": {
-            "ast": 1.0,
-            "mp_seconds": 1320.0,
-            "pts": 8.0,
-            "reb": 6.0,
-            "three_p": 0.6
+            "ast": 0.8571428571428571,
+            "mp_seconds": 1217.142857142857,
+            "pts": 7.428571428571429,
+            "reb": 6.285714285714286,
+            "three_p": 0.42857142857142855
           },
-          "player_games": 5,
+          "player_games": 7,
           "position": "C",
           "start_date": "2026-11-17"
         },
         {
-          "end_date": "2026-11-21",
+          "end_date": "2026-11-22",
           "per_player_game_means": {
-            "ast": 1.9090909090909092,
-            "mp_seconds": 1636.3636363636363,
-            "pts": 12.0,
-            "reb": 3.8181818181818183,
-            "three_p": 1.3636363636363635
+            "ast": 1.4375,
+            "mp_seconds": 1428.75,
+            "pts": 11.125,
+            "reb": 3.6875,
+            "three_p": 1.1875
           },
-          "player_games": 11,
+          "player_games": 16,
           "position": "F",
           "start_date": "2026-11-17"
         },
         {
-          "end_date": "2026-11-21",
+          "end_date": "2026-11-22",
           "per_player_game_means": {
-            "ast": 3.3076923076923075,
-            "mp_seconds": 1435.3846153846155,
-            "pts": 9.615384615384615,
-            "reb": 2.8461538461538463,
-            "three_p": 1.6153846153846154
+            "ast": 3.3333333333333335,
+            "mp_seconds": 1456.6666666666667,
+            "pts": 9.61111111111111,
+            "reb": 2.6666666666666665,
+            "three_p": 1.2777777777777777
           },
-          "player_games": 13,
+          "player_games": 18,
           "position": "G",
           "start_date": "2026-11-17"
         }
@@ -1005,48 +1005,48 @@
       "team": "NYK"
     },
     {
-      "end_date": "2026-11-20",
-      "estimated_defensive_rating": 106.23454825838984,
-      "estimated_offensive_rating": 110.64058943039679,
-      "games": 16,
-      "opponent_points_per_game": 108.5,
+      "end_date": "2026-11-23",
+      "estimated_defensive_rating": 108.04099458705903,
+      "estimated_offensive_rating": 111.14499493557837,
+      "games": 18,
+      "opponent_points_per_game": 110.22222222222223,
       "opponent_position_observations": [
         {
-          "end_date": "2026-11-20",
+          "end_date": "2026-11-23",
           "per_player_game_means": {
-            "ast": 1.5,
-            "mp_seconds": 1230.0,
-            "pts": 7.5,
-            "reb": 7.5,
+            "ast": 4.0,
+            "mp_seconds": 1560.0,
+            "pts": 13.25,
+            "reb": 11.25,
             "three_p": 0.0
           },
-          "player_games": 2,
+          "player_games": 4,
           "position": "C",
           "start_date": "2026-11-20"
         },
         {
-          "end_date": "2026-11-20",
+          "end_date": "2026-11-23",
           "per_player_game_means": {
-            "ast": 2.9,
-            "mp_seconds": 1488.0,
-            "pts": 12.9,
-            "reb": 4.7,
-            "three_p": 2.0
+            "ast": 2.4,
+            "mp_seconds": 1299.0,
+            "pts": 11.55,
+            "reb": 4.9,
+            "three_p": 1.65
           },
-          "player_games": 10,
+          "player_games": 20,
           "position": "F",
           "start_date": "2026-11-18"
         },
         {
-          "end_date": "2026-11-20",
+          "end_date": "2026-11-23",
           "per_player_game_means": {
-            "ast": 2.875,
-            "mp_seconds": 1432.5,
-            "pts": 11.625,
-            "reb": 3.875,
-            "three_p": 2.125
+            "ast": 3.0,
+            "mp_seconds": 1496.4705882352941,
+            "pts": 11.823529411764707,
+            "reb": 3.2941176470588234,
+            "three_p": 2.0
           },
-          "player_games": 8,
+          "player_games": 17,
           "position": "G",
           "start_date": "2026-11-18"
         }
@@ -1055,48 +1055,48 @@
       "team": "OKC"
     },
     {
-      "end_date": "2026-11-20",
-      "estimated_defensive_rating": 111.79171021471946,
-      "estimated_offensive_rating": 108.74885893076852,
-      "games": 15,
-      "opponent_points_per_game": 112.66666666666667,
+      "end_date": "2026-11-22",
+      "estimated_defensive_rating": 112.48832139520398,
+      "estimated_offensive_rating": 108.37745250700716,
+      "games": 16,
+      "opponent_points_per_game": 112.875,
       "opponent_position_observations": [
         {
-          "end_date": "2026-11-20",
+          "end_date": "2026-11-22",
           "per_player_game_means": {
-            "ast": 2.8333333333333335,
-            "mp_seconds": 1300.0,
-            "pts": 9.166666666666666,
-            "reb": 5.0,
-            "three_p": 0.3333333333333333
+            "ast": 2.625,
+            "mp_seconds": 1207.5,
+            "pts": 8.125,
+            "reb": 5.125,
+            "three_p": 0.5
           },
-          "player_games": 6,
+          "player_games": 8,
           "position": "C",
           "start_date": "2026-11-16"
         },
         {
-          "end_date": "2026-11-20",
+          "end_date": "2026-11-22",
           "per_player_game_means": {
-            "ast": 3.0,
-            "mp_seconds": 1565.4545454545455,
-            "pts": 14.090909090909092,
-            "reb": 4.7272727272727275,
+            "ast": 2.9375,
+            "mp_seconds": 1545.0,
+            "pts": 13.9375,
+            "reb": 4.625,
             "three_p": 2.0
           },
-          "player_games": 11,
+          "player_games": 16,
           "position": "F",
           "start_date": "2026-11-16"
         },
         {
-          "end_date": "2026-11-20",
+          "end_date": "2026-11-22",
           "per_player_game_means": {
-            "ast": 1.7857142857142858,
-            "mp_seconds": 1298.5714285714287,
-            "pts": 9.071428571428571,
-            "reb": 2.642857142857143,
-            "three_p": 1.5714285714285714
+            "ast": 1.9,
+            "mp_seconds": 1158.0,
+            "pts": 8.25,
+            "reb": 2.45,
+            "three_p": 1.6
           },
-          "player_games": 14,
+          "player_games": 20,
           "position": "G",
           "start_date": "2026-11-16"
         }
@@ -1105,48 +1105,48 @@
       "team": "ORL"
     },
     {
-      "end_date": "2026-11-21",
-      "estimated_defensive_rating": 110.88067293098057,
-      "estimated_offensive_rating": 113.77724223429772,
-      "games": 17,
-      "opponent_points_per_game": 112.58823529411765,
+      "end_date": "2026-11-23",
+      "estimated_defensive_rating": 111.87937628069562,
+      "estimated_offensive_rating": 113.68741713146103,
+      "games": 18,
+      "opponent_points_per_game": 113.44444444444444,
       "opponent_position_observations": [
         {
-          "end_date": "2026-11-21",
+          "end_date": "2026-11-23",
           "per_player_game_means": {
-            "ast": 3.0,
-            "mp_seconds": 1350.0,
-            "pts": 7.333333333333333,
-            "reb": 6.5,
-            "three_p": 0.5
+            "ast": 2.272727272727273,
+            "mp_seconds": 1047.2727272727273,
+            "pts": 6.090909090909091,
+            "reb": 6.0,
+            "three_p": 0.36363636363636365
           },
-          "player_games": 6,
+          "player_games": 11,
           "position": "C",
           "start_date": "2026-11-16"
         },
         {
-          "end_date": "2026-11-21",
+          "end_date": "2026-11-23",
           "per_player_game_means": {
-            "ast": 1.8181818181818181,
-            "mp_seconds": 1358.1818181818182,
-            "pts": 12.0,
-            "reb": 3.090909090909091,
-            "three_p": 1.0909090909090908
+            "ast": 2.2142857142857144,
+            "mp_seconds": 1332.857142857143,
+            "pts": 12.142857142857142,
+            "reb": 3.0,
+            "three_p": 1.2857142857142858
           },
-          "player_games": 11,
+          "player_games": 14,
           "position": "F",
           "start_date": "2026-11-16"
         },
         {
-          "end_date": "2026-11-21",
+          "end_date": "2026-11-23",
           "per_player_game_means": {
-            "ast": 3.142857142857143,
-            "mp_seconds": 1444.2857142857142,
-            "pts": 13.714285714285714,
-            "reb": 3.642857142857143,
-            "three_p": 2.357142857142857
+            "ast": 3.0526315789473686,
+            "mp_seconds": 1446.3157894736842,
+            "pts": 13.631578947368421,
+            "reb": 3.4210526315789473,
+            "three_p": 2.3684210526315788
           },
-          "player_games": 14,
+          "player_games": 19,
           "position": "G",
           "start_date": "2026-11-16"
         }
@@ -1155,48 +1155,48 @@
       "team": "PHI"
     },
     {
-      "end_date": "2026-11-20",
-      "estimated_defensive_rating": 113.48948853894646,
-      "estimated_offensive_rating": 112.63221756218509,
-      "games": 15,
-      "opponent_points_per_game": 114.73333333333333,
+      "end_date": "2026-11-23",
+      "estimated_defensive_rating": 112.94579829353628,
+      "estimated_offensive_rating": 112.39334601927442,
+      "games": 16,
+      "opponent_points_per_game": 115.0,
       "opponent_position_observations": [
         {
-          "end_date": "2026-11-20",
+          "end_date": "2026-11-23",
           "per_player_game_means": {
-            "ast": 1.6,
-            "mp_seconds": 1224.0,
-            "pts": 10.8,
-            "reb": 7.4,
-            "three_p": 0.4
+            "ast": 1.4285714285714286,
+            "mp_seconds": 1242.857142857143,
+            "pts": 9.857142857142858,
+            "reb": 7.714285714285714,
+            "three_p": 0.2857142857142857
           },
-          "player_games": 5,
+          "player_games": 7,
           "position": "C",
           "start_date": "2026-11-16"
         },
         {
-          "end_date": "2026-11-20",
+          "end_date": "2026-11-23",
           "per_player_game_means": {
-            "ast": 1.7692307692307692,
-            "mp_seconds": 1172.3076923076924,
-            "pts": 6.538461538461538,
-            "reb": 2.769230769230769,
-            "three_p": 0.8461538461538461
+            "ast": 1.8333333333333333,
+            "mp_seconds": 1343.3333333333333,
+            "pts": 8.444444444444445,
+            "reb": 3.3333333333333335,
+            "three_p": 0.8888888888888888
           },
-          "player_games": 13,
+          "player_games": 18,
           "position": "F",
           "start_date": "2026-11-16"
         },
         {
-          "end_date": "2026-11-20",
+          "end_date": "2026-11-23",
           "per_player_game_means": {
-            "ast": 2.6666666666666665,
-            "mp_seconds": 1452.0,
-            "pts": 11.6,
-            "reb": 3.533333333333333,
-            "three_p": 1.3333333333333333
+            "ast": 3.0555555555555554,
+            "mp_seconds": 1453.3333333333333,
+            "pts": 11.722222222222221,
+            "reb": 3.388888888888889,
+            "three_p": 1.4444444444444444
           },
-          "player_games": 15,
+          "player_games": 18,
           "position": "G",
           "start_date": "2026-11-16"
         }
@@ -1205,48 +1205,48 @@
       "team": "PHX"
     },
     {
-      "end_date": "2026-11-21",
-      "estimated_defensive_rating": 107.87453549775081,
-      "estimated_offensive_rating": 113.55857617836884,
-      "games": 16,
-      "opponent_points_per_game": 110.3125,
+      "end_date": "2026-11-23",
+      "estimated_defensive_rating": 108.11683072454412,
+      "estimated_offensive_rating": 114.45630374144169,
+      "games": 17,
+      "opponent_points_per_game": 110.3529411764706,
       "opponent_position_observations": [
         {
-          "end_date": "2026-11-21",
+          "end_date": "2026-11-23",
           "per_player_game_means": {
-            "ast": 1.5,
-            "mp_seconds": 1380.0,
-            "pts": 6.833333333333333,
-            "reb": 7.166666666666667,
-            "three_p": 0.5
+            "ast": 1.2857142857142858,
+            "mp_seconds": 1225.7142857142858,
+            "pts": 6.428571428571429,
+            "reb": 6.428571428571429,
+            "three_p": 0.42857142857142855
           },
-          "player_games": 6,
+          "player_games": 7,
           "position": "C",
           "start_date": "2026-11-16"
         },
         {
-          "end_date": "2026-11-21",
+          "end_date": "2026-11-23",
           "per_player_game_means": {
-            "ast": 1.3333333333333333,
-            "mp_seconds": 1236.0,
-            "pts": 7.133333333333334,
-            "reb": 4.133333333333334,
-            "three_p": 0.8
+            "ast": 1.35,
+            "mp_seconds": 1218.0,
+            "pts": 7.65,
+            "reb": 3.9,
+            "three_p": 0.85
           },
-          "player_games": 15,
+          "player_games": 20,
           "position": "F",
           "start_date": "2026-11-16"
         },
         {
-          "end_date": "2026-11-21",
+          "end_date": "2026-11-23",
           "per_player_game_means": {
-            "ast": 2.727272727272727,
-            "mp_seconds": 1401.8181818181818,
-            "pts": 12.5,
-            "reb": 3.227272727272727,
-            "three_p": 2.1818181818181817
+            "ast": 2.7857142857142856,
+            "mp_seconds": 1395.0,
+            "pts": 12.0,
+            "reb": 3.0714285714285716,
+            "three_p": 1.8571428571428572
           },
-          "player_games": 22,
+          "player_games": 28,
           "position": "G",
           "start_date": "2026-11-16"
         }
@@ -1255,48 +1255,48 @@
       "team": "POR"
     },
     {
-      "end_date": "2026-11-21",
-      "estimated_defensive_rating": 116.56636821762318,
-      "estimated_offensive_rating": 104.51832281422772,
-      "games": 16,
-      "opponent_points_per_game": 119.125,
+      "end_date": "2026-11-23",
+      "estimated_defensive_rating": 117.20194085027728,
+      "estimated_offensive_rating": 104.89833641404807,
+      "games": 17,
+      "opponent_points_per_game": 119.3529411764706,
       "opponent_position_observations": [
         {
-          "end_date": "2026-11-21",
+          "end_date": "2026-11-23",
           "per_player_game_means": {
-            "ast": 1.0,
-            "mp_seconds": 1470.0,
-            "pts": 11.25,
-            "reb": 5.25,
-            "three_p": 0.5
+            "ast": 1.3333333333333333,
+            "mp_seconds": 1420.0,
+            "pts": 11.666666666666666,
+            "reb": 6.5,
+            "three_p": 0.3333333333333333
           },
-          "player_games": 4,
+          "player_games": 6,
           "position": "C",
           "start_date": "2026-11-18"
         },
         {
-          "end_date": "2026-11-21",
+          "end_date": "2026-11-23",
           "per_player_game_means": {
-            "ast": 2.076923076923077,
-            "mp_seconds": 1218.4615384615386,
-            "pts": 8.923076923076923,
-            "reb": 4.0,
-            "three_p": 1.0769230769230769
+            "ast": 2.0526315789473686,
+            "mp_seconds": 1140.0,
+            "pts": 8.473684210526315,
+            "reb": 3.5789473684210527,
+            "three_p": 1.105263157894737
           },
-          "player_games": 13,
+          "player_games": 19,
           "position": "F",
           "start_date": "2026-11-18"
         },
         {
-          "end_date": "2026-11-21",
+          "end_date": "2026-11-23",
           "per_player_game_means": {
-            "ast": 2.888888888888889,
-            "mp_seconds": 1193.3333333333333,
-            "pts": 9.38888888888889,
-            "reb": 3.111111111111111,
-            "three_p": 1.2777777777777777
+            "ast": 3.1363636363636362,
+            "mp_seconds": 1249.090909090909,
+            "pts": 10.090909090909092,
+            "reb": 3.3636363636363638,
+            "three_p": 1.4545454545454546
           },
-          "player_games": 18,
+          "player_games": 22,
           "position": "G",
           "start_date": "2026-11-18"
         }
@@ -1305,48 +1305,48 @@
       "team": "SAC"
     },
     {
-      "end_date": "2026-11-21",
-      "estimated_defensive_rating": 103.73828527738841,
-      "estimated_offensive_rating": 115.49644938197235,
-      "games": 17,
-      "opponent_points_per_game": 105.3529411764706,
+      "end_date": "2026-11-23",
+      "estimated_defensive_rating": 104.14037551987886,
+      "estimated_offensive_rating": 116.1565726952495,
+      "games": 18,
+      "opponent_points_per_game": 105.44444444444444,
       "opponent_position_observations": [
         {
-          "end_date": "2026-11-21",
+          "end_date": "2026-11-23",
           "per_player_game_means": {
-            "ast": 1.25,
-            "mp_seconds": 1620.0,
-            "pts": 12.25,
-            "reb": 8.5,
-            "three_p": 1.25
+            "ast": 1.0,
+            "mp_seconds": 1428.0,
+            "pts": 9.8,
+            "reb": 8.2,
+            "three_p": 1.0
           },
-          "player_games": 4,
+          "player_games": 5,
           "position": "C",
           "start_date": "2026-11-19"
         },
         {
-          "end_date": "2026-11-21",
+          "end_date": "2026-11-23",
           "per_player_game_means": {
-            "ast": 1.5555555555555556,
-            "mp_seconds": 1260.0,
-            "pts": 6.555555555555555,
-            "reb": 3.5555555555555554,
-            "three_p": 0.4444444444444444
+            "ast": 2.2666666666666666,
+            "mp_seconds": 1280.0,
+            "pts": 8.0,
+            "reb": 3.933333333333333,
+            "three_p": 0.5333333333333333
           },
-          "player_games": 9,
+          "player_games": 15,
           "position": "F",
           "start_date": "2026-11-17"
         },
         {
-          "end_date": "2026-11-21",
+          "end_date": "2026-11-23",
           "per_player_game_means": {
-            "ast": 2.473684210526316,
-            "mp_seconds": 1338.9473684210527,
-            "pts": 10.526315789473685,
-            "reb": 3.3684210526315788,
-            "three_p": 1.1578947368421053
+            "ast": 2.36,
+            "mp_seconds": 1248.0,
+            "pts": 9.84,
+            "reb": 3.0,
+            "three_p": 1.12
           },
-          "player_games": 19,
+          "player_games": 25,
           "position": "G",
           "start_date": "2026-11-17"
         }
@@ -1355,48 +1355,48 @@
       "team": "SAS"
     },
     {
-      "end_date": "2026-11-20",
-      "estimated_defensive_rating": 110.88985687616679,
-      "estimated_offensive_rating": 111.07654013690107,
-      "games": 16,
-      "opponent_points_per_game": 111.375,
+      "end_date": "2026-11-23",
+      "estimated_defensive_rating": 111.08379862110944,
+      "estimated_offensive_rating": 110.96674509253081,
+      "games": 17,
+      "opponent_points_per_game": 111.6470588235294,
       "opponent_position_observations": [
         {
-          "end_date": "2026-11-18",
+          "end_date": "2026-11-23",
           "per_player_game_means": {
-            "ast": 2.75,
-            "mp_seconds": 1170.0,
-            "pts": 7.75,
-            "reb": 7.25,
-            "three_p": 1.0
+            "ast": 2.0,
+            "mp_seconds": 1290.0,
+            "pts": 11.166666666666666,
+            "reb": 7.166666666666667,
+            "three_p": 1.6666666666666667
           },
-          "player_games": 4,
+          "player_games": 6,
           "position": "C",
           "start_date": "2026-11-17"
         },
         {
-          "end_date": "2026-11-20",
+          "end_date": "2026-11-23",
           "per_player_game_means": {
-            "ast": 1.8571428571428572,
-            "mp_seconds": 1851.4285714285713,
-            "pts": 14.714285714285714,
-            "reb": 7.0,
-            "three_p": 1.1428571428571428
+            "ast": 1.9,
+            "mp_seconds": 1788.0,
+            "pts": 13.1,
+            "reb": 6.2,
+            "three_p": 1.1
           },
-          "player_games": 7,
+          "player_games": 10,
           "position": "F",
           "start_date": "2026-11-17"
         },
         {
-          "end_date": "2026-11-20",
+          "end_date": "2026-11-23",
           "per_player_game_means": {
-            "ast": 2.263157894736842,
-            "mp_seconds": 1335.7894736842106,
-            "pts": 9.578947368421053,
-            "reb": 2.6315789473684212,
-            "three_p": 1.2105263157894737
+            "ast": 2.44,
+            "mp_seconds": 1274.4,
+            "pts": 9.36,
+            "reb": 2.68,
+            "three_p": 1.12
           },
-          "player_games": 19,
+          "player_games": 25,
           "position": "G",
           "start_date": "2026-11-17"
         }
@@ -1405,48 +1405,48 @@
       "team": "TOR"
     },
     {
-      "end_date": "2026-11-20",
-      "estimated_defensive_rating": 112.71689550049283,
-      "estimated_offensive_rating": 105.49659614458936,
-      "games": 17,
-      "opponent_points_per_game": 115.70588235294117,
+      "end_date": "2026-11-23",
+      "estimated_defensive_rating": 112.74908185624493,
+      "estimated_offensive_rating": 105.3936444906231,
+      "games": 19,
+      "opponent_points_per_game": 115.36842105263158,
       "opponent_position_observations": [
         {
-          "end_date": "2026-11-20",
+          "end_date": "2026-11-23",
           "per_player_game_means": {
-            "ast": 1.0,
-            "mp_seconds": 1110.0,
-            "pts": 11.0,
-            "reb": 6.0,
-            "three_p": 1.0
+            "ast": 0.8,
+            "mp_seconds": 1320.0,
+            "pts": 10.8,
+            "reb": 7.2,
+            "three_p": 0.8
           },
-          "player_games": 4,
+          "player_games": 5,
           "position": "C",
           "start_date": "2026-11-17"
         },
         {
-          "end_date": "2026-11-20",
+          "end_date": "2026-11-23",
           "per_player_game_means": {
-            "ast": 1.2,
-            "mp_seconds": 1032.0,
-            "pts": 6.133333333333334,
-            "reb": 3.533333333333333,
-            "three_p": 0.6
+            "ast": 1.6153846153846154,
+            "mp_seconds": 1190.7692307692307,
+            "pts": 7.961538461538462,
+            "reb": 4.0,
+            "three_p": 0.8076923076923077
           },
-          "player_games": 15,
+          "player_games": 26,
           "position": "F",
           "start_date": "2026-11-17"
         },
         {
-          "end_date": "2026-11-20",
+          "end_date": "2026-11-23",
           "per_player_game_means": {
-            "ast": 2.5789473684210527,
-            "mp_seconds": 1218.9473684210527,
-            "pts": 9.421052631578947,
-            "reb": 2.3684210526315788,
-            "three_p": 1.0526315789473684
+            "ast": 2.962962962962963,
+            "mp_seconds": 1273.3333333333333,
+            "pts": 10.333333333333334,
+            "reb": 2.259259259259259,
+            "three_p": 1.3333333333333333
           },
-          "player_games": 19,
+          "player_games": 27,
           "position": "G",
           "start_date": "2026-11-17"
         }
@@ -1455,48 +1455,48 @@
       "team": "UTA"
     },
     {
-      "end_date": "2026-11-20",
-      "estimated_defensive_rating": 113.82571622289383,
-      "estimated_offensive_rating": 107.44779875659337,
-      "games": 17,
-      "opponent_points_per_game": 116.52941176470588,
+      "end_date": "2026-11-22",
+      "estimated_defensive_rating": 113.24108301438274,
+      "estimated_offensive_rating": 108.27962969020902,
+      "games": 18,
+      "opponent_points_per_game": 115.38888888888889,
       "opponent_position_observations": [
         {
-          "end_date": "2026-11-20",
+          "end_date": "2026-11-22",
           "per_player_game_means": {
-            "ast": 1.75,
-            "mp_seconds": 1320.0,
-            "pts": 11.75,
-            "reb": 7.25,
-            "three_p": 0.0
+            "ast": 2.0,
+            "mp_seconds": 1251.4285714285713,
+            "pts": 8.857142857142858,
+            "reb": 6.0,
+            "three_p": 0.2857142857142857
           },
-          "player_games": 4,
+          "player_games": 7,
           "position": "C",
           "start_date": "2026-11-16"
         },
         {
-          "end_date": "2026-11-20",
+          "end_date": "2026-11-22",
           "per_player_game_means": {
-            "ast": 1.5555555555555556,
-            "mp_seconds": 1150.0,
-            "pts": 8.555555555555555,
-            "reb": 3.5,
-            "three_p": 1.3888888888888888
+            "ast": 1.619047619047619,
+            "mp_seconds": 1180.0,
+            "pts": 9.047619047619047,
+            "reb": 3.5714285714285716,
+            "three_p": 1.380952380952381
           },
-          "player_games": 18,
+          "player_games": 21,
           "position": "F",
           "start_date": "2026-11-16"
         },
         {
-          "end_date": "2026-11-20",
+          "end_date": "2026-11-22",
           "per_player_game_means": {
-            "ast": 4.833333333333333,
-            "mp_seconds": 1440.0,
-            "pts": 10.666666666666666,
-            "reb": 3.25,
-            "three_p": 1.1666666666666667
+            "ast": 4.0,
+            "mp_seconds": 1343.3333333333333,
+            "pts": 9.61111111111111,
+            "reb": 2.9444444444444446,
+            "three_p": 1.1111111111111112
           },
-          "player_games": 12,
+          "player_games": 18,
           "position": "G",
           "start_date": "2026-11-16"
         }

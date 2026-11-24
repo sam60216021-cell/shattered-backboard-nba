@@ -33,11 +33,13 @@ validation. A stopped client does not cancel server spending; do not blindly ret
 
 Luna supports Responses `web_search`. Requests use `external_web_access: true`,
 `search_context_size: low`, and `return_token_budget: default`; never unlimited.
-The existing web toggle and max_searches are preserved. Web disabled, zero search
-limit, or exhausted web-action allowance omits the tool entirely. Each admitted
-response containing web search sets max_tool_calls=1. The analysis permits up to
-the smaller of the app's limit and NBA_CHAT_MAX_WEB_SEARCHES. Page opens and finds
-also consume that action allowance, making it conservative relative to searches.
+The existing web toggle and max_searches are preserved. When the app enables web
+research, the first eligible response explicitly requires a native web search;
+the user-facing toggle therefore results in an attempted live check. Web disabled,
+zero search limit, or exhausted web-action allowance omits the tool entirely. Each
+admitted response containing web search sets max_tool_calls=1. The analysis permits
+up to the smaller of the app's limit and NBA_CHAT_MAX_WEB_SEARCHES. Page opens and
+finds also consume that action allowance, making it conservative relative to searches.
 
 OpenAI executes built-in tools internally. The backend still executes get_players
 and returns function_call_output with prior reasoning/search output for continuation.
@@ -45,8 +47,8 @@ No automatic retry, provider fallback, or model switch occurs after a rejection.
 Model/project access checked by `/nba/chat/status` does not prove native search
 execution: native_search_access is not_tested until an actual reported execution.
 The compatibility field research_configured now describes native-tool configuration,
-not a separate search credential. Search is optional when available; the model
-must not claim research when it did not run.
+not a separate search credential. A failed or source-less search stays visibly
+unverified; the model must not claim research when it did not run.
 
 Instructions use database statistics and existing projections to generate picks
 and conditional parlays even when web research is incomplete. Web research improves
