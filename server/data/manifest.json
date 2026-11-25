@@ -2,50 +2,50 @@
   "feeds": {
     "data_quality": {
       "bytes": 2619,
-      "sha256": "2bfb5f087e6c9759b5cc147062f721af479767891c55a7d03bbe5d52f0465e4f"
+      "sha256": "fe9d738604f89629f76c4e039eace6a0d74b30e119987fcd7aa511e73e7d5843"
     },
     "game_details": {
-      "bytes": 42087806,
-      "sha256": "0a45c250d0010dd3a99e432756507793b77a303e0262465535ad40318e426c25"
+      "bytes": 42564149,
+      "sha256": "f277b1936aa0674e7be0b4e475d7dc445bc24c8f3a49c4c5271e29f70d8063fa"
     },
     "history_backfill": {
       "bytes": 4211,
       "sha256": "c142133f9485935f27b89e19f81867b9fdda4c441969ae7bc776e2a8697f25d0"
     },
     "lineups": {
-      "bytes": 25520,
-      "sha256": "60f34ba850b02fe028d381273ccf9d55964f739d159523fc075b8e00ed3e924b"
+      "bytes": 7780,
+      "sha256": "29418ad1c9153be82e8c3bc92618397c64623cdc4f5f916cfd1ede11553d53b2"
     },
     "player_advanced": {
-      "bytes": 121092,
-      "sha256": "825f0564359a0a61ca63be2be903396c7c024b0bd4792c8422e503b8485920d4"
+      "bytes": 121106,
+      "sha256": "1a845e5899635a0119ae1156de98217025c52da483b8664c46408f53c5cfb743"
     },
     "player_logs": {
-      "bytes": 11935296,
-      "sha256": "4b1500a9e0cb7321a455d678377eb2464456d1d1b0d31913cbe1f5ceaa7f03c9"
+      "bytes": 11971803,
+      "sha256": "c896716a856b9811a7f48c7dc2359aebae3202f49ae4e0541cf95350fa127679"
     },
     "research_defense": {
-      "bytes": 44334,
-      "sha256": "0d1a6375a8fc28143908b353272b501dace447ac61ff4e9b078217f94b3c7e22"
+      "bytes": 44330,
+      "sha256": "e11fa07399a46f7f0781ee8ff2a476c46d9908dde494e79ec770b79353d62528"
     },
     "roster": {
-      "bytes": 208308,
-      "sha256": "62b1c8c48f65c1577f6bec607b96cb5e5ac541a405ce967a04c47bd4a952838a"
+      "bytes": 209122,
+      "sha256": "dbb8e9b26201318f719967568c96ca261315e3e83ee4c1967300cd81c52fadf6"
     },
     "schedule": {
-      "bytes": 8860,
-      "sha256": "f2d348c9ca5cc663f86b250ab068251c048f6b8ddd33736ce36a1bffb6a47a72"
+      "bytes": 7540,
+      "sha256": "b4d1b07039d8045b7d771366dedf027d2b09478fc4505b9520d5e6a8417d943d"
     },
     "standings": {
-      "bytes": 13476,
-      "sha256": "6d711e7c08b7b548504f37beeac39ef931ead93828490b3363381b00a74fdd2a"
+      "bytes": 13491,
+      "sha256": "abbabae180a32241516382a3f519591f4cdf4895c668d888a269d678096915d7"
     },
     "stats": {
-      "bytes": 181689,
-      "sha256": "e708eb9067850fb4cbc4aadb772e0b89ac598460ee573f7000843178bb06eae5"
+      "bytes": 181706,
+      "sha256": "7f9259bb81c551e523ea9b0ccd9b38f6a00055e24f8c073b6635dc1e2324f891"
     }
   },
-  "generated_at": "2026-11-24T06:01:16.811206+00:00",
+  "generated_at": "2026-11-25T05:49:26.222284+00:00",
   "schema_version": 3,
   "season": 2027,
   "source": "desktop-nba-updater"
